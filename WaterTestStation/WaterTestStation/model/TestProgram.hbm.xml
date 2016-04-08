@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="WaterTestStation" namespace="WaterTestStation.model">
+
+	<class name="TestProgram" table="TestProgram">
+		<id name="Id">
+			<column name="Id" not-null="true"/>
+			<generator class="identity" />
+		</id>
+		<property name="Name" />
+		<property name="Title" />
+		<property name="Description" />
+		<property name="PreTestWait" />
+		<property name="Cycles" />
+		<property name="Active" />
+
+		<property name="DateCreated" />
+		<property name="LastUpdated" />
+
+		<bag name="TestProgramSteps" table="TestProgramStep" cascade="all-delete-orphan" inverse="true" lazy="false" order-by="RowOrder" >
+			<key column="TestProgramId" />
+			<one-to-many class="TestProgramStep" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

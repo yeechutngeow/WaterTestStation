@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="WaterTestStation" namespace="WaterTestStation.model">
+
+	<class name="TestData" table="TestData">
+		<id name="Id">
+			<column name="Id" not-null="true"/>
+			<generator class="identity" />
+		</id>
+		<property name="TestRecordId" />
+		<property name="TimeStamp" />
+		<property name="TestType" />
+		<property name="Cycle" />
+		<property name="ElapsedTime" />
+		<property name="StepTime" />
+		<property name="ARefVoltage" />
+		<property name="BRefVoltage" />
+		<property name="ABVoltage" />
+		<property name="ABCurrent" />
+	</class>
+</hibernate-mapping>
