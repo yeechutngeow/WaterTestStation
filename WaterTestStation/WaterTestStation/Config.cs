@@ -12,9 +12,9 @@ namespace WaterTestStation
 			return System.Configuration.ConfigurationManager.AppSettings["UsbComPort"];
 		}
 
-		public static float GetResistorValue(int stationNumber)
+		public static double GetResistorValue(int stationNumber)
 		{
-			return float.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
+			return double.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
 		}
 	}
 }

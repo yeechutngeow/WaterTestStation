@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using WaterTestStation.hardware;
@@ -48,13 +49,19 @@ namespace WaterTestStation
 						TestType testType = (TestType) Enum.Parse(typeof(TestType), m.TestStep.TestType);
 						m.TestStation.SwitchTestType(testType);
 					}
+
+					Stopwatch stopwatch = new Stopwatch();
+					stopwatch.Start();
+					Debug.WriteLine("Begin meter readings:" + DateTime.Now);
 					SelectStation(Main.mux, m.TestStation.StationNumber);
 
 					// measures everything - will serves to cross check the circuit is correct initially.
-					float ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-					float BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
-					float ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
-					float ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
+					double ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
+					double BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
+					double ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
+					double ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
+					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
+					stopwatch.Stop();
 
 					switch (m.TestStep.GetTestType())
 					{

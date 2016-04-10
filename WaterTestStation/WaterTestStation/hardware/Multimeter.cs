@@ -32,12 +32,12 @@ namespace WaterTestStation.hardware
 
 		readonly Random random = new Random();
 
-		private float ReadMeter()
+		private double ReadMeter()
 		{
 			if (!Main.HasMultimeter)
 			{
-				Thread.Sleep(30); 
-				return (float) random.NextDouble();
+				Thread.Sleep(410); 
+				return (double) random.NextDouble();
 			}
 
 			Thread.Sleep(400);
@@ -45,15 +45,15 @@ namespace WaterTestStation.hardware
 			Thread.Sleep(10);
 			string result = mbSession.ReadString();
 
-			float value;
-			float.TryParse(result, out value);
+			double value;
+			double.TryParse(result, out value);
 			return value; 
 		}
 
 		/*
 		 * Reads open circuit voltage across A and B
 		 */
-		public float ReadABVoltage(int stationNumber)
+		public double ReadABVoltage(int stationNumber)
 		{
 			usbRelay.SetChannels(
 				new[] { readingSelector[0] },
@@ -64,7 +64,7 @@ namespace WaterTestStation.hardware
 		/* 
 		 * reads charge & discharge current from A to B
 		 */
-		public float ReadABCurrent(int stationNumber)
+		public double ReadABCurrent(int stationNumber)
 		{
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[3]}, 
@@ -75,7 +75,7 @@ namespace WaterTestStation.hardware
 		/*
 		 * Reads ARef voltage
 		 */
-		public float ReadARefVoltage(int stationNumber)
+		public double ReadARefVoltage(int stationNumber)
 		{
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[2]}, 
@@ -86,7 +86,7 @@ namespace WaterTestStation.hardware
 		/*
 		 * Reads BRef voltage
 		 */
-		public float ReadBRefVoltage(int stationNumber)
+		public double ReadBRefVoltage(int stationNumber)
 		{
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[1]}, 

@@ -14,9 +14,9 @@ namespace WaterTestStation.model
 		public virtual int Cycle { get; set; }
 		public virtual int ElapsedTime { get; set; }
 		public virtual int StepTime { get; set; }
-		public virtual float ARefVoltage { get; set; }
-		public virtual float BRefVoltage { get; set; }
-		public virtual float ABVoltage { get; set; }
-		public virtual float ABCurrent { get; set; }
+		public virtual double ARefVoltage { get; set; }
+		public virtual double BRefVoltage { get; set; }
+		public virtual double ABVoltage { get; set; }
+		public virtual double ABCurrent { get; set; }
 	}
 }

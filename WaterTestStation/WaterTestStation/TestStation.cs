@@ -23,19 +23,20 @@ namespace WaterTestStation
 		private TextBox txtTestDescription;
 		private ComboBox cboTestProgram;
 		private TextBox txtCycles;
-		private Label lblStatus;
-		private Label lblCycle;
+		private TextBox txtStatus;
 		private Label lblARefVolt;
 		private Label lblBRefVolt;
 		private Label lblABAmp;
 		private Label lblABVolt;
 		private TextBox txtVesselId;
 		private TextBox txtSample;
-		private Button btnStart, btnStop;
+		public Button btnStart, btnStop;
 
 		// Tracking progress for logging of test data
 		private int testRecordId; 
-		private int currentCycle;
+		private string currentCycle;
+		private int curCycle;
+		private int curStepNumber;
 
 		readonly TestRecordDao testRecordDao = new TestRecordDao();
 		
@@ -47,15 +48,14 @@ namespace WaterTestStation
 		}
 
 		public void SetFormControls(TextBox vesselId, TextBox tSample, TextBox tTestDescription, ComboBox cboTestProg, TextBox tCycles,
-			Label lStatus, Label lCycle, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt, Button bStart, Button bStop)
+			TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt, Button bStart, Button bStop)
 		{
 			this.cboTestProgram = cboTestProg;
 			this.txtTestDescription = tTestDescription;
 			this.txtCycles = tCycles;
 			this.txtVesselId = vesselId;
 			this.txtSample = tSample;
-			this.lblStatus = lStatus;
-			this.lblCycle = lCycle;
+			this.txtStatus = tStatus;
 			this.lblARefVolt = lARefVolt;
 			this.lblBRefVolt = lBRefVolt;
 			this.lblABAmp = lABAmp;
@@ -64,22 +64,23 @@ namespace WaterTestStation
 			this.btnStop = bStop;
 		}
 
-		private string formatNumber(float n, string unit)
+		private string formatNumber(double n, string unit)
 		{
 			if (Math.Abs(n) < 0.001)
+				return (n * 1000000).ToString("0.00000 ") + "u" + unit;
+			if (Math.Abs(n) < 1)
 				return (n*1000).ToString("0.00000 ") + "m" + unit;
-			else
-				return n.ToString("0.00000 ") + unit;
+			return n.ToString("0.00000 ") + unit;
 		}
 
 		// This method is called by Multimeter class to log and display the readings obtained
 		public void LogMeterReadings(TestProgramStep testStep, int pCycle, int pCycleStartTime, int pStepTime, 
-				float ARefVoltage, float BRefVoltage, float ABVoltage, float ABCurrent, bool logFlag)
+				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, bool logFlag)
 		{
-			ThreadSafeSetText(lblARefVolt, formatNumber(ARefVoltage, "V"));
-			ThreadSafeSetText(lblBRefVolt, formatNumber(BRefVoltage, "V"));
-			ThreadSafeSetText(lblABVolt, formatNumber(ABVoltage,"V"));
-			ThreadSafeSetText(lblABAmp, formatNumber(ABCurrent,"A"));
+			ThreadSafeSetLabel(lblARefVolt, formatNumber(ARefVoltage, "V"));
+			ThreadSafeSetLabel(lblBRefVolt, formatNumber(BRefVoltage, "V"));
+			ThreadSafeSetLabel(lblABVolt, formatNumber(ABVoltage,"V"));
+			ThreadSafeSetLabel(lblABAmp, formatNumber(ABCurrent,"A"));
 
 			// logs to database if this is not an adhoc reading
 			if (logFlag)
@@ -89,16 +90,16 @@ namespace WaterTestStation
 			}
 		}
 
-		private delegate void SetTextCallback(Label label, string text);
+		private delegate void SetLabelCallback(Label label, string text);
 
-		private void ThreadSafeSetText(Label label, string text)
+		private void ThreadSafeSetLabel(Label label, string text)
 		{
 			// InvokeRequired required compares the thread ID of the
 			// calling thread to the thread ID of the creating thread.
 			// If these threads are different, it returns true.
 			if (label.InvokeRequired)
 			{
-				SetTextCallback d = ThreadSafeSetText;
+				SetLabelCallback d = ThreadSafeSetLabel;
 				label.Invoke(d, new object[] {label, text });
 			}
 			else
@@ -107,7 +108,23 @@ namespace WaterTestStation
 			}			
 		}
 
-		//private delegate string ReadTextCallback(Control control);
+		private delegate void SetTextCallback(TextBox txtBox, string text);
+
+		private void ThreadSafeSetText(TextBox txtBox, string text)
+		{
+			// InvokeRequired required compares the thread ID of the
+			// calling thread to the thread ID of the creating thread.
+			// If these threads are different, it returns true.
+			if (txtBox.InvokeRequired)
+			{
+				SetTextCallback d = ThreadSafeSetText;
+				txtBox.Invoke(d, new object[] { txtBox, text });
+			}
+			else
+			{
+				txtBox.Text = text;
+			}
+		}
 
 		private string ThreadSafeReadText(Control control)
 		{
@@ -164,7 +181,7 @@ namespace WaterTestStation
 		public void StopExecution()
 		{
 			executionThread.Abort();
-			lblStatus.Text = "Execution aborted";
+			ThreadSafeSetText(txtStatus, "Execution aborted");
 			FinalizeExecution();
 		}
 
@@ -193,7 +210,8 @@ namespace WaterTestStation
 				TestProgramId = testProgramId,
 				TestType = TestType.OpenCircuit.ToString()
 			};
-			ThreadSafeSetText(lblCycle, "PreTest");
+			currentCycle = "PreTest";
+			curCycle = 0;
 			runstep(stepStartTime, preTest);
 			stepStartTime += testProgram.PreTestWait;
 
@@ -202,16 +220,17 @@ namespace WaterTestStation
 
 			for (int i = 0; i < cycles; i++)
 			{
-				currentCycle = i+1;
-				ThreadSafeSetText(lblCycle, (i + 1).ToString());
+				currentCycle = (i+1).ToString();
+				curCycle = i + 1;
+				curStepNumber = 1;
 				foreach (var step in testProgram.TestProgramSteps)
 				{
 					runstep(stepStartTime, step);
 					stepStartTime += step.Duration;
+					curStepNumber++;
 				}
 			}
-			ThreadSafeSetText(lblStatus, "Idle");
-			ThreadSafeSetText(lblCycle, "Completed");
+			ThreadSafeSetText(txtStatus, "Test Completed");
 			FinalizeExecution();
 		}
 
@@ -221,7 +240,6 @@ namespace WaterTestStation
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
-			ThreadSafeSetText(lblStatus, testStep.TestType);
 			SwitchTestType(testStep.GetTestType());
 			switch (testStep.GetTestType())
 			{
@@ -261,13 +279,21 @@ namespace WaterTestStation
 		
 		private void _TakeReadings(int targetTime, int stepStartTime, TestProgramStep testStep)
 		{
+
 			Debug.WriteLine("TakeReading: TargetTime=" + targetTime + " stepStartTime=" + stepStartTime + " Stopwatch=" + stopwatch.ElapsedMilliseconds/1000);
 			// allows for a slack of 200 ms
 			if (stopwatch.ElapsedMilliseconds > (stepStartTime + targetTime + 200) * 1000)
 				return;
 
 			SleepTill(targetTime, stepStartTime);
-			Main.MultimeterQueue.Enqueue(new MeterRequest(this, testStep, currentCycle, stepStartTime, targetTime, true));
+			TimeSpan t = TimeSpan.FromSeconds(targetTime);
+			string msg = "Cycle: " + currentCycle + Environment.NewLine
+						 + "Step: " + curStepNumber + "-" + testStep.TestType + Environment.NewLine
+						 + "StepTime: " + t.ToString("mm\\:ss") + Environment.NewLine
+						 + "Total Elapsed: " + stopwatch.Elapsed.ToString("hh\\:mm\\:ss");
+			ThreadSafeSetText(txtStatus, msg);
+
+			Main.MultimeterQueue.Enqueue(new MeterRequest(this, testStep, curCycle, stepStartTime, targetTime, true));
 		}
 
 		private void SleepTill(int targetTime, int baseTime)

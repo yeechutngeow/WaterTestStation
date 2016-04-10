@@ -35,27 +35,27 @@ namespace WaterTestStation.hardware
 
 		Random random = new Random();
 
-		private float ReadMeter()
+		private double ReadMeter()
 		{
 			if (!Main.HasMultimeter)
 			{
 				Thread.Sleep(30); 
-				return (float) random.NextDouble();
+				return (double) random.NextDouble();
 			}
 
 			mbSession.Write(":measure:voltage:DC?");
 			Thread.Sleep(10);
 			string result = mbSession.ReadString();
 
-			float value;
-			float.TryParse(result, out value);
+			double value;
+			double.TryParse(result, out value);
 			return value; 
 		}
 
 		/*
 		 * Reads open circuit voltage across A and B
 		 */
-		public float ReadABVoltage(int channelNumber)
+		public double ReadABVoltage(int channelNumber)
 		{
 			SelectChannel(channelNumber);
 			usbRelay.SetChannels(new int[]{}, readingSelector);
@@ -65,7 +65,7 @@ namespace WaterTestStation.hardware
 		/* 
 		 * reads charge & discharge current from A to B
 		 */
-		public float ReadABCurrent(int channelNumber)
+		public double ReadABCurrent(int channelNumber)
 		{
 			SelectChannel(channelNumber);
 			usbRelay.SetChannels(new[] {readingSelector[2]}, new int[] {readingSelector[0],readingSelector[1]});
@@ -75,14 +75,14 @@ namespace WaterTestStation.hardware
 		/*
 		 * Reads A voltage
 		 */
-		public float ReadARefVoltage(int channelNumber)
+		public double ReadARefVoltage(int channelNumber)
 		{
 			SelectChannel(channelNumber);
 			usbRelay.SetChannels(new[] {readingSelector[1]}, new[] {readingSelector[0], readingSelector[2]});
 			return ReadMeter();
 		}
 
-		public float ReadBRefVoltage(int channelNumber)
+		public double ReadBRefVoltage(int channelNumber)
 		{
 			SelectChannel(channelNumber);
 			usbRelay.SetChannels(new[] {readingSelector[0]}, new int[] {readingSelector[1], readingSelector[2]});

@@ -52,7 +52,7 @@ namespace WaterTestStation.dao
 		}
 
 		internal void LogTestData(int testRecordId, TestType testType, int cycle, int elapsedTime, int stepTime, 
-			float ARefVoltage, float BRefVoltage, float ABVoltage, float ABCurrent)
+			double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent)
 		{
 			TestData testData = new TestData
 				{

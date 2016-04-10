@@ -71,9 +71,12 @@ namespace WaterTestStation
 
 		private void btnAdhocReading_Click(object sender, EventArgs e)
 		{
+			int stationNumber = int.Parse(cboStationNumber.Text) - 1;
+			if (!stations[stationNumber].btnStart.Enabled)
+				// disallow taking adhoc readings when a program is running
+				return;
 			int portNumber = int.Parse(txtUsbRelayComPort.Text);
 			usbRelay.OpenComPort(portNumber);
-			int stationNumber = int.Parse(cboStationNumber.Text) - 1;
 			string testType = cboTestType.Text;
 			TestType eTestType = (TestType) Enum.Parse(typeof (TestType), testType);
 
@@ -85,7 +88,7 @@ namespace WaterTestStation
 		private void DrawForm()
 		{
 			const int panelWidth = 400;
-			const int panelHeight = 350;
+			const int panelHeight = 320;
 			const int yOffSet = 60;
 			const int xOffSet = 15;
 
@@ -100,7 +103,6 @@ namespace WaterTestStation
 
 			this.Height = panelHeight*2 + yOffSet + 50;
 			this.Width = panelWidth*3 + xOffSet + 30;
-			this.Location = new Point(10, 10);
 
 			IList<TestProgram> testPrograms = new TestProgramDao().GetProgramsList();
 
@@ -205,7 +207,7 @@ namespace WaterTestStation
 				//------------------------------------------------------------
 				label = new Label
 				{
-					Text = "Cycles:",
+					Text = "Run Cycles:",
 					Location = new Point(col1, y),
 					Width = labelWidth
 				};
@@ -218,45 +220,19 @@ namespace WaterTestStation
 				};
 				panel.Controls.Add(txtCycles);
 
-				label = new Label
-				{
-					Text = "cycles to run",
-					Font = new Font(this.Font.FontFamily, 7),
-					Location = new Point(col2+55, y+4),
-				};
-				panel.Controls.Add(label);
 				y += yLineHeight;
 
 				//------------------------------------------------------------
-				label = new Label
-					{
-						Text = "Run Status:",
-						Location = new Point(col1, y),
-						Width = labelWidth
-					};
-				panel.Controls.Add(label);
-				Label lblStatus = new Label
-					{
-						Text = "Idle",
-						Location = new Point(col2, y)
-					};
-				panel.Controls.Add(lblStatus);
-
-				label = new Label
-					{
-						Text = "Cycle:",
-						Width = labelWidth,
-						Location = new Point(col3, y)
-					};
-				panel.Controls.Add(label);
-
-				Label lblCycle = new Label
-					{
-						Width = 80,
-						Location = new Point(col4, y)
-					};
-				panel.Controls.Add(lblCycle);
-				y += yLineHeight;
+				TextBox txtStatus = new TextBox
+					                    {
+						                    Multiline = true,
+						                    Width = panelWidth/2 - 20,
+						                    Height = 60,
+						                    ReadOnly = true,
+						                    Location = new Point(col3, y),
+											Text = "Idle"
+					                    };
+				panel.Controls.Add(txtStatus);
 
 				//------------------------------------------------------------
 				label = new Label
@@ -347,7 +323,7 @@ namespace WaterTestStation
 
 				//-----------------------------------------------------------------
 
-				stations[i].SetFormControls(txtVesselId, txtSample, txtTestDescription, cboTestProgram, txtCycles, lblStatus, lblCycle,
+				stations[i].SetFormControls(txtVesselId, txtSample, txtTestDescription, cboTestProgram, txtCycles, txtStatus,
 					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, btnStart, btnStop);
 			}
 		}
@@ -356,7 +332,7 @@ namespace WaterTestStation
 		{
 			usbRelay = new UsbRelay(txtUsbRelayComPort.Text);
 
-			switches[0] = new RelayMux(usbRelay, new[] {  0, 1});
+			switches[0] = new RelayMux(usbRelay, new[] { 0, 1 });
 			toggles[0] = new MultiPoleSwitch(usbRelay, new[] { 2, 3 });
 			switches[1] = new RelayMux(usbRelay, new[] { 4, 5 });
 			toggles[1] = new MultiPoleSwitch(usbRelay, new[] { 6, 7 });

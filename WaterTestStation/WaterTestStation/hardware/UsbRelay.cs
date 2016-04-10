@@ -34,7 +34,16 @@ namespace WaterTestStation
 			SerialPort.DiscardInBuffer();
 			SerialPort.Write(command + "\r");
 			System.Threading.Thread.Sleep(10);
-			string v = SerialPort.ReadExisting();
+			String v = null;
+			try
+			{
+				v = SerialPort.ReadExisting();
+			}
+// ReSharper disable EmptyGeneralCatchClause
+			catch
+// ReSharper restore EmptyGeneralCatchClause
+			{
+			}
 			return v;
 		}
 
