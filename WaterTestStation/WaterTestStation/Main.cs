@@ -12,8 +12,8 @@ namespace WaterTestStation
 	public partial class Main : Form
 	{
 		// for development & debugging purposes
-		public static bool HasMultimeter = true;
-		public static bool HasRelay = true;
+		public static bool HasMultimeter = false;
+		public static bool HasRelay = false;
 
 		public const int NStations = 4;
 		//----- the hardware components ---------------------------------------------------------
@@ -28,7 +28,7 @@ namespace WaterTestStation
 		// the 4 multiplexers for switching the multiplexer to the right channel
 		public static readonly RelayMux[] mux = new RelayMux[4];
 
-		readonly TestStation[] stations = new TestStation[6];
+		readonly TestStation[] stations = new TestStation[NStations];
 
 		public static Multimeter Multimeter;
 
@@ -364,6 +364,20 @@ namespace WaterTestStation
 		{
 			var f = new ViewResultsForm();
 			f.Show();
+		}
+
+		private void Main_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			foreach (var station in stations)
+			{
+				station.StopExecution();	
+			}
+			if (HasMultimeter)
+				Multimeter.CloseSession();
+			MeterRequest.AbortThread();
+			usbRelay.Close();
+
+
 		}
 	}
 }

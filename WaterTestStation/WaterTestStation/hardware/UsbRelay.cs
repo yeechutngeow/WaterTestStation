@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 
-namespace WaterTestStation
+namespace WaterTestStation.hardware
 {
 	public class UsbRelay
 	{
-		private static readonly SerialPort SerialPort = new SerialPort();
-		private static Int32 bitmap = 0;
+		private readonly SerialPort SerialPort = new SerialPort();
+		private static Int32 bitmap;
 
 		public UsbRelay(String comPort)
 		{
@@ -25,6 +26,13 @@ namespace WaterTestStation
 				SerialPort.PortName = "COM" + portNumber;
 				SerialPort.Open();
 			}
+		}
+
+		public void Close()
+		{
+			if (Main.HasRelay)
+				if (SerialPort.IsOpen)
+					SerialPort.Close();
 		}
 
 		private String SendCommand(String command)
@@ -49,31 +57,24 @@ namespace WaterTestStation
 
 		public void OnChannel(int channelNumber)
 		{
-			SetChannels(new int[] {channelNumber}, new int[] {});
+			SetChannels(new[] {channelNumber}, new int[] {});
 		}
 
 		public void OffChannel(int channelNumber)
 		{
-			SetChannels(new int[] { }, new int[] { channelNumber });
+			SetChannels(new int[] { }, new[] { channelNumber });
 		}
 		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 		public void SetChannels(IEnumerable<int> onList, IEnumerable<int> offList)
 		{
-			Int32 onMask = 0;
-			foreach (var channel in onList)
-			{
-				onMask = onMask | (1 << channel);
-			}
-			Int32 offMask = 0;
-			foreach (var channel in offList)
-			{
-				offMask = offMask | (1 << channel);
-			}
+			Int32 onMask = onList.Aggregate(0, (current, channel) => current | (1 << channel));
+			Int32 offMask = offList.Aggregate(0, (current, channel) => current | (1 << channel));
 			bitmap = bitmap | onMask;
 			bitmap = bitmap & ~offMask;
 
 			String command = "relay writeall " + bitmap.ToString("X8").ToLower();
 			SendCommand(command);
 		}
+
 	}
 }

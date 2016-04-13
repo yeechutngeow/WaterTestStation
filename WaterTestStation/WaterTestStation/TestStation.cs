@@ -64,23 +64,15 @@ namespace WaterTestStation
 			this.btnStop = bStop;
 		}
 
-		private string formatNumber(double n, string unit)
-		{
-			if (Math.Abs(n) < 0.001)
-				return (n * 1000000).ToString("0.00000 ") + "u" + unit;
-			if (Math.Abs(n) < 1)
-				return (n*1000).ToString("0.00000 ") + "m" + unit;
-			return n.ToString("0.00000 ") + unit;
-		}
 
 		// This method is called by Multimeter class to log and display the readings obtained
 		public void LogMeterReadings(TestProgramStep testStep, int pCycle, int pCycleStartTime, int pStepTime, 
 				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, bool logFlag)
 		{
-			ThreadSafeSetLabel(lblARefVolt, formatNumber(ARefVoltage, "V"));
-			ThreadSafeSetLabel(lblBRefVolt, formatNumber(BRefVoltage, "V"));
-			ThreadSafeSetLabel(lblABVolt, formatNumber(ABVoltage,"V"));
-			ThreadSafeSetLabel(lblABAmp, formatNumber(ABCurrent,"A"));
+			ThreadSafeSetLabel(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
+			ThreadSafeSetLabel(lblBRefVolt, Util.formatNumber(BRefVoltage, "V"));
+			ThreadSafeSetLabel(lblABVolt, Util.formatNumber(ABVoltage, "V"));
+			ThreadSafeSetLabel(lblABAmp, Util.formatNumber(ABCurrent, "A"));
 
 			// logs to database if this is not an adhoc reading
 			if (logFlag)
@@ -180,9 +172,12 @@ namespace WaterTestStation
 
 		public void StopExecution()
 		{
-			executionThread.Abort();
-			ThreadSafeSetText(txtStatus, "Execution aborted");
-			FinalizeExecution();
+			if (executionThread != null && executionThread.IsAlive)
+			{
+				executionThread.Abort();
+				ThreadSafeSetText(txtStatus, "Execution aborted");
+				FinalizeExecution();
+			}
 		}
 
 		private void FinalizeExecution()
@@ -192,6 +187,9 @@ namespace WaterTestStation
 
 			TestRecord testRecord = testRecordDao.FindById(testRecordId);
 			testRecord.TestEnd = DateTime.Now;
+			testRecord.Sample = txtSample.Text;
+			testRecord.Description = txtTestDescription.Text;
+			testRecord.VesselId = txtVesselId.Text;
 			testRecordDao.saveOrUpdate(testRecord);
 		}
 
@@ -240,7 +238,7 @@ namespace WaterTestStation
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
-			SwitchTestType(testStep.GetTestType());
+			//SwitchTestType(testStep.GetTestType());
 			switch (testStep.GetTestType())
 			{
 				case TestType.OpenCircuit:

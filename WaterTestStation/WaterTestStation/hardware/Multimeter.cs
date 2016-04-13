@@ -30,6 +30,12 @@ namespace WaterTestStation.hardware
 			mbSession.Write(":function:voltage:DC");
 		}
 
+		public void CloseSession()
+		{
+			if (Main.HasMultimeter)
+				mbSession.Dispose();
+		}
+
 		readonly Random random = new Random();
 
 		private double ReadMeter()
@@ -40,7 +46,7 @@ namespace WaterTestStation.hardware
 				return (double) random.NextDouble();
 			}
 
-			Thread.Sleep(400);
+			Thread.Sleep(500);
 			mbSession.Write(":measure:voltage:DC?");
 			Thread.Sleep(10);
 			string result = mbSession.ReadString();
@@ -98,5 +104,6 @@ namespace WaterTestStation.hardware
 		{
 			usbRelay.SetChannels(new int [] {}, readingSelector );
 		}
+
 	}
 }

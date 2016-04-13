@@ -57,7 +57,7 @@
 			this.txtUsbRelayComPort.Name = "txtUsbRelayComPort";
 			this.txtUsbRelayComPort.Size = new System.Drawing.Size(34, 22);
 			this.txtUsbRelayComPort.TabIndex = 1;
-			this.txtUsbRelayComPort.Text = "5";
+			this.txtUsbRelayComPort.Text = "7";
 			// 
 			// menuStrip1
 			// 
@@ -170,6 +170,7 @@
 			this.Name = "Main";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Water Test Control Panel";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();

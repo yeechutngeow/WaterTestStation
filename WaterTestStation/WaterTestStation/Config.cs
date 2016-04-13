@@ -14,7 +14,8 @@ namespace WaterTestStation
 
 		public static double GetResistorValue(int stationNumber)
 		{
-			return double.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
+			double v = double.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
+			return v;
 		}
 	}
 }

@@ -20,6 +20,9 @@ namespace WaterTestStation
 		private readonly int _stepTime;
 		private readonly TestProgramStep TestStep;
 		private readonly bool logFlag;
+		private static Thread thread;
+
+		readonly static Stopwatch stopwatch = new Stopwatch();
 
 		public MeterRequest(TestStation testStation, TestProgramStep pTestStep, int pCycle, int pStepStartTime, int pStepTime, bool flag)
 		{
@@ -33,8 +36,13 @@ namespace WaterTestStation
 
 		public static void StartServiceQueue()
 		{
-			Thread thread = new Thread(_serviceQueue);
+			thread = new Thread(_serviceQueue);
 			thread.Start();
+		}
+
+		public static void AbortThread()
+		{
+			thread.Abort();
 		}
 
 		public static void _serviceQueue()
@@ -44,13 +52,9 @@ namespace WaterTestStation
 				MeterRequest m;
 				if (Main.MultimeterQueue.TryDequeue(out m))
 				{
-					if (!m.logFlag)
-					{ // adhoc reading - set the reading type
-						TestType testType = (TestType) Enum.Parse(typeof(TestType), m.TestStep.TestType);
-						m.TestStation.SwitchTestType(testType);
-					}
+					TestType testType = (TestType) Enum.Parse(typeof(TestType), m.TestStep.TestType);
+					m.TestStation.SwitchTestType(testType);
 
-					Stopwatch stopwatch = new Stopwatch();
 					stopwatch.Start();
 					Debug.WriteLine("Begin meter readings:" + DateTime.Now);
 					SelectStation(Main.mux, m.TestStation.StationNumber);

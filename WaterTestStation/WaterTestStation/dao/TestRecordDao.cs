@@ -33,6 +33,17 @@ namespace WaterTestStation.dao
 			return r;
 		}
 
+		public void saveOrUpdate(TestRecord testRecord)
+		{
+			using (ISession session = SessionFactory.OpenSession)
+			{
+				//session.Evict(testRecord);
+				session.SaveOrUpdate(testRecord);
+				session.Flush();
+			}
+		}
+
+
 		public TestRecord FindById(int id)
 		{
 			using (ISession session = SessionFactory.OpenSession)
@@ -70,14 +81,6 @@ namespace WaterTestStation.dao
 			using (ISession session = SessionFactory.OpenSession)
 			{
 				session.SaveOrUpdate(testData);
-			}
-		}
-
-		public void saveOrUpdate(TestRecord testRecord)
-		{
-			using (ISession session = SessionFactory.OpenSession)
-			{
-				session.SaveOrUpdate(testRecord);
 			}
 		}
 
