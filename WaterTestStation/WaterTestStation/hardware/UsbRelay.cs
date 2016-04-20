@@ -10,7 +10,7 @@ namespace WaterTestStation.hardware
 		private readonly SerialPort SerialPort = new SerialPort();
 		private static Int32 bitmap;
 
-		public UsbRelay(String comPort)
+		public UsbRelay(int comPort)
 		{
 			SerialPort.PortName = "COM" + comPort;
 			SerialPort.BaudRate = 9600;
@@ -19,7 +19,7 @@ namespace WaterTestStation.hardware
 
 		public void OpenComPort(int portNumber)
 		{
-			if (!Main.HasRelay) return;
+			if (Config.HasRelay) return;
 
 			if (!SerialPort.IsOpen)
 			{
@@ -30,14 +30,14 @@ namespace WaterTestStation.hardware
 
 		public void Close()
 		{
-			if (Main.HasRelay)
+			if (Config.HasRelay)
 				if (SerialPort.IsOpen)
 					SerialPort.Close();
 		}
 
 		private String SendCommand(String command)
 		{
-			if (!Main.HasRelay) return "";
+			if (Config.HasRelay) return "";
 
 			SerialPort.DiscardInBuffer();
 			SerialPort.Write(command + "\r");

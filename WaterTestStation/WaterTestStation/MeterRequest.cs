@@ -52,7 +52,9 @@ namespace WaterTestStation
 				MeterRequest m;
 				if (Main.MultimeterQueue.TryDequeue(out m))
 				{
-					TestType testType = (TestType) Enum.Parse(typeof(TestType), m.TestStep.TestType);
+					Main.Multimeter.OpenSession();
+
+					TestType testType = (TestType)Enum.Parse(typeof(TestType), m.TestStep.TestType);
 					m.TestStation.SwitchTestType(testType);
 
 					stopwatch.Start();

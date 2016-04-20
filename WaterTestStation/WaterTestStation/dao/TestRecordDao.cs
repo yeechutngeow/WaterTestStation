@@ -9,13 +9,14 @@ namespace WaterTestStation.dao
 {
 	class TestRecordDao
 	{
-		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber)
+		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber, string leadTime)
 		{
 			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 
 			TestRecord r = new TestRecord
 				{
 					Cycles = testProgram.Cycles,
+					LeadTime = Util.ParseInt(leadTime),
 					Description = description,
 					VesselId = vesselId,
 					Sample = sample,

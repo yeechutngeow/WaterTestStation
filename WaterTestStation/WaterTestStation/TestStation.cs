@@ -23,6 +23,7 @@ namespace WaterTestStation
 		private TextBox txtTestDescription;
 		private ComboBox cboTestProgram;
 		private TextBox txtCycles;
+		private TextBox txtLeadTime;
 		private TextBox txtStatus;
 		private Label lblARefVolt;
 		private Label lblBRefVolt;
@@ -47,12 +48,13 @@ namespace WaterTestStation
 			this.chargeDischargeSelect = chargeDischargeSelect;
 		}
 
-		public void SetFormControls(TextBox vesselId, TextBox tSample, TextBox tTestDescription, ComboBox cboTestProg, TextBox tCycles,
+		public void SetFormControls(TextBox vesselId, TextBox tSample, TextBox tTestDescription, ComboBox cboTestProg, TextBox tCycles, TextBox tLeadTime,
 			TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt, Button bStart, Button bStop)
 		{
 			this.cboTestProgram = cboTestProg;
 			this.txtTestDescription = tTestDescription;
 			this.txtCycles = tCycles;
+			this.txtLeadTime = tLeadTime;
 			this.txtVesselId = vesselId;
 			this.txtSample = tSample;
 			this.txtStatus = tStatus;
@@ -160,7 +162,7 @@ namespace WaterTestStation
 			int testProgramId = (int) ThreadSafeReadCombo(cboTestProgram);
 
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(testProgramId, ThreadSafeReadText(txtSample),
-				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber);
+				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime));
 
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
@@ -204,14 +206,14 @@ namespace WaterTestStation
 			int stepStartTime = 0;
 			TestProgramStep preTest = new TestProgramStep
 			{
-				Duration = testProgram.PreTestWait,
+				Duration = Util.ParseInt(ThreadSafeReadText(txtLeadTime)),
 				TestProgramId = testProgramId,
 				TestType = TestType.OpenCircuit.ToString()
 			};
-			currentCycle = "PreTest";
+			currentCycle = "LeadTime";
 			curCycle = 0;
 			runstep(stepStartTime, preTest);
-			stepStartTime += testProgram.PreTestWait;
+			stepStartTime += Util.ParseInt(ThreadSafeReadText(txtLeadTime));
 
 			int cycles;
 			if (!int.TryParse(txtCycles.Text, out cycles)) cycles = 1000;
@@ -272,15 +274,16 @@ namespace WaterTestStation
 			{
 				_TakeReadings(time, stepStartTime, testStep);
 				time += 300; // add 5 mins 
+				if (time == testStep.Duration) time -= 2; // last reading - bring forward 2 seconds
 			}
 		}
 		
 		private void _TakeReadings(int targetTime, int stepStartTime, TestProgramStep testStep)
 		{
-
 			Debug.WriteLine("TakeReading: TargetTime=" + targetTime + " stepStartTime=" + stepStartTime + " Stopwatch=" + stopwatch.ElapsedMilliseconds/1000);
-			// allows for a slack of 200 ms
-			if (stopwatch.ElapsedMilliseconds > (stepStartTime + targetTime + 200) * 1000)
+			
+			// allows for a slack of 500 ms
+			if (stopwatch.ElapsedMilliseconds > (stepStartTime + targetTime + .5) * 1000)
 				return;
 
 			SleepTill(targetTime, stepStartTime);

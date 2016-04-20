@@ -5,17 +5,34 @@ using System.Text;
 
 namespace WaterTestStation
 {
-	class Config
+	internal class Config
 	{
-		public static String RelayComPort()
-		{
-			return System.Configuration.ConfigurationManager.AppSettings["UsbComPort"];
-		}
-
 		public static double GetResistorValue(int stationNumber)
 		{
 			double v = double.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
 			return v;
 		}
+
+
+		public static bool HasRelay
+		{
+			get { return Properties.Settings.Default.HasRelay; }
+		}
+
+		public static bool HasMultimeter
+		{
+			get { return Properties.Settings.Default.HasMultimeter; }
+		}
+
+		public static int RelayCom1
+		{
+			get { return Properties.Settings.Default.RelayCom1; }
+		}
+
+		public static int RelayCom2
+		{
+			get { return Properties.Settings.Default.RelayCom2; }
+		}
+
 	}
 }

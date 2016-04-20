@@ -20,19 +20,22 @@ namespace WaterTestStation.hardware
 
 		public void OpenSession()
 		{
+
 			const string strVISARsrc = "USB0::0x1AB1::0x0C94::DM3O161550090::INSTR";
 
-			if (!Main.HasMultimeter)
+			if (Config.HasMultimeter)
 				return;
 
-			mbSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open(strVISARsrc);
-
-			mbSession.Write(":function:voltage:DC");
+			if (mbSession == null)
+			{
+				mbSession = (MessageBasedSession) ResourceManager.GetLocalManager().Open(strVISARsrc);
+				mbSession.Write(":function:voltage:DC");
+			}
 		}
 
 		public void CloseSession()
 		{
-			if (Main.HasMultimeter)
+			if (Config.HasMultimeter)
 				mbSession.Dispose();
 		}
 
@@ -40,13 +43,13 @@ namespace WaterTestStation.hardware
 
 		private double ReadMeter()
 		{
-			if (!Main.HasMultimeter)
+			if (Config.HasMultimeter)
 			{
 				Thread.Sleep(410); 
 				return (double) random.NextDouble();
 			}
 
-			Thread.Sleep(500);
+			Thread.Sleep(400);
 			mbSession.Write(":measure:voltage:DC?");
 			Thread.Sleep(10);
 			string result = mbSession.ReadString();

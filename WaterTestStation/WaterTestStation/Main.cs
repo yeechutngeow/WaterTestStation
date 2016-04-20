@@ -12,13 +12,12 @@ namespace WaterTestStation
 	public partial class Main : Form
 	{
 		// for development & debugging purposes
-		public static bool HasMultimeter = false;
-		public static bool HasRelay = false;
 
-		public const int NStations = 4;
+		public const int NStations = 8;
 		//----- the hardware components ---------------------------------------------------------
 
 		UsbRelay usbRelay;
+		UsbRelay usbRelay2;
 		// switch between charge/discharge, one for each station
 		private readonly RelayMux[] switches = new RelayMux[NStations];
 		//
@@ -44,14 +43,14 @@ namespace WaterTestStation
 
 			cboTestType.DataSource = Enum.GetValues(typeof(TestType));
 
-			Multimeter.OpenSession();
 			MeterRequest.StartServiceQueue();
 		}
 
 		private void btnStart_Click(object sender, EventArgs e)
 		{
-			int portNumber = int.Parse(txtUsbRelayComPort.Text);
-			usbRelay.OpenComPort(portNumber);
+			usbRelay.OpenComPort(Config.RelayCom1);
+			usbRelay2.OpenComPort(Config.RelayCom2);
+
 			Button btn = (Button)sender;
 			int index = int.Parse(btn.Name.Substring(8));
 			stations[index].ExecuteProgram();
@@ -75,8 +74,9 @@ namespace WaterTestStation
 			if (!stations[stationNumber].btnStart.Enabled)
 				// disallow taking adhoc readings when a program is running
 				return;
-			int portNumber = int.Parse(txtUsbRelayComPort.Text);
-			usbRelay.OpenComPort(portNumber);
+			usbRelay.OpenComPort(Config.RelayCom1);
+			usbRelay2.OpenComPort(Config.RelayCom2);
+
 			string testType = cboTestType.Text;
 			TestType eTestType = (TestType) Enum.Parse(typeof (TestType), testType);
 
@@ -87,7 +87,9 @@ namespace WaterTestStation
 
 		private void DrawForm()
 		{
-			const int panelWidth = 400;
+			const int stationsPerRow = 4;
+
+			const int panelWidth = 360;
 			const int panelHeight = 320;
 			const int yOffSet = 60;
 			const int xOffSet = 15;
@@ -102,7 +104,7 @@ namespace WaterTestStation
 			const int textWidth = panelWidth - col2 -5 ; 
 
 			this.Height = panelHeight*2 + yOffSet + 50;
-			this.Width = panelWidth*3 + xOffSet + 30;
+			this.Width = panelWidth*stationsPerRow + xOffSet + 30;
 
 			IList<TestProgram> testPrograms = new TestProgramDao().GetProgramsList();
 
@@ -113,7 +115,7 @@ namespace WaterTestStation
 					Name = "panel" + (i), 
 					Size = new Size(panelWidth, panelHeight),
 					BorderStyle = BorderStyle.FixedSingle,
-					Location = new Point(panelWidth * (i % 3) + xOffSet, panelHeight *(i / 3) + yOffSet)
+					Location = new Point(panelWidth * (i % stationsPerRow) + xOffSet, panelHeight * (i / stationsPerRow) + yOffSet)
 				};
 				this.Controls.Add(panel);
 
@@ -220,6 +222,20 @@ namespace WaterTestStation
 				};
 				panel.Controls.Add(txtCycles);
 
+				label = new Label
+				{
+					Text = "Lead Time:",
+					Location = new Point(col3, y),
+					Width = labelWidth
+				};
+				TextBox txtLeadTime = new TextBox
+				{
+					Width = 50,
+					Location = new Point(col4, y),
+					Text = "20"
+				};
+
+
 				y += yLineHeight;
 
 				//------------------------------------------------------------
@@ -323,14 +339,15 @@ namespace WaterTestStation
 
 				//-----------------------------------------------------------------
 
-				stations[i].SetFormControls(txtVesselId, txtSample, txtTestDescription, cboTestProgram, txtCycles, txtStatus,
+				stations[i].SetFormControls(txtVesselId, txtSample, txtTestDescription, cboTestProgram, txtCycles, txtLeadTime, txtStatus,
 					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, btnStart, btnStop);
 			}
 		}
 
 		private void InitializeHardware()
 		{
-			usbRelay = new UsbRelay(txtUsbRelayComPort.Text);
+			usbRelay = new UsbRelay(Config.RelayCom1);
+			usbRelay2 = new UsbRelay(Config.RelayCom2);
 
 			switches[0] = new RelayMux(usbRelay, new[] { 0, 1 });
 			toggles[0] = new MultiPoleSwitch(usbRelay, new[] { 2, 3 });
@@ -340,17 +357,21 @@ namespace WaterTestStation
 			toggles[2] = new MultiPoleSwitch(usbRelay, new[] { 10, 11 });
 			switches[3] = new RelayMux(usbRelay, new[] { 12, 13 });
 			toggles[3] = new MultiPoleSwitch(usbRelay, new[] { 14, 15 });
-//			switches[4] = new RelayMux(usbRelay, new[] { 18, 19 });
-//			toggles[4] = new MultiPoleSwitch(usbRelay, new[] { 16, 17 });
-//			switches[5] = new RelayMux(usbRelay, new[] { 22, 23 });
-//			toggles[5] = new MultiPoleSwitch(usbRelay, new[] { 20, 21 });
+			switches[4] = new RelayMux(usbRelay, new[] { 16, 17 });
+			toggles[4] = new MultiPoleSwitch(usbRelay, new[] { 18, 19 });
+			switches[5] = new RelayMux(usbRelay, new[] { 20, 21 });
+			toggles[5] = new MultiPoleSwitch(usbRelay, new[] { 22, 23 });
+			switches[6] = new RelayMux(usbRelay, new[] { 24, 25 });
+			toggles[6] = new MultiPoleSwitch(usbRelay, new[] { 26, 27 });
+			switches[7] = new RelayMux(usbRelay, new[] { 28, 29 });
+			toggles[7] = new MultiPoleSwitch(usbRelay, new[] { 30, 31 });
 
-			mux[0] = new RelayMux(usbRelay, new[] {20, 21, 22});
-			mux[1] = new RelayMux(usbRelay, new[] {23, 24, 25 });
-			mux[2] = new RelayMux(usbRelay, new[] {26, 27, 28 });
-			mux[3] = new RelayMux(usbRelay, new[] {29, 30, 31});
+			mux[0] = new RelayMux(usbRelay2, new[] {0, 1, 2, 3, 4, 5, 6});
+			mux[1] = new RelayMux(usbRelay2, new[] {7, 8, 9, 10, 11, 12, 13 });
+			mux[2] = new RelayMux(usbRelay2, new[] {14, 15, 16, 17, 18, 19, 20 });
+			mux[3] = new RelayMux(usbRelay2, new[] {21, 22, 23, 24, 25, 26, 27});
 
-			Multimeter = new Multimeter(usbRelay, new[] {16,17,18,19});
+			Multimeter = new Multimeter(usbRelay2, new[] {28, 29, 30, 31});
 
 			for (int i = 0; i < NStations; i++ )
 				stations[i] = new TestStation(i, toggles[i], switches[i]);
@@ -372,12 +393,19 @@ namespace WaterTestStation
 			{
 				station.StopExecution();	
 			}
-			if (HasMultimeter)
+			if (Config.HasMultimeter)
 				Multimeter.CloseSession();
 			MeterRequest.AbortThread();
 			usbRelay.Close();
+			usbRelay2.Close();
 
 
+		}
+
+		private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PropertiesForm frm = new PropertiesForm();
+			frm.Show();
 		}
 	}
 }

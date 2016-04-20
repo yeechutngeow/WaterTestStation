@@ -19,7 +19,17 @@ namespace WaterTestStation
 			return args.Count(t => t);
 		}
 
+		public static int ParseInt(string s)
+		{
+			int v = 0;
+			try
+			{
+				v = int.Parse(s);
+			} catch
+			{}
 
+			return v;
+		}
 
 
 	}

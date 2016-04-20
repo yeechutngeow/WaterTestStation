@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -111,8 +111,13 @@
     <Compile Include="Config.cs" />
     <Compile Include="dao\TestProgramDao.cs" />
     <Compile Include="dao\TestRecordDao.cs" />
+    <Compile Include="PropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertiesForm.Designer.cs">
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="hardware\Multimeter.cs" />
-    <Compile Include="hardware\MultimeterOld.cs" />
     <Compile Include="hardware\MultiPoleSwitch.cs" />
     <Compile Include="hardware\RelayMux.cs" />
     <Compile Include="hardware\UsbRelay.cs" />
@@ -147,6 +152,9 @@
     <Compile Include="ViewResultsForm.Designer.cs">
       <DependentUpon>ViewResultsForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="PropertiesForm.resx">
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

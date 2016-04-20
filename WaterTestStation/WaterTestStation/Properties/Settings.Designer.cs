@@ -22,5 +22,53 @@ namespace WaterTestStation.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int RelayCom1 {
+            get {
+                return ((int)(this["RelayCom1"]));
+            }
+            set {
+                this["RelayCom1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int RelayCom2 {
+            get {
+                return ((int)(this["RelayCom2"]));
+            }
+            set {
+                this["RelayCom2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HasRelay {
+            get {
+                return ((bool)(this["HasRelay"]));
+            }
+            set {
+                this["HasRelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HasMultimeter {
+            get {
+                return ((bool)(this["HasMultimeter"]));
+            }
+            set {
+                this["HasMultimeter"] = value;
+            }
+        }
     }
 }
