@@ -19,7 +19,7 @@ namespace WaterTestStation.hardware
 
 		public void OpenComPort(int portNumber)
 		{
-			if (Config.HasRelay) return;
+			if (!Config.HasRelay) return;
 
 			if (!SerialPort.IsOpen)
 			{
@@ -30,14 +30,13 @@ namespace WaterTestStation.hardware
 
 		public void Close()
 		{
-			if (Config.HasRelay)
-				if (SerialPort.IsOpen)
-					SerialPort.Close();
+			if (Config.HasRelay && SerialPort.IsOpen)
+				SerialPort.Close();
 		}
 
 		private String SendCommand(String command)
 		{
-			if (Config.HasRelay) return "";
+			if (!Config.HasRelay) return "";
 
 			SerialPort.DiscardInBuffer();
 			SerialPort.Write(command + "\r");

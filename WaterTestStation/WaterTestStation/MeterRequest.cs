@@ -72,23 +72,28 @@ namespace WaterTestStation
 					switch (m.TestStep.GetTestType())
 					{
 						case TestType.OpenCircuit:
+							// No ABCurrent
 							break;
 						case TestType.ForwardCharge:
-							break;
 						case TestType.ReverseCharge:
+							// No ABVoltage
 							break;
 						case TestType.Discharge:
+							// No ABVoltage
 							break;
 					}
 					Main.Multimeter.TurnOffMeter();
-					m.TestStation.LogMeterReadings(m.TestStep, m.cycle, m._stepStartTime, m._stepTime, ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, m.logFlag);
+					m.TestStation.LogMeterReadings(m.TestStep, m.cycle, m._stepStartTime, m._stepTime, 
+						ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, m.logFlag);
 				}
 				else
 				{
 					Thread.Sleep(20);
 				}
 			}
+// ReSharper disable FunctionNeverReturns
 		}
+// ReSharper restore FunctionNeverReturns
 
 		private static void _selectChannel(RelayMux mux, int channelNumber, ref List<int> onList, ref List<int> offList)
 		{

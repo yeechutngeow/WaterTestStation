@@ -23,7 +23,7 @@ namespace WaterTestStation.hardware
 
 			const string strVISARsrc = "USB0::0x1AB1::0x0C94::DM3O161550090::INSTR";
 
-			if (Config.HasMultimeter)
+			if (!Config.HasMultimeter)
 				return;
 
 			if (mbSession == null)
@@ -35,28 +35,46 @@ namespace WaterTestStation.hardware
 
 		public void CloseSession()
 		{
-			if (Config.HasMultimeter)
+			if (Config.HasMultimeter && mbSession != null)
 				mbSession.Dispose();
 		}
 
 		readonly Random random = new Random();
 
-		private double ReadMeter()
+		private double ReadVoltage()
 		{
-			if (Config.HasMultimeter)
+			return _ReadMeter(":measure:voltage:DC?", 400);
+		}
+
+		private double ReadCapacitance()
+		{
+			return _ReadMeter(":measure:capacitance?", 32000);
+		}
+
+		private double _ReadMeter(string command, int delay)
+		{
+			if (!Config.HasMultimeter)
 			{
-				Thread.Sleep(410); 
-				return (double) random.NextDouble();
+				Thread.Sleep(delay+ 20);
+				return random.NextDouble();
 			}
 
-			Thread.Sleep(400);
-			mbSession.Write(":measure:voltage:DC?");
-			Thread.Sleep(10);
-			string result = mbSession.ReadString();
+			Thread.Sleep(delay);
+			mbSession.Write(command);
+			Thread.Sleep(20);
+			string result;
+			try
+			{
+				result = mbSession.ReadString();
+			}
+			catch
+			{
+				result = "0";
+			}
 
 			double value;
 			double.TryParse(result, out value);
-			return value; 
+			return value;
 		}
 
 		/*
@@ -67,7 +85,7 @@ namespace WaterTestStation.hardware
 			usbRelay.SetChannels(
 				new[] { readingSelector[0] },
 				new[] { readingSelector[1], readingSelector[2], readingSelector[3] });
-			return ReadMeter();
+			return ReadVoltage();
 		}
 
 		/* 
@@ -78,9 +96,19 @@ namespace WaterTestStation.hardware
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[3]}, 
 				new[] {readingSelector[1],readingSelector[2]});
-			return ReadMeter() / Config.GetResistorValue(stationNumber);
+			return ReadVoltage() / Config.GetResistorValue(stationNumber);
 		}
 
+		/* 
+		 * reads charge & discharge current from A to B
+		 */
+		public double ReadABCapacitance(int stationNumber)
+		{
+			usbRelay.SetChannels(
+				new[] { readingSelector[0], readingSelector[3] },
+				new[] { readingSelector[1], readingSelector[2] });
+			return ReadCapacitance() / Config.GetResistorValue(stationNumber);
+		}
 		/*
 		 * Reads ARef voltage
 		 */
@@ -89,7 +117,7 @@ namespace WaterTestStation.hardware
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[2]}, 
 				new[] {readingSelector[1], readingSelector[3]});
-			return ReadMeter();
+			return ReadVoltage();
 		}
 
 		/*
@@ -100,7 +128,7 @@ namespace WaterTestStation.hardware
 			usbRelay.SetChannels(
 				new[] {readingSelector[0], readingSelector[1]}, 
 				new[] {readingSelector[2], readingSelector[3]});
-			return -1 * ReadMeter();
+			return -1 * ReadVoltage();
 		}
 
 		public void TurnOffMeter()

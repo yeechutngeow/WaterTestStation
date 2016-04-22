@@ -89,12 +89,12 @@ namespace WaterTestStation
 		{
 			const int stationsPerRow = 4;
 
-			const int panelWidth = 360;
-			const int panelHeight = 320;
-			const int yOffSet = 60;
+			const int panelWidth = 350;
+			const int panelHeight = 310;
+			const int yOffSet = 50;
 			const int xOffSet = 15;
 
-			const int yLineHeight = 24;
+			const int yLineHeight = 23;
 			const int labelWidth = 90;
 			const int col1 = 5;
 			const int col2 = col1 + labelWidth;
@@ -228,6 +228,8 @@ namespace WaterTestStation
 					Location = new Point(col3, y),
 					Width = labelWidth
 				};
+				panel.Controls.Add(label);
+
 				TextBox txtLeadTime = new TextBox
 				{
 					Width = 50,
@@ -235,6 +237,7 @@ namespace WaterTestStation
 					Text = "20"
 				};
 
+				panel.Controls.Add(txtLeadTime);
 
 				y += yLineHeight;
 
