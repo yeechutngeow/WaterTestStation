@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
@@ -259,7 +260,7 @@ namespace WaterTestStation
 			SleepTill(testStep.Duration, stepStartTime);
 		}
 
-		private void _ExecuteStep(int stepStartTime, TestProgramStep testStep, int[] ReadingTimes)
+		private void _ExecuteStep(int stepStartTime, TestProgramStep testStep, IEnumerable<int> ReadingTimes)
 		{
 			foreach (var t in ReadingTimes)
 			{

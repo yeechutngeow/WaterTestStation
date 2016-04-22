@@ -62,26 +62,38 @@ namespace WaterTestStation
 					SelectStation(Main.mux, m.TestStation.StationNumber);
 
 					// measures everything - will serves to cross check the circuit is correct initially.
-					double ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-					double BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
-					double ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
-					double ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
-					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
-					stopwatch.Stop();
+
+					double ARefVoltage = 0;
+					double BRefVoltage = 0;
+					double ABVoltage = 0;
+					double ABCurrent = 0;
 
 					switch (m.TestStep.GetTestType())
 					{
 						case TestType.OpenCircuit:
 							// No ABCurrent
+							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
+							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
+							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
 							break;
 						case TestType.ForwardCharge:
 						case TestType.ReverseCharge:
+							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
+							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
+							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
+							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
 							// No ABVoltage
 							break;
 						case TestType.Discharge:
 							// No ABVoltage
+							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
+							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
+							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
 							break;
 					}
+					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
+					stopwatch.Stop();
+
 					Main.Multimeter.TurnOffMeter();
 					m.TestStation.LogMeterReadings(m.TestStep, m.cycle, m._stepStartTime, m._stepTime, 
 						ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, m.logFlag);

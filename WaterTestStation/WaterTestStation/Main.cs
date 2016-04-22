@@ -224,7 +224,7 @@ namespace WaterTestStation
 
 				label = new Label
 				{
-					Text = "Lead Time:",
+					Text = "Lead Time(s):",
 					Location = new Point(col3, y),
 					Width = labelWidth
 				};
@@ -234,7 +234,7 @@ namespace WaterTestStation
 				{
 					Width = 50,
 					Location = new Point(col4, y),
-					Text = "20"
+					Text = "1200"
 				};
 
 				panel.Controls.Add(txtLeadTime);
