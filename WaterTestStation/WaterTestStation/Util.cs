@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace WaterTestStation
 {
@@ -18,6 +19,12 @@ namespace WaterTestStation
 			return n.ToString(4) + unit;
 		}
 
+		public static string formatTime(int seconds)
+		{
+			TimeSpan ts = TimeSpan.FromSeconds(seconds);
+			return ts.ToString(@"hh\:mm\:ss");
+		}
+
 		public static int CountTrue(params bool[] args)
 		{
 			return args.Count(t => t);
@@ -28,13 +35,25 @@ namespace WaterTestStation
 			int v = 0;
 			try
 			{
-				v = int.Parse(s);
+				v = int.Parse(Regex.Replace(s, "[^0-9.]", ""));
 			} catch
 			{}
 
 			return v;
 		}
 
+		public static double ParseDouble(string s)
+		{
+			double v = 0;
+			try
+			{
+				v = double.Parse(Regex.Replace(s, "[^0-9.]", ""));
+			}
+			catch
+			{
+			}
+			return v;
+		}
 
 	}
 }

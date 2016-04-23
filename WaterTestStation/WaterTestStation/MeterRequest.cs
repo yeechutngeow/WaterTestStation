@@ -68,26 +68,21 @@ namespace WaterTestStation
 					double ABVoltage = 0;
 					double ABCurrent = 0;
 
+					ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
+					BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
 					switch (m.TestStep.GetTestType())
 					{
 						case TestType.OpenCircuit:
 							// No ABCurrent
-							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
 							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
 							break;
 						case TestType.ForwardCharge:
 						case TestType.ReverseCharge:
-							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
 							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
 							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
-							// No ABVoltage
 							break;
 						case TestType.Discharge:
 							// No ABVoltage
-							ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-							BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
 							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
 							break;
 					}

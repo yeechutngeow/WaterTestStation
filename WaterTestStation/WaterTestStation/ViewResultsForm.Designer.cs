@@ -28,9 +28,9 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -43,15 +43,15 @@
 			this.chkShowABVoltage = new System.Windows.Forms.CheckBox();
 			this.chkShowARefVoltage = new System.Windows.Forms.CheckBox();
 			this.chkShowABCurrent = new System.Windows.Forms.CheckBox();
-			this.lbtnAddDataSet = new System.Windows.Forms.LinkLabel();
 			this.lbtnRefresh = new System.Windows.Forms.LinkLabel();
+			this.lbtnAddDataSet = new System.Windows.Forms.LinkLabel();
+			this.chkShowReverseCharge = new System.Windows.Forms.CheckBox();
+			this.chkShowForwardCharge = new System.Windows.Forms.CheckBox();
+			this.chkShowDischarge = new System.Windows.Forms.CheckBox();
+			this.chkShowOpenCircuit = new System.Windows.Forms.CheckBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.chkShowOpenCircuit = new System.Windows.Forms.CheckBox();
-			this.chkShowDischarge = new System.Windows.Forms.CheckBox();
-			this.chkShowForwardCharge = new System.Windows.Forms.CheckBox();
-			this.chkShowReverseCharge = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -98,7 +98,7 @@
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage1.Size = new System.Drawing.Size(974, 532);
 			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "tabPage1";
+			this.tabPage1.Text = "Data";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer1
@@ -234,17 +234,6 @@
 			this.chkShowABCurrent.Text = "AB Current";
 			this.chkShowABCurrent.UseVisualStyleBackColor = true;
 			// 
-			// lbtnAddDataSet
-			// 
-			this.lbtnAddDataSet.AutoSize = true;
-			this.lbtnAddDataSet.Location = new System.Drawing.Point(3, 250);
-			this.lbtnAddDataSet.Name = "lbtnAddDataSet";
-			this.lbtnAddDataSet.Size = new System.Drawing.Size(106, 17);
-			this.lbtnAddDataSet.TabIndex = 5;
-			this.lbtnAddDataSet.TabStop = true;
-			this.lbtnAddDataSet.Text = "Select Data Set";
-			this.lbtnAddDataSet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnAddDataSet_LinkClicked);
-			// 
 			// lbtnRefresh
 			// 
 			this.lbtnRefresh.AutoSize = true;
@@ -256,69 +245,16 @@
 			this.lbtnRefresh.Text = "Refresh";
 			this.lbtnRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefresh_LinkClicked);
 			// 
-			// tabPage2
+			// lbtnAddDataSet
 			// 
-			this.tabPage2.Controls.Add(this.chart1);
-			this.tabPage2.Location = new System.Drawing.Point(4, 25);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(974, 532);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "tabPage2";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// chart1
-			// 
-			chartArea2.Name = "ChartArea1";
-			this.chart1.ChartAreas.Add(chartArea2);
-			this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-			legend2.Name = "Legend1";
-			this.chart1.Legends.Add(legend2);
-			this.chart1.Location = new System.Drawing.Point(3, 3);
-			this.chart1.Name = "chart1";
-			series2.ChartArea = "ChartArea1";
-			series2.Legend = "Legend1";
-			series2.Name = "Series1";
-			this.chart1.Series.Add(series2);
-			this.chart1.Size = new System.Drawing.Size(968, 526);
-			this.chart1.TabIndex = 0;
-			this.chart1.Text = "chart1";
-			// 
-			// chkShowOpenCircuit
-			// 
-			this.chkShowOpenCircuit.AutoSize = true;
-			this.chkShowOpenCircuit.Checked = true;
-			this.chkShowOpenCircuit.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowOpenCircuit.Location = new System.Drawing.Point(3, 157);
-			this.chkShowOpenCircuit.Name = "chkShowOpenCircuit";
-			this.chkShowOpenCircuit.Size = new System.Drawing.Size(108, 18);
-			this.chkShowOpenCircuit.TabIndex = 7;
-			this.chkShowOpenCircuit.Text = "Open Circuit";
-			this.chkShowOpenCircuit.UseVisualStyleBackColor = true;
-			// 
-			// chkShowDischarge
-			// 
-			this.chkShowDischarge.AutoSize = true;
-			this.chkShowDischarge.Checked = true;
-			this.chkShowDischarge.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowDischarge.Location = new System.Drawing.Point(3, 181);
-			this.chkShowDischarge.Name = "chkShowDischarge";
-			this.chkShowDischarge.Size = new System.Drawing.Size(94, 18);
-			this.chkShowDischarge.TabIndex = 8;
-			this.chkShowDischarge.Text = "Discharge";
-			this.chkShowDischarge.UseVisualStyleBackColor = true;
-			// 
-			// chkShowForwardCharge
-			// 
-			this.chkShowForwardCharge.AutoSize = true;
-			this.chkShowForwardCharge.Checked = true;
-			this.chkShowForwardCharge.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowForwardCharge.Location = new System.Drawing.Point(3, 205);
-			this.chkShowForwardCharge.Name = "chkShowForwardCharge";
-			this.chkShowForwardCharge.Size = new System.Drawing.Size(131, 18);
-			this.chkShowForwardCharge.TabIndex = 9;
-			this.chkShowForwardCharge.Text = "Forward Charge";
-			this.chkShowForwardCharge.UseVisualStyleBackColor = true;
+			this.lbtnAddDataSet.AutoSize = true;
+			this.lbtnAddDataSet.Location = new System.Drawing.Point(3, 250);
+			this.lbtnAddDataSet.Name = "lbtnAddDataSet";
+			this.lbtnAddDataSet.Size = new System.Drawing.Size(106, 17);
+			this.lbtnAddDataSet.TabIndex = 5;
+			this.lbtnAddDataSet.TabStop = true;
+			this.lbtnAddDataSet.Text = "Select Data Set";
+			this.lbtnAddDataSet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnAddDataSet_LinkClicked);
 			// 
 			// chkShowReverseCharge
 			// 
@@ -332,6 +268,42 @@
 			this.chkShowReverseCharge.Text = "Reverse Charge";
 			this.chkShowReverseCharge.UseVisualStyleBackColor = true;
 			// 
+			// chkShowForwardCharge
+			// 
+			this.chkShowForwardCharge.AutoSize = true;
+			this.chkShowForwardCharge.Checked = true;
+			this.chkShowForwardCharge.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkShowForwardCharge.Location = new System.Drawing.Point(3, 205);
+			this.chkShowForwardCharge.Name = "chkShowForwardCharge";
+			this.chkShowForwardCharge.Size = new System.Drawing.Size(131, 18);
+			this.chkShowForwardCharge.TabIndex = 9;
+			this.chkShowForwardCharge.Text = "Forward Charge";
+			this.chkShowForwardCharge.UseVisualStyleBackColor = true;
+			// 
+			// chkShowDischarge
+			// 
+			this.chkShowDischarge.AutoSize = true;
+			this.chkShowDischarge.Checked = true;
+			this.chkShowDischarge.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkShowDischarge.Location = new System.Drawing.Point(3, 181);
+			this.chkShowDischarge.Name = "chkShowDischarge";
+			this.chkShowDischarge.Size = new System.Drawing.Size(94, 18);
+			this.chkShowDischarge.TabIndex = 8;
+			this.chkShowDischarge.Text = "Discharge";
+			this.chkShowDischarge.UseVisualStyleBackColor = true;
+			// 
+			// chkShowOpenCircuit
+			// 
+			this.chkShowOpenCircuit.AutoSize = true;
+			this.chkShowOpenCircuit.Checked = true;
+			this.chkShowOpenCircuit.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkShowOpenCircuit.Location = new System.Drawing.Point(3, 157);
+			this.chkShowOpenCircuit.Name = "chkShowOpenCircuit";
+			this.chkShowOpenCircuit.Size = new System.Drawing.Size(108, 18);
+			this.chkShowOpenCircuit.TabIndex = 7;
+			this.chkShowOpenCircuit.Text = "Open Circuit";
+			this.chkShowOpenCircuit.UseVisualStyleBackColor = true;
+			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
@@ -340,6 +312,34 @@
 			this.label2.Size = new System.Drawing.Size(110, 17);
 			this.label2.TabIndex = 11;
 			this.label2.Text = "Show Test Type";
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.chart1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 25);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(974, 532);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Chart";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// chart1
+			// 
+			chartArea1.Name = "ChartArea1";
+			this.chart1.ChartAreas.Add(chartArea1);
+			this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
+			legend1.Name = "Legend1";
+			this.chart1.Legends.Add(legend1);
+			this.chart1.Location = new System.Drawing.Point(3, 3);
+			this.chart1.Name = "chart1";
+			series1.ChartArea = "ChartArea1";
+			series1.Legend = "Legend1";
+			series1.Name = "Series1";
+			this.chart1.Series.Add(series1);
+			this.chart1.Size = new System.Drawing.Size(968, 526);
+			this.chart1.TabIndex = 0;
+			this.chart1.Text = "chart1";
 			// 
 			// ViewResultsForm
 			// 
