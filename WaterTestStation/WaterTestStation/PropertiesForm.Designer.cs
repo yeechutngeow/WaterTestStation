@@ -35,6 +35,8 @@
 			this.chkHasRelay = new System.Windows.Forms.CheckBox();
 			this.chkHasMultimeter = new System.Windows.Forms.CheckBox();
 			this.btnSave = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
+			this.txtMultimeterDelay = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -91,7 +93,7 @@
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(184, 202);
+			this.btnSave.Location = new System.Drawing.Point(165, 248);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 6;
@@ -99,11 +101,29 @@
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
-			// frmProperties
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(36, 198);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(149, 17);
+			this.label3.TabIndex = 7;
+			this.label3.Text = "Multimeter Delay (ms):";
+			// 
+			// txtMultimeterDelay
+			// 
+			this.txtMultimeterDelay.Location = new System.Drawing.Point(200, 193);
+			this.txtMultimeterDelay.Name = "txtMultimeterDelay";
+			this.txtMultimeterDelay.Size = new System.Drawing.Size(40, 22);
+			this.txtMultimeterDelay.TabIndex = 8;
+			// 
+			// PropertiesForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(377, 345);
+			this.ClientSize = new System.Drawing.Size(297, 306);
+			this.Controls.Add(this.txtMultimeterDelay);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.chkHasMultimeter);
 			this.Controls.Add(this.chkHasRelay);
@@ -127,5 +147,7 @@
 		private System.Windows.Forms.CheckBox chkHasRelay;
 		private System.Windows.Forms.CheckBox chkHasMultimeter;
 		private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox txtMultimeterDelay;
 	}
 }

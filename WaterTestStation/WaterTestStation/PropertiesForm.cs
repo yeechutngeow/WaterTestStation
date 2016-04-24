@@ -20,6 +20,8 @@ namespace WaterTestStation
 
 			chkHasMultimeter.Checked = Config.HasMultimeter;
 			chkHasRelay.Checked = Config.HasRelay;
+
+			txtMultimeterDelay.Text = Config.MultimeterDelay + "";
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -28,6 +30,8 @@ namespace WaterTestStation
 			Properties.Settings.Default.RelayCom2 = int.Parse(txtCom2.Text);
 			Properties.Settings.Default.HasRelay = chkHasRelay.Checked;
 			Properties.Settings.Default.HasMultimeter = chkHasMultimeter.Checked;
+
+			Properties.Settings.Default.MultimeterDelay = int.Parse(txtMultimeterDelay.Text);
 
 			Properties.Settings.Default.Save();
 			this.Close();

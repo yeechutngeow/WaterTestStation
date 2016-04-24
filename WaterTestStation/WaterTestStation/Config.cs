@@ -34,5 +34,9 @@ namespace WaterTestStation
 			get { return Properties.Settings.Default.RelayCom2; }
 		}
 
+		public static int MultimeterDelay
+		{
+			get { return Properties.Settings.Default.MultimeterDelay; }
+		}
 	}
 }

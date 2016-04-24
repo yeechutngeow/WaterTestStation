@@ -43,7 +43,7 @@ namespace WaterTestStation.hardware
 
 		private double ReadVoltage()
 		{
-			return _ReadMeter(":measure:voltage:DC?", 400);
+			return _ReadMeter(":measure:voltage:DC?", Config.MultimeterDelay);
 		}
 
 		private double ReadCapacitance()

@@ -60,6 +60,9 @@ namespace WaterTestStation
 		{
 			var f = new SelectDataForm();
 			f.ShowDialog();
+			if (f.selectedData.Count == 0)
+				return;
+
 			selectedDataSet.Clear();
 			foreach (int dataSetId in f.selectedData)
 			{
@@ -182,6 +185,10 @@ namespace WaterTestStation
 
 		private void RefreshData()
 		{
+			int scrollIndex = 0;
+			if (dgvDataGrid.Columns.Count != 0)
+				scrollIndex = dgvDataGrid.FirstDisplayedScrollingRowIndex;
+
 			_compileData();
 
 			dataTable.Columns[0].ColumnName = "Elapsed";
@@ -196,6 +203,11 @@ namespace WaterTestStation
 				dgvDataGrid.Columns[n].SortMode = DataGridViewColumnSortMode.NotSortable;
 				dgvDataGrid.Columns[n].Width = colWidth[n];
 			}
+
+			if (scrollIndex >= dgvDataGrid.RowCount && dgvDataGrid.RowCount > 0)
+				scrollIndex = dgvDataGrid.RowCount-1;
+			if (scrollIndex > 0)
+				dgvDataGrid.FirstDisplayedScrollingRowIndex = scrollIndex;
 
 			DrawChart();
 		}
@@ -233,6 +245,8 @@ namespace WaterTestStation
 					c.Points.AddXY(x, y);
 				}
 			}
+
+			chart1.ChartAreas[0].RecalculateAxesScale();
 		}
 
 	}
