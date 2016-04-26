@@ -90,6 +90,8 @@ namespace WaterTestStation
 					stopwatch.Stop();
 
 					Main.Multimeter.TurnOffMeter();
+					SelectStation(Main.mux, 0); // turn off the relays
+
 					m.TestStation.LogMeterReadings(m.TestStep, m.cycle, m._stepStartTime, m._stepTime, 
 						ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, m.logFlag);
 				}

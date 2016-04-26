@@ -10,7 +10,7 @@ using WaterTestStation.model;
 
 namespace WaterTestStation
 {
-	public class TestStation
+	public class TestStation : FormUtil
 	{
 		public readonly int StationNumber;
 		private readonly MultiPoleSwitch powerSupplySwitch;
@@ -85,78 +85,6 @@ namespace WaterTestStation
 			}
 		}
 
-		private delegate void SetLabelCallback(Label label, string text);
-
-		private void ThreadSafeSetLabel(Label label, string text)
-		{
-			// InvokeRequired required compares the thread ID of the
-			// calling thread to the thread ID of the creating thread.
-			// If these threads are different, it returns true.
-			if (label.InvokeRequired)
-			{
-				SetLabelCallback d = ThreadSafeSetLabel;
-				label.Invoke(d, new object[] {label, text });
-			}
-			else
-			{
-				label.Text = text;
-			}			
-		}
-
-		private delegate void SetTextCallback(TextBox txtBox, string text);
-
-		private void ThreadSafeSetText(TextBox txtBox, string text)
-		{
-			// InvokeRequired required compares the thread ID of the
-			// calling thread to the thread ID of the creating thread.
-			// If these threads are different, it returns true.
-			if (txtBox.InvokeRequired)
-			{
-				SetTextCallback d = ThreadSafeSetText;
-				txtBox.Invoke(d, new object[] { txtBox, text });
-			}
-			else
-			{
-				txtBox.Text = text;
-			}
-		}
-
-		private string ThreadSafeReadText(Control control)
-		{
-			string text = null;
-			if (control.InvokeRequired)
-			{
-				//ReadTextCallback d = ThreadSafeReadText;
-				control.Invoke((MethodInvoker)delegate
-				{
-					text = control.Text;
-				});
-			}
-			else 
-				text = control.Text;
-
-			return text;
-		}
-
-		//private delegate Object ReadComboboxCallback(ComboBox cbo);
-
-		private Object ThreadSafeReadCombo(ComboBox cbo)
-		{
-			Object value = null;
-			if (cbo.InvokeRequired)
-			{
-				//ReadComboboxCallback d = (ReadComboboxCallback) ThreadSafeReadCombo(cbo);
-				cbo.Invoke((MethodInvoker)delegate
-				{
-					value = cbo.SelectedValue;
-				});
-			}
-			else
-				value = cbo.SelectedValue;
-
-			return value;
-		}
-
 
 		public void ExecuteProgram()
 		{
@@ -178,6 +106,8 @@ namespace WaterTestStation
 			if (executionThread != null && executionThread.IsAlive)
 			{
 				executionThread.Abort();
+				TogglePositivePower();
+ 				SwitchTestType(TestType.OpenCircuit);
 				ThreadSafeSetText(txtStatus, "Execution aborted");
 				FinalizeExecution();
 			}
@@ -270,7 +200,7 @@ namespace WaterTestStation
 				_TakeReadings(t, stepStartTime, testStep);
 			}
 
-			int time = 300;
+			int time = 300;																																																																																																																										
 			while (time < testStep.Duration)
 			{
 				_TakeReadings(time, stepStartTime, testStep);

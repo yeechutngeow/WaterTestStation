@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
-
+using System.Windows.Forms;
 namespace WaterTestStation.hardware
 {
-	public class UsbRelay
+	public class UsbRelay : FormUtil
 	{
 		private readonly SerialPort SerialPort = new SerialPort();
-		private static Int32 bitmap;
+		private Int32 bitmap;
 
-		public UsbRelay(int comPort)
+		private readonly Label statusDisplay;
+
+		public UsbRelay(int comPort, Label statusDisplay)
 		{
 			SerialPort.PortName = "COM" + comPort;
 			SerialPort.BaudRate = 9600;
+			this.statusDisplay = statusDisplay;
 			//SerialPort.Open();
 		}
 
@@ -31,7 +34,14 @@ namespace WaterTestStation.hardware
 		public void Close()
 		{
 			if (Config.HasRelay && SerialPort.IsOpen)
+			{
+				bitmap = 0;
+				String command = "relay writeall " + bitmap.ToString("X8").ToLower();
+				SendCommand(command);
+				displayStatus();
+
 				SerialPort.Close();
+			}
 		}
 
 		private String SendCommand(String command)
@@ -40,15 +50,15 @@ namespace WaterTestStation.hardware
 
 			SerialPort.DiscardInBuffer();
 			SerialPort.Write(command + "\r");
-			System.Threading.Thread.Sleep(10);
+			System.Threading.Thread.Sleep(20);
 			String v = null;
 			try
 			{
 				v = SerialPort.ReadExisting();
 			}
-// ReSharper disable EmptyGeneralCatchClause
+				// ReSharper disable EmptyGeneralCatchClause
 			catch
-// ReSharper restore EmptyGeneralCatchClause
+				// ReSharper restore EmptyGeneralCatchClause
 			{
 			}
 			return v;
@@ -61,9 +71,9 @@ namespace WaterTestStation.hardware
 
 		public void OffChannel(int channelNumber)
 		{
-			SetChannels(new int[] { }, new[] { channelNumber });
+			SetChannels(new int[] {}, new[] {channelNumber});
 		}
-		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
 		public void SetChannels(IEnumerable<int> onList, IEnumerable<int> offList)
 		{
 			Int32 onMask = onList.Aggregate(0, (current, channel) => current | (1 << channel));
@@ -73,7 +83,22 @@ namespace WaterTestStation.hardware
 
 			String command = "relay writeall " + bitmap.ToString("X8").ToLower();
 			SendCommand(command);
+			displayStatus();
 		}
 
+		private void displayStatus()
+		{
+			String s = "";
+			for (int i = 0; i < 32; i++)
+			{
+				if (i % 4 == 0)
+					s += " ";
+				if ((bitmap & (1 << i)) > 0)
+					s += "1";
+				else
+					s += "0";
+			}
+			ThreadSafeSetLabel(statusDisplay, s);
+		}
 	}
 }

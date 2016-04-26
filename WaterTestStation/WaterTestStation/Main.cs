@@ -91,7 +91,7 @@ namespace WaterTestStation
 
 			const int panelWidth = 350;
 			const int panelHeight = 310;
-			const int yOffSet = 50;
+			const int yOffSet = 60;
 			const int xOffSet = 15;
 
 			const int yLineHeight = 23;
@@ -349,8 +349,8 @@ namespace WaterTestStation
 
 		private void InitializeHardware()
 		{
-			usbRelay = new UsbRelay(Config.RelayCom1);
-			usbRelay2 = new UsbRelay(Config.RelayCom2);
+			usbRelay = new UsbRelay(Config.RelayCom1, lblRelayStatus1);
+			usbRelay2 = new UsbRelay(Config.RelayCom2, lblRelayStatus2);
 
 			switches[0] = new RelayMux(usbRelay, new[] { 0, 1 });
 			toggles[0] = new MultiPoleSwitch(usbRelay, new[] { 2, 3 });

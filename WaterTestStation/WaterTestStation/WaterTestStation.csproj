@@ -105,6 +105,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="dao\TestProgramDao.cs" />
     <Compile Include="dao\TestRecordDao.cs" />
+    <Compile Include="FormUtil.cs" />
     <Compile Include="PropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
