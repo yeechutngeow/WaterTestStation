@@ -88,7 +88,7 @@ namespace WaterTestStation
 			int datasetNum = 0;
 			foreach (int testRecordId in selectedDataSet)
 			{
-				IList<TestData> dataSet = testRecordDao.GetTestData(testRecordId);
+				IList<TestData> dataSet = testRecordDao.GetTestData(testRecordId, chkIgnoreLeadTime.Checked);
 				TestRecord testRecord = testRecordDao.FindById(testRecordId);
 
 				SetColumnNames(datasetNum, nDataShown, testRecord);
@@ -117,7 +117,7 @@ namespace WaterTestStation
 						row = new string[nColumns];
 						row[0] = Util.formatTime(testData.ElapsedTime);
 						row[1] = testData.TestType;
-						row[3] = testData.StepTime.ToString();
+						row[2] = testData.StepTime.ToString();
 						matrix2.Add(row);
 					}
 
@@ -267,11 +267,44 @@ namespace WaterTestStation
 				};
 				chart1.Series.Add(c);
 
+				int lastStepTime = 0;
+				int curX = 0;
+				double integrateValue = 0;
 				foreach (string[] row in matrix2)
 				{
-					double x = Util.ParseInt(row[0]);
-					double y = Util.ParseDouble(row[i]);
-					c.Points.AddXY(x, y);
+					int curStepTime = Util.ParseInt(row[2]);
+					int interval;
+					bool lastInterval = false;
+					if (curStepTime < lastStepTime)
+					{
+						// switching to the next step
+						interval = 2;
+						lastInterval = true;
+					}
+					else
+						interval = curStepTime - lastStepTime;
+
+					curX += interval;
+
+					lastStepTime = curStepTime;
+					double y;
+
+					y = Util.ParseDoubleE(row[i]);
+					if (chkIntegrate.Checked)
+					{
+						if (y < 0) y = -y;
+						integrateValue += y*interval;
+						c.Points.AddXY(curX, integrateValue);
+						if (lastInterval)
+							integrateValue = 0;
+					}
+					else
+					{
+						if (chkInvertGraph.Checked)
+							y = -y;
+						c.Points.AddXY(curX, y);
+					}
+
 				}
 			}
 

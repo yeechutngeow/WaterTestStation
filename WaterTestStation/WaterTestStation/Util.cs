@@ -55,5 +55,17 @@ namespace WaterTestStation
 			return v;
 		}
 
+		public static double ParseDoubleE(string s)
+		{
+			double v = 0;
+			try
+			{
+				v = double.Parse(s);
+			}
+			catch
+			{
+			}
+			return v;
+		}
 	}
 }

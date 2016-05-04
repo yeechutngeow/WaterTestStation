@@ -85,11 +85,14 @@ namespace WaterTestStation.dao
 			}
 		}
 
-		internal IList<TestData> GetTestData(int testRecordId)
+		internal IList<TestData> GetTestData(int testRecordId, bool ignoreLeadTime)
 		{
 			using (ISession session = SessionFactory.OpenSession)
 			{
-				return session.CreateQuery("from TestData where TestRecordId = :testRecordId order by Id")
+				string sql = "from TestData where TestRecordId = :testRecordId ";
+				if (ignoreLeadTime) sql += " and cycle > 0 ";
+				sql += "order by Id ";
+				return session.CreateQuery(sql)
 				       .SetParameter("testRecordId", testRecordId)
 				       .List().Cast<TestData>().ToList();
 			}
