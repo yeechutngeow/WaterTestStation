@@ -42,6 +42,11 @@
 			this.lblRelayStatus2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.btnRefresh = new System.Windows.Forms.Button();
+			this.label6 = new System.Windows.Forms.Label();
+			this.cboTestProgram = new System.Windows.Forms.ComboBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.txtTestDataSet = new System.Windows.Forms.TextBox();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -53,7 +58,7 @@
             this.propertiesToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(1232, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(1567, 28);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -80,7 +85,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(12, 37);
+			this.label2.Location = new System.Drawing.Point(12, 43);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(109, 17);
 			this.label2.TabIndex = 3;
@@ -89,7 +94,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(137, 37);
+			this.label3.Location = new System.Drawing.Point(127, 43);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(56, 17);
 			this.label3.TabIndex = 4;
@@ -107,20 +112,20 @@
             "6",
             "7",
             "8"});
-			this.cboStationNumber.Location = new System.Drawing.Point(199, 35);
+			this.cboStationNumber.Location = new System.Drawing.Point(186, 39);
 			this.cboStationNumber.Name = "cboStationNumber";
-			this.cboStationNumber.Size = new System.Drawing.Size(45, 24);
+			this.cboStationNumber.Size = new System.Drawing.Size(35, 24);
 			this.cboStationNumber.TabIndex = 5;
 			this.cboStationNumber.Text = "1";
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(250, 37);
+			this.label4.Location = new System.Drawing.Point(239, 43);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(65, 17);
+			this.label4.Size = new System.Drawing.Size(37, 17);
 			this.label4.TabIndex = 6;
-			this.label4.Text = "Reading:";
+			this.label4.Text = "Step";
 			// 
 			// cboTestType
 			// 
@@ -132,14 +137,14 @@
             "4",
             "5",
             "6"});
-			this.cboTestType.Location = new System.Drawing.Point(321, 35);
+			this.cboTestType.Location = new System.Drawing.Point(281, 39);
 			this.cboTestType.Name = "cboTestType";
 			this.cboTestType.Size = new System.Drawing.Size(141, 24);
 			this.cboTestType.TabIndex = 7;
 			// 
 			// btnAdhocReading
 			// 
-			this.btnAdhocReading.Location = new System.Drawing.Point(468, 35);
+			this.btnAdhocReading.Location = new System.Drawing.Point(428, 38);
 			this.btnAdhocReading.Name = "btnAdhocReading";
 			this.btnAdhocReading.Size = new System.Drawing.Size(100, 26);
 			this.btnAdhocReading.TabIndex = 8;
@@ -150,48 +155,96 @@
 			// lblRelayStatus1
 			// 
 			this.lblRelayStatus1.AutoSize = true;
-			this.lblRelayStatus1.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus1.Location = new System.Drawing.Point(1061, 33);
+			this.lblRelayStatus1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblRelayStatus1.Location = new System.Drawing.Point(1384, 33);
 			this.lblRelayStatus1.Name = "lblRelayStatus1";
-			this.lblRelayStatus1.Size = new System.Drawing.Size(160, 17);
+			this.lblRelayStatus1.Size = new System.Drawing.Size(160, 18);
 			this.lblRelayStatus1.TabIndex = 9;
 			this.lblRelayStatus1.Text = "0000 0000 0000 0000";
 			// 
 			// lblRelayStatus2
 			// 
 			this.lblRelayStatus2.AutoSize = true;
-			this.lblRelayStatus2.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus2.Location = new System.Drawing.Point(1061, 50);
+			this.lblRelayStatus2.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblRelayStatus2.Location = new System.Drawing.Point(1384, 50);
 			this.lblRelayStatus2.Name = "lblRelayStatus2";
-			this.lblRelayStatus2.Size = new System.Drawing.Size(160, 17);
+			this.lblRelayStatus2.Size = new System.Drawing.Size(160, 18);
 			this.lblRelayStatus2.TabIndex = 10;
 			this.lblRelayStatus2.Text = "0000 0000 0000 0000";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(999, 33);
+			this.label1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(1322, 33);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(64, 17);
+			this.label1.Size = new System.Drawing.Size(64, 18);
 			this.label1.TabIndex = 11;
 			this.label1.Text = "Relay1:";
 			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(999, 50);
+			this.label5.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Location = new System.Drawing.Point(1322, 50);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(64, 17);
+			this.label5.Size = new System.Drawing.Size(64, 18);
 			this.label5.TabIndex = 12;
 			this.label5.Text = "Relay2:";
+			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Location = new System.Drawing.Point(942, 38);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(64, 26);
+			this.btnRefresh.TabIndex = 13;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.UseVisualStyleBackColor = true;
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(563, 43);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(98, 17);
+			this.label6.TabIndex = 14;
+			this.label6.Text = "Test Program:";
+			// 
+			// cboTestProgram
+			// 
+			this.cboTestProgram.FormattingEnabled = true;
+			this.cboTestProgram.Location = new System.Drawing.Point(667, 39);
+			this.cboTestProgram.Name = "cboTestProgram";
+			this.cboTestProgram.Size = new System.Drawing.Size(267, 24);
+			this.cboTestProgram.TabIndex = 15;
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(1026, 43);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(99, 17);
+			this.label7.TabIndex = 16;
+			this.label7.Text = "Test Data Set:";
+			// 
+			// txtTestDataSet
+			// 
+			this.txtTestDataSet.Location = new System.Drawing.Point(1131, 38);
+			this.txtTestDataSet.Name = "txtTestDataSet";
+			this.txtTestDataSet.Size = new System.Drawing.Size(100, 22);
+			this.txtTestDataSet.TabIndex = 17;
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1232, 446);
+			this.ClientSize = new System.Drawing.Size(1567, 446);
+			this.Controls.Add(this.txtTestDataSet);
+			this.Controls.Add(this.label7);
+			this.Controls.Add(this.cboTestProgram);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.btnRefresh);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.lblRelayStatus2);
@@ -233,6 +286,11 @@
 		private System.Windows.Forms.Label lblRelayStatus2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Button btnRefresh;
+		private System.Windows.Forms.Label label6;
+		public System.Windows.Forms.ComboBox cboTestProgram;
+		private System.Windows.Forms.Label label7;
+		public System.Windows.Forms.TextBox txtTestDataSet;
 	}
 }
 

@@ -21,8 +21,8 @@ namespace WaterTestStation
 
 		private Thread executionThread;
 
+		private Main frmMain;
 		private TextBox txtTestDescription;
-		private ComboBox cboTestProgram;
 		private TextBox txtCycles;
 		private TextBox txtLeadTime;
 		private TextBox txtStatus;
@@ -33,6 +33,8 @@ namespace WaterTestStation
 		private TextBox txtVesselId;
 		private TextBox txtSample;
 		public Button btnStart, btnStop;
+
+		public int testProgramId;
 
 		// Tracking progress for logging of test data
 		private int testRecordId; 
@@ -49,10 +51,10 @@ namespace WaterTestStation
 			this.chargeDischargeSelect = chargeDischargeSelect;
 		}
 
-		public void SetFormControls(TextBox vesselId, TextBox tSample, TextBox tTestDescription, ComboBox cboTestProg, TextBox tCycles, TextBox tLeadTime,
+		public void SetFormControls(Main fMain, TextBox vesselId, TextBox tSample, TextBox tTestDescription, TextBox tCycles, TextBox tLeadTime,
 			TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt, Button bStart, Button bStop)
 		{
-			this.cboTestProgram = cboTestProg;
+			this.frmMain = fMain;
 			this.txtTestDescription = tTestDescription;
 			this.txtCycles = tCycles;
 			this.txtLeadTime = tLeadTime;
@@ -88,10 +90,11 @@ namespace WaterTestStation
 
 		public void ExecuteProgram()
 		{
-			int testProgramId = (int) ThreadSafeReadCombo(cboTestProgram);
+			testProgramId = (int) ThreadSafeReadCombo(frmMain.cboTestProgram);
 
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(testProgramId, ThreadSafeReadText(txtSample),
-				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime));
+				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime),
+				frmMain.txtTestDataSet.Text);
 
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
@@ -107,7 +110,7 @@ namespace WaterTestStation
 			{
 				executionThread.Abort();
 				TogglePositivePower();
- 				SwitchTestType(TestType.OpenCircuit);
+				SwitchTestType(TestType.OpenCircuit);
 				ThreadSafeSetText(txtStatus, "Execution aborted");
 				FinalizeExecution();
 			}
@@ -128,7 +131,7 @@ namespace WaterTestStation
 
 		private void _executeProgram()
 		{
-			int testProgramId = (int) ThreadSafeReadCombo(cboTestProgram);
+			testProgramId = (int) ThreadSafeReadCombo(frmMain.cboTestProgram);
 			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 
 			stopwatch = new Stopwatch();

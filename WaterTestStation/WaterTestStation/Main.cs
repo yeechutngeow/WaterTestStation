@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WaterTestStation.dao;
@@ -42,6 +41,9 @@ namespace WaterTestStation
 			DrawForm();
 
 			cboTestType.DataSource = Enum.GetValues(typeof(TestType));
+			cboTestProgram.ValueMember = "Id";
+			cboTestProgram.DisplayMember = "Title";
+			cboTestProgram.DataSource = new TestProgramDao().GetProgramsList();
 
 			MeterRequest.StartServiceQueue();
 		}
@@ -90,7 +92,7 @@ namespace WaterTestStation
 			const int stationsPerRow = 4;
 
 			const int panelWidth = 350;
-			const int panelHeight = 310;
+			const int panelHeight = 290;
 			const int yOffSet = 60;
 			const int xOffSet = 15;
 
@@ -105,8 +107,6 @@ namespace WaterTestStation
 
 			this.Height = panelHeight*2 + yOffSet + 50;
 			this.Width = panelWidth*stationsPerRow + xOffSet + 30;
-
-			IList<TestProgram> testPrograms = new TestProgramDao().GetProgramsList();
 
 			for (int i = 0; i < NStations; i++)
 			{
@@ -147,26 +147,6 @@ namespace WaterTestStation
 					Location = new Point(col2, y)
 				};
 				panel.Controls.Add(txtVesselId);
-				y += yLineHeight;
-
-				//------------------------------------------------------------
-				label = new Label
-				{
-					Text = "Program:",
-					Location = new Point(col1, y),
-					Width = labelWidth
-				};
-				panel.Controls.Add(label);
-
-				ComboBox cboTestProgram = new ComboBox
-				{
-					DisplayMember = "Title",
-					ValueMember = "Id",
-					DataSource = testPrograms,
-					Width = textWidth,
-					Location = new Point(col2, y),
-				};
-				panel.Controls.Add(cboTestProgram);
 				y += yLineHeight;
 
 				//------------------------------------------------------------
@@ -342,7 +322,7 @@ namespace WaterTestStation
 
 				//-----------------------------------------------------------------
 
-				stations[i].SetFormControls(txtVesselId, txtSample, txtTestDescription, cboTestProgram, txtCycles, txtLeadTime, txtStatus,
+				stations[i].SetFormControls(this, txtVesselId, txtSample, txtTestDescription,  txtCycles, txtLeadTime, txtStatus,
 					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, btnStart, btnStop);
 			}
 		}
@@ -401,14 +381,17 @@ namespace WaterTestStation
 			MeterRequest.AbortThread();
 			usbRelay.Close();
 			usbRelay2.Close();
-
-
 		}
 
 		private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PropertiesForm frm = new PropertiesForm();
 			frm.Show();
+		}
+
+		private void btnRefresh_Click(object sender, EventArgs e)
+		{
+			cboTestProgram.DataSource = new TestProgramDao().GetProgramsList();
 		}
 	}
 }

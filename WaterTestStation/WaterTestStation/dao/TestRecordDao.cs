@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NHibernate;
 using WaterTestStation.model;
 
@@ -9,7 +8,7 @@ namespace WaterTestStation.dao
 {
 	class TestRecordDao
 	{
-		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber, string leadTime)
+		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber, string leadTime, string testDataSet)
 		{
 			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 
@@ -23,7 +22,8 @@ namespace WaterTestStation.dao
 					StationNumber = StationNumber,
 					TestStart = DateTime.Now,
 					TestProgramId = testProgramId,
-					TestSummary = testProgram.TestSummary()
+					TestSummary = testProgram.TestSummary(),
+					DataSet = testDataSet
 				};
 
 			using (ISession session = SessionFactory.OpenSession)

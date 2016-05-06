@@ -24,6 +24,7 @@ namespace WaterTestStation
 		// track user setting of column width
 		readonly int[] colWidth = new int[30];
 
+		private string chartTitle;
 
 		public ViewResultsForm()
 		{
@@ -90,6 +91,7 @@ namespace WaterTestStation
 			{
 				IList<TestData> dataSet = testRecordDao.GetTestData(testRecordId, chkIgnoreLeadTime.Checked);
 				TestRecord testRecord = testRecordDao.FindById(testRecordId);
+				chartTitle = testRecord.DataSet;
 
 				SetColumnNames(datasetNum, nDataShown, testRecord);
 
@@ -252,10 +254,23 @@ namespace WaterTestStation
 			RefreshData();
 		}
 
+		private Color getColor(string sampleName)
+		{
+			if (sampleName.ToUpper().StartsWith("DIW")) return Color.Gainsboro;
+			if (sampleName.ToUpper().StartsWith("CTRL")) return Color.Aquamarine;
+			if (sampleName.ToUpper().StartsWith("B5")) return Color.Blue;
+			if (sampleName.ToUpper().StartsWith("SPRITZ")) return Color.Orange;
+			if (sampleName.ToUpper().StartsWith("KMK")) return Color.Green;
+			if (sampleName.ToUpper().StartsWith("M3")) return Color.Crimson;
+			return Color.Bisque;
+		}
 
 		private void DrawChart()
 		{
 			chart1.Series.Clear();
+
+			chart1.Titles.Clear();
+			chart1.Titles.Add("DataSet: " + chartTitle);
 
 			for (int i = 3; i < dataTable.Columns.Count; i++)
 			{
@@ -264,46 +279,44 @@ namespace WaterTestStation
 					Name = dataTable.Columns[i].ColumnName,
 					ChartType = SeriesChartType.Line,
 					XValueType = ChartValueType.Int32,
+					Color = getColor(dataTable.Columns[i].ColumnName)
 				};
 				chart1.Series.Add(c);
 
 				int lastStepTime = 0;
+				double lastY = 0;
 				int curX = 0;
 				double integrateValue = 0;
 				foreach (string[] row in matrix2)
 				{
 					int curStepTime = Util.ParseInt(row[2]);
+					double curY = Util.ParseDoubleE(row[i]);
+
 					int interval;
-					bool lastInterval = false;
-					if (curStepTime < lastStepTime)
-					{
-						// switching to the next step
-						interval = 2;
-						lastInterval = true;
-					}
+					if (curStepTime == 0)
+						interval = curX > 0 ? 2 : 0;
 					else
 						interval = curStepTime - lastStepTime;
 
 					curX += interval;
 
-					lastStepTime = curStepTime;
-					double y;
-
-					y = Util.ParseDoubleE(row[i]);
 					if (chkIntegrate.Checked)
 					{
-						if (y < 0) y = -y;
-						integrateValue += y*interval;
-						c.Points.AddXY(curX, integrateValue);
-						if (lastInterval)
+						//if (curY < 0) curY = -curY;
+
+						if (curStepTime == 0)
 							integrateValue = 0;
+						else
+							integrateValue += (curY + lastY)/2*interval;
+
+						c.Points.AddXY(curX, integrateValue);
+
 					}
 					else
-					{
-						if (chkInvertGraph.Checked)
-							y = -y;
-						c.Points.AddXY(curX, y);
-					}
+						c.Points.AddXY(curX, curY);
+
+					lastStepTime = curStepTime;
+					lastY = curY;
 
 				}
 			}
