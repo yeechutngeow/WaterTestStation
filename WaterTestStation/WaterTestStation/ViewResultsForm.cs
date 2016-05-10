@@ -256,13 +256,13 @@ namespace WaterTestStation
 
 		private Color getColor(string sampleName)
 		{
-			if (sampleName.ToUpper().StartsWith("DIW")) return Color.Gainsboro;
+			if (sampleName.ToUpper().StartsWith("DIW")) return Color.Gray;
 			if (sampleName.ToUpper().StartsWith("CTRL")) return Color.Aquamarine;
 			if (sampleName.ToUpper().StartsWith("B5")) return Color.Blue;
 			if (sampleName.ToUpper().StartsWith("SPRITZ")) return Color.Orange;
 			if (sampleName.ToUpper().StartsWith("KMK")) return Color.Green;
 			if (sampleName.ToUpper().StartsWith("M3")) return Color.Crimson;
-			return Color.Bisque;
+			return Color.White;
 		}
 
 		private void DrawChart()
@@ -271,6 +271,7 @@ namespace WaterTestStation
 
 			chart1.Titles.Clear();
 			chart1.Titles.Add("DataSet: " + chartTitle);
+			chart1.ChartAreas[0].AxisY.IsLogarithmic = chkLogarithmic.Checked;
 
 			for (int i = 3; i < dataTable.Columns.Count; i++)
 			{
@@ -279,8 +280,10 @@ namespace WaterTestStation
 					Name = dataTable.Columns[i].ColumnName,
 					ChartType = SeriesChartType.Line,
 					XValueType = ChartValueType.Int32,
-					Color = getColor(dataTable.Columns[i].ColumnName)
 				};
+				Color color = getColor(dataTable.Columns[i].ColumnName);
+				if (color != Color.White)c.Color = color;
+
 				chart1.Series.Add(c);
 
 				int lastStepTime = 0;
@@ -292,6 +295,9 @@ namespace WaterTestStation
 					int curStepTime = Util.ParseInt(row[2]);
 					double curY = Util.ParseDoubleE(row[i]);
 
+					curY += 200E-9;
+					if (chkInvertGraph.Checked) curY = -curY;
+
 					int interval;
 					if (curStepTime == 0)
 						interval = curX > 0 ? 2 : 0;
@@ -299,21 +305,22 @@ namespace WaterTestStation
 						interval = curStepTime - lastStepTime;
 
 					curX += interval;
+					double yValue = 0;
 
 					if (chkIntegrate.Checked)
 					{
-						//if (curY < 0) curY = -curY;
-
 						if (curStepTime == 0)
 							integrateValue = 0;
 						else
 							integrateValue += (curY + lastY)/2*interval;
 
-						c.Points.AddXY(curX, integrateValue);
-
+						yValue = integrateValue;
 					}
 					else
-						c.Points.AddXY(curX, curY);
+						yValue = curY;
+
+					if (!chkLogarithmic.Checked || yValue > 0)
+						c.Points.AddXY(curX, yValue);
 
 					lastStepTime = curStepTime;
 					lastY = curY;
@@ -322,6 +329,9 @@ namespace WaterTestStation
 			}
 
 			chart1.ChartAreas[0].RecalculateAxesScale();
+			//Set initial zoom
+			chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 4000);
+			chart1.ChartAreas[0].AxisY.ScaleView.Zoom(-5E-7, 4E-6);
 		}
 
 	}

@@ -28,9 +28,9 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -38,6 +38,7 @@
 			this.dgvDataGrid = new System.Windows.Forms.DataGridView();
 			this.dataGrid = new System.Windows.Forms.DataGridView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.chkIgnoreLeadTime = new System.Windows.Forms.CheckBox();
 			this.chkShowReverseCharge = new System.Windows.Forms.CheckBox();
 			this.chkShowForwardCharge = new System.Windows.Forms.CheckBox();
 			this.chkShowDischarge = new System.Windows.Forms.CheckBox();
@@ -54,7 +55,8 @@
 			this.lbtnRefresh = new System.Windows.Forms.LinkLabel();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.chkIgnoreLeadTime = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.chkLogarithmic = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -152,7 +154,7 @@
 			// 
 			this.tableLayoutPanel2.ColumnCount = 1;
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.Controls.Add(this.chkIgnoreLeadTime, 0, 15);
+			this.tableLayoutPanel2.Controls.Add(this.chkIgnoreLeadTime, 0, 17);
 			this.tableLayoutPanel2.Controls.Add(this.chkShowReverseCharge, 0, 11);
 			this.tableLayoutPanel2.Controls.Add(this.chkShowForwardCharge, 0, 10);
 			this.tableLayoutPanel2.Controls.Add(this.chkShowDischarge, 0, 9);
@@ -164,13 +166,15 @@
 			this.tableLayoutPanel2.Controls.Add(this.chkShowABVoltage, 0, 2);
 			this.tableLayoutPanel2.Controls.Add(this.label1, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.lbtnAddDataSet, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.chkIntegrate, 0, 13);
-			this.tableLayoutPanel2.Controls.Add(this.chkInvertGraph, 0, 14);
-			this.tableLayoutPanel2.Controls.Add(this.lbtnRefresh, 0, 17);
+			this.tableLayoutPanel2.Controls.Add(this.chkIntegrate, 0, 14);
+			this.tableLayoutPanel2.Controls.Add(this.chkInvertGraph, 0, 16);
+			this.tableLayoutPanel2.Controls.Add(this.lbtnRefresh, 0, 19);
+			this.tableLayoutPanel2.Controls.Add(this.label3, 0, 13);
+			this.tableLayoutPanel2.Controls.Add(this.chkLogarithmic, 0, 15);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 19;
+			this.tableLayoutPanel2.RowCount = 21;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
@@ -183,15 +187,27 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(206, 571);
 			this.tableLayoutPanel2.TabIndex = 5;
+			// 
+			// chkIgnoreLeadTime
+			// 
+			this.chkIgnoreLeadTime.AutoSize = true;
+			this.chkIgnoreLeadTime.Location = new System.Drawing.Point(3, 385);
+			this.chkIgnoreLeadTime.Name = "chkIgnoreLeadTime";
+			this.chkIgnoreLeadTime.Size = new System.Drawing.Size(141, 18);
+			this.chkIgnoreLeadTime.TabIndex = 14;
+			this.chkIgnoreLeadTime.Text = "Ignore Lead Time";
+			this.chkIgnoreLeadTime.UseVisualStyleBackColor = true;
 			// 
 			// chkShowReverseCharge
 			// 
@@ -317,9 +333,9 @@
 			// chkIntegrate
 			// 
 			this.chkIntegrate.AutoSize = true;
-			this.chkIntegrate.Location = new System.Drawing.Point(3, 295);
+			this.chkIntegrate.Location = new System.Drawing.Point(3, 313);
 			this.chkIntegrate.Name = "chkIntegrate";
-			this.chkIntegrate.Size = new System.Drawing.Size(131, 19);
+			this.chkIntegrate.Size = new System.Drawing.Size(131, 18);
 			this.chkIntegrate.TabIndex = 12;
 			this.chkIntegrate.Text = "Integrate values";
 			this.chkIntegrate.UseVisualStyleBackColor = true;
@@ -327,9 +343,9 @@
 			// chkInvertGraph
 			// 
 			this.chkInvertGraph.AutoSize = true;
-			this.chkInvertGraph.Location = new System.Drawing.Point(3, 320);
+			this.chkInvertGraph.Location = new System.Drawing.Point(3, 361);
 			this.chkInvertGraph.Name = "chkInvertGraph";
-			this.chkInvertGraph.Size = new System.Drawing.Size(109, 21);
+			this.chkInvertGraph.Size = new System.Drawing.Size(109, 18);
 			this.chkInvertGraph.TabIndex = 13;
 			this.chkInvertGraph.Text = "Invert Graph";
 			this.chkInvertGraph.UseVisualStyleBackColor = true;
@@ -337,7 +353,7 @@
 			// lbtnRefresh
 			// 
 			this.lbtnRefresh.AutoSize = true;
-			this.lbtnRefresh.Location = new System.Drawing.Point(3, 377);
+			this.lbtnRefresh.Location = new System.Drawing.Point(3, 414);
 			this.lbtnRefresh.Name = "lbtnRefresh";
 			this.lbtnRefresh.Size = new System.Drawing.Size(58, 15);
 			this.lbtnRefresh.TabIndex = 6;
@@ -351,37 +367,46 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 25);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(974, 532);
+			this.tabPage2.Size = new System.Drawing.Size(1058, 577);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Chart";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
 			// chart1
 			// 
-			chartArea6.Name = "ChartArea1";
-			this.chart1.ChartAreas.Add(chartArea6);
+			chartArea1.Name = "ChartArea1";
+			this.chart1.ChartAreas.Add(chartArea1);
 			this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-			legend6.Name = "Legend1";
-			this.chart1.Legends.Add(legend6);
+			legend1.Name = "Legend1";
+			this.chart1.Legends.Add(legend1);
 			this.chart1.Location = new System.Drawing.Point(3, 3);
 			this.chart1.Name = "chart1";
-			series6.ChartArea = "ChartArea1";
-			series6.Legend = "Legend1";
-			series6.Name = "Series1";
-			this.chart1.Series.Add(series6);
-			this.chart1.Size = new System.Drawing.Size(968, 526);
+			series1.ChartArea = "ChartArea1";
+			series1.Legend = "Legend1";
+			series1.Name = "Series1";
+			this.chart1.Series.Add(series1);
+			this.chart1.Size = new System.Drawing.Size(1052, 571);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
 			// 
-			// chkIgnoreLeadTime
+			// label3
 			// 
-			this.chkIgnoreLeadTime.AutoSize = true;
-			this.chkIgnoreLeadTime.Location = new System.Drawing.Point(3, 348);
-			this.chkIgnoreLeadTime.Name = "chkIgnoreLeadTime";
-			this.chkIgnoreLeadTime.Size = new System.Drawing.Size(141, 18);
-			this.chkIgnoreLeadTime.TabIndex = 14;
-			this.chkIgnoreLeadTime.Text = "Ignore Lead Time";
-			this.chkIgnoreLeadTime.UseVisualStyleBackColor = true;
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(3, 289);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(114, 17);
+			this.label3.TabIndex = 15;
+			this.label3.Text = "Charting Options";
+			// 
+			// chkLogarithmic
+			// 
+			this.chkLogarithmic.AutoSize = true;
+			this.chkLogarithmic.Location = new System.Drawing.Point(3, 337);
+			this.chkLogarithmic.Name = "chkLogarithmic";
+			this.chkLogarithmic.Size = new System.Drawing.Size(142, 18);
+			this.chkLogarithmic.TabIndex = 16;
+			this.chkLogarithmic.Text = "Logarithmic Scale";
+			this.chkLogarithmic.UseVisualStyleBackColor = true;
 			// 
 			// ViewResultsForm
 			// 
@@ -434,6 +459,8 @@
 		private System.Windows.Forms.CheckBox chkIntegrate;
 		private System.Windows.Forms.CheckBox chkInvertGraph;
 		private System.Windows.Forms.CheckBox chkIgnoreLeadTime;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.CheckBox chkLogarithmic;
 
 	}
 }

@@ -37,9 +37,9 @@ namespace WaterTestStation
 		public int testProgramId;
 
 		// Tracking progress for logging of test data
-		private int testRecordId; 
-		private string currentCycle;
+		private int testRecordId;
 		private int curCycle;
+		private string curCycleStr;
 		private int curStepNumber;
 
 		readonly TestRecordDao testRecordDao = new TestRecordDao();
@@ -138,23 +138,15 @@ namespace WaterTestStation
 			stopwatch.Start();
 
 			int stepStartTime = 0;
-			TestProgramStep preTest = new TestProgramStep
-			{
-				Duration = Util.ParseInt(ThreadSafeReadText(txtLeadTime)),
-				TestProgramId = testProgramId,
-				TestType = TestType.OpenCircuit.ToString()
-			};
-			currentCycle = "LeadTime";
-			curCycle = 0;
-			runstep(stepStartTime, preTest);
-			stepStartTime += Util.ParseInt(ThreadSafeReadText(txtLeadTime));
+			stepStartTime = _runPreTest(stepStartTime);
+
 
 			int cycles;
 			if (!int.TryParse(txtCycles.Text, out cycles)) cycles = 1000;
 
 			for (int i = 0; i < cycles; i++)
 			{
-				currentCycle = (i+1).ToString();
+				curCycleStr = (i+1).ToString();
 				curCycle = i + 1;
 				curStepNumber = 1;
 				foreach (var step in testProgram.TestProgramSteps)
@@ -168,9 +160,38 @@ namespace WaterTestStation
 			FinalizeExecution();
 		}
 
-		private readonly int[] DischargeReadingTime = { 0, 2, 5, 10, 30, 60, 120 };
-		private readonly int[] ChargeReadingTime = { 0, 2, 5, 10, 30, 60, 120 };
-		private readonly int[] OpenCircuitReadingTime = { 0, 5, 10, 30, 60, 120 };
+		private int _runPreTest(int stepStartTime)
+		{
+			TestProgramStep preTest = new TestProgramStep
+			{
+				Duration = Util.ParseInt(ThreadSafeReadText(txtLeadTime)),
+				TestProgramId = testProgramId,
+				TestType = TestType.OpenCircuit.ToString()
+			};
+			curCycleStr = "LeadTime";
+			curCycle = 0;
+			curStepNumber = 1;
+			runstep(stepStartTime, preTest);
+			stepStartTime += preTest.Duration;
+
+			// Run 10 minutes of discharge to establish a baseline for imbalanceses 
+			// that can be used for correction for later cycles
+			TestProgramStep preTest2 = new TestProgramStep
+			{
+				Duration = 600,
+				TestProgramId = testProgramId,
+				TestType = TestType.Discharge.ToString()
+			};
+			runstep(stepStartTime, preTest2);
+			curStepNumber = 2;
+			stepStartTime += preTest2.Duration;
+			return stepStartTime;
+		}
+
+		private readonly int[] _dischargeSamplingTime = { 0, 2, 5, 10, 30, 60, 120 };
+		private readonly int[] _chargeSamplingTime = { 0, 2, 5, 10, 30, 60, 120 };
+		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60, 120 };
+		private const int SamplingInterval = 150; // one sampling every 2.5 minutes
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
@@ -178,16 +199,16 @@ namespace WaterTestStation
 			switch (testStep.GetTestType())
 			{
 				case TestType.OpenCircuit:
-					_ExecuteStep(stepStartTime, testStep, OpenCircuitReadingTime);
+					_ExecuteStep(stepStartTime, testStep, _openCircuitSamplingTime);
 					break;
 				case TestType.ForwardCharge:
-					_ExecuteStep(stepStartTime, testStep, ChargeReadingTime);
+					_ExecuteStep(stepStartTime, testStep, _chargeSamplingTime);
 					break;
 				case TestType.ReverseCharge:
-					_ExecuteStep(stepStartTime, testStep, ChargeReadingTime);
+					_ExecuteStep(stepStartTime, testStep, _chargeSamplingTime);
 					break;
 				case TestType.Discharge:
-					_ExecuteStep(stepStartTime, testStep, DischargeReadingTime);
+					_ExecuteStep(stepStartTime, testStep, _dischargeSamplingTime);
 					break;
 			}
 			SleepTill(testStep.Duration, stepStartTime);
@@ -203,11 +224,11 @@ namespace WaterTestStation
 				_TakeReadings(t, stepStartTime, testStep);
 			}
 
-			int time = 300;																																																																																																																										
+			int time = SamplingInterval;																																																																																																																										
 			while (time < testStep.Duration)
 			{
 				_TakeReadings(time, stepStartTime, testStep);
-				time += 300; // add 5 mins 
+				time += SamplingInterval; // add 5 mins 
 				if (time == testStep.Duration) time -= 2; // last reading - bring forward 2 seconds
 			}
 		}
@@ -222,7 +243,7 @@ namespace WaterTestStation
 
 			SleepTill(targetTime, stepStartTime);
 			TimeSpan t = TimeSpan.FromSeconds(targetTime);
-			string msg = "Cycle: " + currentCycle + Environment.NewLine
+			string msg = "Cycle: " + curCycleStr + Environment.NewLine
 						 + "Step: " + curStepNumber + "-" + testStep.TestType + Environment.NewLine
 						 + "StepTime: " + t.ToString("mm\\:ss") + Environment.NewLine
 						 + "Total Elapsed: " + stopwatch.Elapsed.ToString("hh\\:mm\\:ss");
