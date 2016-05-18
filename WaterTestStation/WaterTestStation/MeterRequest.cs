@@ -55,7 +55,7 @@ namespace WaterTestStation
 					Main.Multimeter.OpenSession();
 
 					TestType testType = (TestType)Enum.Parse(typeof(TestType), m.TestStep.TestType);
-					m.TestStation.SwitchTestType(testType);
+					m.TestStation._switchTestType(testType);
 
 					stopwatch.Start();
 					Debug.WriteLine("Begin meter readings:" + DateTime.Now);

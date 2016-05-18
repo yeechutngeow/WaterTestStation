@@ -17,5 +17,11 @@
     <Setting Name="MultimeterDelay" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
+    <Setting Name="VoltageThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1E-05</Value>
+    </Setting>
+    <Setting Name="CurrentThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5E-07</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

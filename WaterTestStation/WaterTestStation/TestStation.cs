@@ -99,8 +99,8 @@ namespace WaterTestStation
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
 			executionThread = thread;
-			btnStart.Enabled = false;
-			btnStop.Enabled = true;
+			ThreadSafeSetButtonEnabled(btnStart, false);
+			ThreadSafeSetButtonEnabled(btnStop, true);
 			thread.Start();
 		}
 
@@ -110,17 +110,22 @@ namespace WaterTestStation
 			{
 				executionThread.Abort();
 				TogglePositivePower();
-				SwitchTestType(TestType.OpenCircuit);
-				ThreadSafeSetText(txtStatus, "Execution aborted");
-				FinalizeExecution();
+				_switchTestType(TestType.OpenCircuit);
+				ThreadSafeSetText(txtStatus, "Execution aborted" + System.Environment.NewLine + ThreadSafeReadText(txtStatus));
+				_finalizeExecution();
 			}
 		}
 
-		private void FinalizeExecution()
+		private void _finalizeExecution()
 		{
-			btnStart.Enabled = true;
-			btnStop.Enabled = false;
+			ThreadSafeSetButtonEnabled(btnStart, true);
+			ThreadSafeSetButtonEnabled(btnStop, false);
 
+			_updateTestRecord();
+		}
+
+		private void _updateTestRecord()
+		{
 			TestRecord testRecord = testRecordDao.FindById(testRecordId);
 			testRecord.TestEnd = DateTime.Now;
 			testRecord.Sample = txtSample.Text;
@@ -140,14 +145,13 @@ namespace WaterTestStation
 			int stepStartTime = 0;
 			stepStartTime = _runPreTest(stepStartTime);
 
+			int cyclesToRun;
+			if (!int.TryParse(ThreadSafeReadText(txtCycles), out cyclesToRun)) cyclesToRun = 10000;
 
-			int cycles;
-			if (!int.TryParse(txtCycles.Text, out cycles)) cycles = 1000;
-
-			for (int i = 0; i < cycles; i++)
+			curCycle = 1;
+			for (; curCycle <= cyclesToRun; curCycle++)
 			{
-				curCycleStr = (i+1).ToString();
-				curCycle = i + 1;
+				curCycleStr = curCycle.ToString();
 				curStepNumber = 1;
 				foreach (var step in testProgram.TestProgramSteps)
 				{
@@ -155,9 +159,11 @@ namespace WaterTestStation
 					stepStartTime += step.Duration;
 					curStepNumber++;
 				}
+				_updateTestRecord();
+				if (!int.TryParse(ThreadSafeReadText(txtCycles), out cyclesToRun)) cyclesToRun = 10000;
 			}
-			ThreadSafeSetText(txtStatus, "Test Completed");
-			FinalizeExecution();
+			ThreadSafeSetText(txtStatus, "Test Completed" + System.Environment.NewLine + ThreadSafeReadText(txtStatus));
+			_finalizeExecution();
 		}
 
 		private int _runPreTest(int stepStartTime)
@@ -174,11 +180,11 @@ namespace WaterTestStation
 			runstep(stepStartTime, preTest);
 			stepStartTime += preTest.Duration;
 
-			// Run 10 minutes of discharge to establish a baseline for imbalanceses 
-			// that can be used for correction for later cycles
+			// Run 5 minutes of discharge to establish a baseline for imbalanceses 
+			// that could be used for correction for later cycles
 			TestProgramStep preTest2 = new TestProgramStep
 			{
-				Duration = 600,
+				Duration = 300,
 				TestProgramId = testProgramId,
 				TestType = TestType.Discharge.ToString()
 			};
@@ -259,7 +265,7 @@ namespace WaterTestStation
 				Thread.Sleep(t);
 		}
 
-		public void SwitchTestType(TestType testType)
+		public void _switchTestType(TestType testType)
 		{
 			switch (testType)
 			{
@@ -282,7 +288,7 @@ namespace WaterTestStation
 
 		public void Initialize()
 		{
-			SwitchTestType(TestType.OpenCircuit);
+			_switchTestType(TestType.OpenCircuit);
 		}
 
 		public void TogglePositivePower()

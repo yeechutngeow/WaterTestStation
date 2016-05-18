@@ -78,5 +78,18 @@ namespace WaterTestStation
 		}
 
 
+		private delegate void SetButtonEnabledCallback(Button btn, bool enabled);
+
+		protected void ThreadSafeSetButtonEnabled(Button btn, bool enabled)
+		{
+			if (btn.InvokeRequired)
+			{
+				SetButtonEnabledCallback d = ThreadSafeSetButtonEnabled;
+				btn.Invoke(d, new object[] { btn, enabled });
+			}
+			else
+				btn.Enabled = enabled;
+
+		}
 	}
 }

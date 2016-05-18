@@ -83,7 +83,7 @@ namespace WaterTestStation
 			TestType eTestType = (TestType) Enum.Parse(typeof (TestType), testType);
 
 			TestProgramStep testStep = new TestProgramStep {TestType = testType};
-			stations[stationNumber].SwitchTestType(eTestType);
+			stations[stationNumber]._switchTestType(eTestType);
 			MultimeterQueue.Enqueue(new MeterRequest(stations[stationNumber], testStep, 0, 0, 0, false));
 		}
 
@@ -226,7 +226,7 @@ namespace WaterTestStation
 					                    {
 						                    Multiline = true,
 						                    Width = panelWidth/2 - 20,
-						                    Height = 60,
+						                    Height = 82,
 						                    ReadOnly = true,
 						                    Location = new Point(col3, y),
 											Text = "Idle"

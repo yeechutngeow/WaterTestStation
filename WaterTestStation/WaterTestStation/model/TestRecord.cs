@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WaterTestStation.model
 {
-	class TestRecord
+	class TestRecord : IComparable<TestRecord>
 	{
 		public virtual int Id { get; set; }
 		public virtual int TestProgramId { get; set; }
@@ -21,5 +21,9 @@ namespace WaterTestStation.model
 		public virtual int LeadTime { get; set; }
 		public virtual int TotalDuration { get; set; }
 
+		public virtual int CompareTo(TestRecord other)
+		{
+			return System.String.Compare((this.Sample + this.Id), (other.Sample + other.Id), System.StringComparison.Ordinal);
+		}
 	}
 }

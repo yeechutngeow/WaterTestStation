@@ -82,5 +82,29 @@ namespace WaterTestStation.Properties {
                 this["MultimeterDelay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1E-05")]
+        public double VoltageThreshold {
+            get {
+                return ((double)(this["VoltageThreshold"]));
+            }
+            set {
+                this["VoltageThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5E-07")]
+        public double CurrentThreshold {
+            get {
+                return ((double)(this["CurrentThreshold"]));
+            }
+            set {
+                this["CurrentThreshold"] = value;
+            }
+        }
     }
 }

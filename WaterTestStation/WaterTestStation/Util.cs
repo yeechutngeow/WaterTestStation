@@ -33,39 +33,43 @@ namespace WaterTestStation
 		public static int ParseInt(string s)
 		{
 			int v = 0;
-			try
-			{
-				v = int.Parse(Regex.Replace(s, "[^0-9.]", ""));
-			} catch
-			{}
-
+			Int32.TryParse(s, out v);
 			return v;
 		}
 
 		public static double ParseDouble(string s)
 		{
 			double v = 0;
-			try
-			{
-				v = double.Parse(Regex.Replace(s, "[^0-9.]", ""));
-			}
-			catch
-			{
-			}
+			Double.TryParse(Regex.Replace(s, "[^0-9.]", ""), out v);
 			return v;
 		}
 
 		public static double ParseDoubleE(string s)
 		{
 			double v = 0;
-			try
-			{
-				v = double.Parse(s);
-			}
-			catch
-			{
-			}
+			Double.TryParse(s, out v);
 			return v;
+		}
+
+		public static double NextExponent(double v)
+		{
+			double result = v;
+
+			if (Math.Abs(v) < 1E-7) result = 1E-7;
+			else if (Math.Abs(v) < 1E-6) result = 1E-6;
+			else if (Math.Abs(v) < 1E-5) result = 1E-5;
+			else if (Math.Abs(v) < 1E-4) result = 1E-4;
+			else if (Math.Abs(v) < 1E-3) result = 1E-3;
+			else if (Math.Abs(v) < 1E-2) result = 1E-2;
+			else if (Math.Abs(v) < 1E-1) result = 1E-1;
+			else if (Math.Abs(v) < 1E0) result = 1E-0;
+			else if (Math.Abs(v) < 1E1) result = 1E1;
+			else if (Math.Abs(v) < 1E2) result = 1E2;
+
+			if (v > 0)
+				return result;
+			else
+				return -result;
 		}
 	}
 }

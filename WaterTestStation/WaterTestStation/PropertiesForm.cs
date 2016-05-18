@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WaterTestStation
@@ -22,6 +16,8 @@ namespace WaterTestStation
 			chkHasRelay.Checked = Config.HasRelay;
 
 			txtMultimeterDelay.Text = Config.MultimeterDelay + "";
+			txtVoltageThreshold.Text = Config.VoltageThreshold.ToString();
+			txtCurrentThreshold.Text = Config.CurrentThreshold.ToString();
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -30,6 +26,8 @@ namespace WaterTestStation
 			Properties.Settings.Default.RelayCom2 = int.Parse(txtCom2.Text);
 			Properties.Settings.Default.HasRelay = chkHasRelay.Checked;
 			Properties.Settings.Default.HasMultimeter = chkHasMultimeter.Checked;
+			Properties.Settings.Default.VoltageThreshold = Util.ParseDoubleE(txtVoltageThreshold.Text);
+			Properties.Settings.Default.CurrentThreshold = Util.ParseDoubleE(txtCurrentThreshold.Text);
 
 			Properties.Settings.Default.MultimeterDelay = int.Parse(txtMultimeterDelay.Text);
 

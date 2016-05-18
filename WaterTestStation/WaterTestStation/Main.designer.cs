@@ -114,7 +114,7 @@
             "8"});
 			this.cboStationNumber.Location = new System.Drawing.Point(186, 39);
 			this.cboStationNumber.Name = "cboStationNumber";
-			this.cboStationNumber.Size = new System.Drawing.Size(35, 24);
+			this.cboStationNumber.Size = new System.Drawing.Size(47, 24);
 			this.cboStationNumber.TabIndex = 5;
 			this.cboStationNumber.Text = "1";
 			// 

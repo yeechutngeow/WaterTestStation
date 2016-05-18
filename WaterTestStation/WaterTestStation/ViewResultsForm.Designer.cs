@@ -53,10 +53,10 @@
 			this.chkIntegrate = new System.Windows.Forms.CheckBox();
 			this.chkInvertGraph = new System.Windows.Forms.CheckBox();
 			this.lbtnRefresh = new System.Windows.Forms.LinkLabel();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.label3 = new System.Windows.Forms.Label();
 			this.chkLogarithmic = new System.Windows.Forms.CheckBox();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -202,6 +202,8 @@
 			// chkIgnoreLeadTime
 			// 
 			this.chkIgnoreLeadTime.AutoSize = true;
+			this.chkIgnoreLeadTime.Checked = true;
+			this.chkIgnoreLeadTime.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chkIgnoreLeadTime.Location = new System.Drawing.Point(3, 385);
 			this.chkIgnoreLeadTime.Name = "chkIgnoreLeadTime";
 			this.chkIgnoreLeadTime.Size = new System.Drawing.Size(141, 18);
@@ -361,6 +363,25 @@
 			this.lbtnRefresh.Text = "Refresh";
 			this.lbtnRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefresh_LinkClicked);
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(3, 289);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(114, 17);
+			this.label3.TabIndex = 15;
+			this.label3.Text = "Charting Options";
+			// 
+			// chkLogarithmic
+			// 
+			this.chkLogarithmic.AutoSize = true;
+			this.chkLogarithmic.Location = new System.Drawing.Point(3, 337);
+			this.chkLogarithmic.Name = "chkLogarithmic";
+			this.chkLogarithmic.Size = new System.Drawing.Size(142, 18);
+			this.chkLogarithmic.TabIndex = 16;
+			this.chkLogarithmic.Text = "Logarithmic Scale";
+			this.chkLogarithmic.UseVisualStyleBackColor = true;
+			// 
 			// tabPage2
 			// 
 			this.tabPage2.Controls.Add(this.chart1);
@@ -388,25 +409,6 @@
 			this.chart1.Size = new System.Drawing.Size(1052, 571);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 289);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(114, 17);
-			this.label3.TabIndex = 15;
-			this.label3.Text = "Charting Options";
-			// 
-			// chkLogarithmic
-			// 
-			this.chkLogarithmic.AutoSize = true;
-			this.chkLogarithmic.Location = new System.Drawing.Point(3, 337);
-			this.chkLogarithmic.Name = "chkLogarithmic";
-			this.chkLogarithmic.Size = new System.Drawing.Size(142, 18);
-			this.chkLogarithmic.TabIndex = 16;
-			this.chkLogarithmic.Text = "Logarithmic Scale";
-			this.chkLogarithmic.UseVisualStyleBackColor = true;
 			// 
 			// ViewResultsForm
 			// 
