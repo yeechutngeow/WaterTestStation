@@ -15,6 +15,8 @@ namespace WaterTestStation.model
 		public virtual string VesselId { get; set; }
 		public virtual string Sample { get; set; }
 		public virtual int StationNumber { get; set; }
+		public virtual float Volume { get; set; }
+		public virtual float MolarConcentration { get; set; }
 		public virtual DateTime TestStart { get; set; }
 		public virtual DateTime? TestEnd { get; set; }
 		public virtual int Cycles { get; set; }

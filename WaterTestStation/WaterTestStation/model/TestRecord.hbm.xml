@@ -13,6 +13,8 @@
 		<property name="Description" />
 		<property name="VesselId" />
 		<property name="Sample" />
+		<property name="Volume" />
+		<property name="MolarConcentration" />
 		<property name="StationNumber" />
 		<property name="TestStart" />
 		<property name="TestEnd" />
