@@ -61,31 +61,30 @@ namespace WaterTestStation
 					Debug.WriteLine("Begin meter readings:" + DateTime.Now);
 					SelectStation(Main.mux, m.TestStation.StationNumber);
 
-					// measures everything - will serves to cross check the circuit is correct initially.
-
 					double ARefVoltage = 0;
 					double BRefVoltage = 0;
 					double ABVoltage = 0;
 					double ABCurrent = 0;
 
-					ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation.StationNumber);
-					BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation.StationNumber);
 					switch (m.TestStep.GetTestType())
 					{
 						case TestType.OpenCircuit:
 							// No ABCurrent
-							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
+							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation);
 							break;
 						case TestType.ForwardCharge:
 						case TestType.ReverseCharge:
-							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation.StationNumber);
-							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
+							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation);
+							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation);
 							break;
 						case TestType.Discharge:
 							// No ABVoltage
-							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation.StationNumber);
+							Main.Multimeter.ReadABCurrentAndVoltage(m.TestStation, out ABCurrent, out ABVoltage);
 							break;
 					}
+
+					ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation);
+					BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation);
 					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
 					stopwatch.Stop();
 

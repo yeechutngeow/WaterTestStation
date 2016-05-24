@@ -12,16 +12,18 @@ namespace WaterTestStation
 	{
 		// for development & debugging purposes
 
-		public const int NStations = 8;
+		public const int NStations = 7;
 		//----- the hardware components ---------------------------------------------------------
 
-		UsbRelay usbRelay;
+		UsbRelay usbRelay1;
 		UsbRelay usbRelay2;
 		// switch between charge/discharge, one for each station
 		private readonly RelayMux[] switches = new RelayMux[NStations];
 		//
 		private readonly MultiPoleSwitch[] toggles = new MultiPoleSwitch[NStations];
 		// 4 multiplexer to select measuring points. Each mux has #station channels.
+
+		private readonly MultiPoleSwitch[] currentSwitch = new MultiPoleSwitch[NStations];
 
 		// the 4 multiplexers for switching the multiplexer to the right channel
 		public static readonly RelayMux[] mux = new RelayMux[4];
@@ -50,7 +52,7 @@ namespace WaterTestStation
 
 		private void btnStart_Click(object sender, EventArgs e)
 		{
-			usbRelay.OpenComPort(Config.RelayCom1);
+			usbRelay1.OpenComPort(Config.RelayCom1);
 			usbRelay2.OpenComPort(Config.RelayCom2);
 
 			Button btn = (Button)sender;
@@ -76,7 +78,7 @@ namespace WaterTestStation
 			if (!stations[stationNumber].btnStart.Enabled)
 				// disallow taking adhoc readings when a program is running
 				return;
-			usbRelay.OpenComPort(Config.RelayCom1);
+			usbRelay1.OpenComPort(Config.RelayCom1);
 			usbRelay2.OpenComPort(Config.RelayCom2);
 
 			string testType = cboTestType.Text;
@@ -329,35 +331,42 @@ namespace WaterTestStation
 
 		private void InitializeHardware()
 		{
-			usbRelay = new UsbRelay(Config.RelayCom1, lblRelayStatus1);
+			usbRelay1 = new UsbRelay(Config.RelayCom1, lblRelayStatus1);
 			usbRelay2 = new UsbRelay(Config.RelayCom2, lblRelayStatus2);
 
-			switches[0] = new RelayMux(usbRelay, new[] { 0, 1 });
-			toggles[0] = new MultiPoleSwitch(usbRelay, new[] { 2, 3 });
-			switches[1] = new RelayMux(usbRelay, new[] { 4, 5 });
-			toggles[1] = new MultiPoleSwitch(usbRelay, new[] { 6, 7 });
-			switches[2] = new RelayMux(usbRelay, new[] { 8, 9 });
-			toggles[2] = new MultiPoleSwitch(usbRelay, new[] { 10, 11 });
-			switches[3] = new RelayMux(usbRelay, new[] { 12, 13 });
-			toggles[3] = new MultiPoleSwitch(usbRelay, new[] { 14, 15 });
-			switches[4] = new RelayMux(usbRelay, new[] { 16, 17 });
-			toggles[4] = new MultiPoleSwitch(usbRelay, new[] { 18, 19 });
-			switches[5] = new RelayMux(usbRelay, new[] { 20, 21 });
-			toggles[5] = new MultiPoleSwitch(usbRelay, new[] { 22, 23 });
-			switches[6] = new RelayMux(usbRelay, new[] { 24, 25 });
-			toggles[6] = new MultiPoleSwitch(usbRelay, new[] { 26, 27 });
-			switches[7] = new RelayMux(usbRelay, new[] { 28, 29 });
-			toggles[7] = new MultiPoleSwitch(usbRelay, new[] { 30, 31 });
+			switches[0] = new RelayMux(usbRelay1, new[] { 0, 1 });
+			toggles[0] = new MultiPoleSwitch(usbRelay1, new[] { 2, 3 });
+			switches[1] = new RelayMux(usbRelay1, new[] { 4, 5 });
+			toggles[1] = new MultiPoleSwitch(usbRelay1, new[] { 6, 7 });
+			switches[2] = new RelayMux(usbRelay1, new[] { 8, 9 });
+			toggles[2] = new MultiPoleSwitch(usbRelay1, new[] { 10, 11 });
+			switches[3] = new RelayMux(usbRelay1, new[] { 12, 13 });
+			toggles[3] = new MultiPoleSwitch(usbRelay1, new[] { 14, 15 });
+			switches[4] = new RelayMux(usbRelay1, new[] { 16, 17 });
+			toggles[4] = new MultiPoleSwitch(usbRelay1, new[] { 18, 19 });
+			switches[5] = new RelayMux(usbRelay1, new[] { 20, 21 });
+			toggles[5] = new MultiPoleSwitch(usbRelay1, new[] { 22, 23 });
+			switches[6] = new RelayMux(usbRelay1, new[] { 24, 25 });
+			toggles[6] = new MultiPoleSwitch(usbRelay1, new[] { 26, 27 });
 
-			mux[0] = new RelayMux(usbRelay2, new[] {0, 1, 2, 3, 4, 5, 6});
-			mux[1] = new RelayMux(usbRelay2, new[] {7, 8, 9, 10, 11, 12, 13 });
-			mux[2] = new RelayMux(usbRelay2, new[] {14, 15, 16, 17, 18, 19, 20 });
-			mux[3] = new RelayMux(usbRelay2, new[] {21, 22, 23, 24, 25, 26, 27});
+			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
+			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 25 });
+			currentSwitch[2] = new MultiPoleSwitch(usbRelay2, new[] { 26 });
+			currentSwitch[3] = new MultiPoleSwitch(usbRelay2, new[] { 27 });
+			currentSwitch[4] = new MultiPoleSwitch(usbRelay2, new[] { 28 });
+			currentSwitch[5] = new MultiPoleSwitch(usbRelay2, new[] { 29 });
+			currentSwitch[6] = new MultiPoleSwitch(usbRelay2, new[] { 30 });
 
-			Multimeter = new Multimeter(usbRelay2, new[] {28, 29, 30, 31});
+
+			mux[0] = new RelayMux(usbRelay2, new[] {0, 1, 2, 3, 4, 5});
+			mux[1] = new RelayMux(usbRelay2, new[] {6, 7, 8, 9, 10, 11});
+			mux[2] = new RelayMux(usbRelay2, new[] {12, 13, 14, 15, 16, 17});
+			mux[3] = new RelayMux(usbRelay2, new[] {18, 19, 20, 21, 22, 23});
+
+			Multimeter = new Multimeter(usbRelay1, new[] {29, 30, 31, 28});
 
 			for (int i = 0; i < NStations; i++ )
-				stations[i] = new TestStation(i, toggles[i], switches[i]);
+				stations[i] = new TestStation(i, toggles[i], switches[i], currentSwitch[i]);
 		}
 
 		private void Main_Load(object sender, EventArgs e)
@@ -379,7 +388,7 @@ namespace WaterTestStation
 			if (Config.HasMultimeter)
 				Multimeter.CloseSession();
 			MeterRequest.AbortThread();
-			usbRelay.Close();
+			usbRelay1.Close();
 			usbRelay2.Close();
 		}
 

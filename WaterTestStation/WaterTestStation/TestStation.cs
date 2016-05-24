@@ -15,6 +15,7 @@ namespace WaterTestStation
 		public readonly int StationNumber;
 		private readonly MultiPoleSwitch powerSupplySwitch;
 		private readonly RelayMux chargeDischargeSelect;
+		public readonly MultiPoleSwitch currentSwitch;
 
 		// Execution of test program
 		private Stopwatch stopwatch;
@@ -44,11 +45,12 @@ namespace WaterTestStation
 
 		readonly TestRecordDao testRecordDao = new TestRecordDao();
 		
-		public TestStation(int stationNumber, MultiPoleSwitch powerSupplySwitch, RelayMux chargeDischargeSelect)
+		public TestStation(int stationNumber, MultiPoleSwitch powerSupplySwitch, RelayMux chargeDischargeSelect, MultiPoleSwitch currentSwitch)
 		{
 			this.StationNumber = stationNumber;
 			this.powerSupplySwitch = powerSupplySwitch;
 			this.chargeDischargeSelect = chargeDischargeSelect;
+			this.currentSwitch = currentSwitch;
 		}
 
 		public void SetFormControls(Main fMain, TextBox vesselId, TextBox tSample, TextBox tTestDescription, TextBox tCycles, TextBox tLeadTime,

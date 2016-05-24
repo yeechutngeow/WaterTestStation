@@ -20,7 +20,6 @@ namespace WaterTestStation.hardware
 
 		public void OpenSession()
 		{
-
 			const string strVISARsrc = "USB0::0x1AB1::0x0C94::DM3O161550090::INSTR";
 
 			if (!Config.HasMultimeter)
@@ -44,6 +43,11 @@ namespace WaterTestStation.hardware
 		private double ReadVoltage()
 		{
 			return _ReadMeter(":measure:voltage:DC?", Config.MultimeterDelay);
+		}
+
+		private double ReadCurrent()
+		{
+			return _ReadMeter(":measure:current:DC?", Config.MultimeterDelay);
 		}
 
 		private double ReadCapacitance()
@@ -80,55 +84,88 @@ namespace WaterTestStation.hardware
 		/*
 		 * Reads open circuit voltage across A and B
 		 */
-		public double ReadABVoltage(int stationNumber)
+		public double ReadABVoltage(TestStation station)
 		{
 			usbRelay.SetChannels(
 				new[] { readingSelector[0] },
-				new[] { readingSelector[1], readingSelector[2], readingSelector[3] });
-			return ReadVoltage();
+				new[] { readingSelector[1], readingSelector[2], readingSelector[3]});
+			double result = -ReadVoltage();
+			TurnOffMeter();
+			return result;
 		}
 
 		/* 
-		 * reads charge & discharge current from A to B
+		 * Reads charge & discharge current from A to B
+		 * This will require breaking the circuit to route the current into the multimeter
 		 */
-		public double ReadABCurrent(int stationNumber)
+		public double ReadABCurrent(TestStation station)
 		{
+			station.currentSwitch.ToggleOn();
 			usbRelay.SetChannels(
-				new[] {readingSelector[0], readingSelector[3]}, 
-				new[] {readingSelector[1],readingSelector[2]});
-			return ReadVoltage() / Config.GetResistorValue(stationNumber);
+				new[] { readingSelector[0], readingSelector[3] },
+				new[] { readingSelector[1], readingSelector[2]});
+			
+			double result = ReadCurrent();
+			station.currentSwitch.ToggleOff();
+			TurnOffMeter();
+			return result;
 		}
 
-		/* 
-		 * reads charge & discharge current from A to B
+		/*
+		 * Breaks the circuit and route the current into the multimeter,
+		 * And reads current and voltage together
 		 */
-		public double ReadABCapacitance(int stationNumber)
+		public void ReadABCurrentAndVoltage(TestStation station, out double ABCurrent, out double ABVoltage)
 		{
+			station.currentSwitch.ToggleOn();
 			usbRelay.SetChannels(
 				new[] { readingSelector[0], readingSelector[3] },
 				new[] { readingSelector[1], readingSelector[2] });
-			return ReadCapacitance() / Config.GetResistorValue(stationNumber);
+
+			ABCurrent = ReadCurrent();
+			ABVoltage = -ReadVoltage();
+
+			station.currentSwitch.ToggleOff();
+			TurnOffMeter();
 		}
+
 		/*
 		 * Reads ARef voltage
 		 */
-		public double ReadARefVoltage(int stationNumber)
+		public double ReadARefVoltage(TestStation station)
 		{
 			usbRelay.SetChannels(
-				new[] {readingSelector[0], readingSelector[2]}, 
-				new[] {readingSelector[1], readingSelector[3]});
-			return ReadVoltage();
+				new[] {readingSelector[0], readingSelector[2]},
+				new[] { readingSelector[1], readingSelector[3]});
+			double result = - ReadVoltage();
+			TurnOffMeter();
+			return result;
 		}
 
 		/*
 		 * Reads BRef voltage
 		 */
-		public double ReadBRefVoltage(int stationNumber)
+		public double ReadBRefVoltage(TestStation station)
 		{
 			usbRelay.SetChannels(
-				new[] {readingSelector[0], readingSelector[1]}, 
-				new[] {readingSelector[2], readingSelector[3]});
-			return -1 * ReadVoltage();
+				new[] {readingSelector[0], readingSelector[1]},
+				new[] { readingSelector[2], readingSelector[3]});
+			double result = ReadVoltage();
+			TurnOffMeter();
+			return result;
+		}
+
+		/* 
+		 * reads charge & discharge current from A to B
+		 */
+		public double ReadABCapacitance(TestStation station)
+		{
+			usbRelay.SetChannels(
+				new[] { readingSelector[0] },
+				new[] { readingSelector[1], readingSelector[2], readingSelector[3]});
+			double result = ReadCapacitance();
+			TurnOffMeter();
+			return result;
 		}
 
 		public void TurnOffMeter()

@@ -7,13 +7,6 @@ namespace WaterTestStation
 {
 	internal class Config
 	{
-		public static double GetResistorValue(int stationNumber)
-		{
-			double v = double.Parse(System.Configuration.ConfigurationManager.AppSettings["Resistor" + stationNumber]);
-			return v;
-		}
-
-
 		public static bool HasRelay
 		{
 			get { return Properties.Settings.Default.HasRelay; }
