@@ -8,7 +8,7 @@ namespace WaterTestStation.dao
 {
 	class TestRecordDao
 	{
-		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber, string leadTime, string testDataSet)
+		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, int StationNumber, string leadTime, string testDataSet, bool hasReferenceElectrode)
 		{
 			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 

@@ -37,10 +37,6 @@
 			this.btnSave = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.txtMultimeterDelay = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.txtVoltageThreshold = new System.Windows.Forms.TextBox();
-			this.txtCurrentThreshold = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -121,47 +117,11 @@
 			this.txtMultimeterDelay.Size = new System.Drawing.Size(40, 22);
 			this.txtMultimeterDelay.TabIndex = 8;
 			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(36, 230);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(128, 17);
-			this.label4.TabIndex = 9;
-			this.label4.Text = "Voltage Threshold:";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(36, 258);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(127, 17);
-			this.label5.TabIndex = 10;
-			this.label5.Text = "Current Threshold:";
-			// 
-			// txtVoltageThreshold
-			// 
-			this.txtVoltageThreshold.Location = new System.Drawing.Point(200, 225);
-			this.txtVoltageThreshold.Name = "txtVoltageThreshold";
-			this.txtVoltageThreshold.Size = new System.Drawing.Size(71, 22);
-			this.txtVoltageThreshold.TabIndex = 11;
-			// 
-			// txtCurrentThreshold
-			// 
-			this.txtCurrentThreshold.Location = new System.Drawing.Point(200, 253);
-			this.txtCurrentThreshold.Name = "txtCurrentThreshold";
-			this.txtCurrentThreshold.Size = new System.Drawing.Size(71, 22);
-			this.txtCurrentThreshold.TabIndex = 12;
-			// 
 			// PropertiesForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(297, 352);
-			this.Controls.Add(this.txtCurrentThreshold);
-			this.Controls.Add(this.txtVoltageThreshold);
-			this.Controls.Add(this.label5);
-			this.Controls.Add(this.label4);
 			this.Controls.Add(this.txtMultimeterDelay);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnSave);
@@ -189,9 +149,5 @@
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox txtMultimeterDelay;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox txtVoltageThreshold;
-		private System.Windows.Forms.TextBox txtCurrentThreshold;
 	}
 }

@@ -32,14 +32,5 @@ namespace WaterTestStation
 			get { return Properties.Settings.Default.MultimeterDelay; }
 		}
 
-		public static double VoltageThreshold
-		{
-			get { return Properties.Settings.Default.VoltageThreshold; }
-		}
-
-		public static double CurrentThreshold
-		{
-			get { return Properties.Settings.Default.CurrentThreshold; }
-		}
 	}
 }

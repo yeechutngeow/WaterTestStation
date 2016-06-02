@@ -4,3 +4,6 @@ WaterTestStation/WaterTestStation/bin
 WaterTestStation/WaterTestStation/obj
 WaterTestStation/packages/
 Resources/
+dbBackup.bak
+*.mdf
+*.ldf

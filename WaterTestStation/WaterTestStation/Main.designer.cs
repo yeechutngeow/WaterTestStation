@@ -47,6 +47,8 @@
 			this.cboTestProgram = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.txtTestDataSet = new System.Windows.Forms.TextBox();
+			this.chkReferenceElectrode = new System.Windows.Forms.CheckBox();
+			this.chkFastSampling = new System.Windows.Forms.CheckBox();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -58,7 +60,7 @@
             this.propertiesToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(1567, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(1805, 28);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -139,12 +141,12 @@
             "6"});
 			this.cboTestType.Location = new System.Drawing.Point(281, 39);
 			this.cboTestType.Name = "cboTestType";
-			this.cboTestType.Size = new System.Drawing.Size(141, 24);
+			this.cboTestType.Size = new System.Drawing.Size(130, 24);
 			this.cboTestType.TabIndex = 7;
 			// 
 			// btnAdhocReading
 			// 
-			this.btnAdhocReading.Location = new System.Drawing.Point(428, 38);
+			this.btnAdhocReading.Location = new System.Drawing.Point(420, 38);
 			this.btnAdhocReading.Name = "btnAdhocReading";
 			this.btnAdhocReading.Size = new System.Drawing.Size(100, 26);
 			this.btnAdhocReading.TabIndex = 8;
@@ -155,48 +157,48 @@
 			// lblRelayStatus1
 			// 
 			this.lblRelayStatus1.AutoSize = true;
-			this.lblRelayStatus1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus1.Location = new System.Drawing.Point(1384, 33);
+			this.lblRelayStatus1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblRelayStatus1.Location = new System.Drawing.Point(1670, 33);
 			this.lblRelayStatus1.Name = "lblRelayStatus1";
-			this.lblRelayStatus1.Size = new System.Drawing.Size(160, 18);
+			this.lblRelayStatus1.Size = new System.Drawing.Size(130, 20);
 			this.lblRelayStatus1.TabIndex = 9;
 			this.lblRelayStatus1.Text = "0000 0000 0000 0000";
 			// 
 			// lblRelayStatus2
 			// 
 			this.lblRelayStatus2.AutoSize = true;
-			this.lblRelayStatus2.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus2.Location = new System.Drawing.Point(1384, 50);
+			this.lblRelayStatus2.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblRelayStatus2.Location = new System.Drawing.Point(1670, 50);
 			this.lblRelayStatus2.Name = "lblRelayStatus2";
-			this.lblRelayStatus2.Size = new System.Drawing.Size(160, 18);
+			this.lblRelayStatus2.Size = new System.Drawing.Size(130, 20);
 			this.lblRelayStatus2.TabIndex = 10;
 			this.lblRelayStatus2.Text = "0000 0000 0000 0000";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(1322, 33);
+			this.label1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(1622, 33);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(64, 18);
+			this.label1.Size = new System.Drawing.Size(50, 20);
 			this.label1.TabIndex = 11;
 			this.label1.Text = "Relay1:";
 			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(1322, 50);
+			this.label5.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Location = new System.Drawing.Point(1622, 50);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(64, 18);
+			this.label5.Size = new System.Drawing.Size(50, 20);
 			this.label5.TabIndex = 12;
 			this.label5.Text = "Relay2:";
 			// 
 			// btnRefresh
 			// 
-			this.btnRefresh.Location = new System.Drawing.Point(942, 38);
+			this.btnRefresh.Location = new System.Drawing.Point(926, 38);
 			this.btnRefresh.Name = "btnRefresh";
-			this.btnRefresh.Size = new System.Drawing.Size(64, 26);
+			this.btnRefresh.Size = new System.Drawing.Size(69, 26);
 			this.btnRefresh.TabIndex = 13;
 			this.btnRefresh.Text = "Refresh";
 			this.btnRefresh.UseVisualStyleBackColor = true;
@@ -205,7 +207,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(563, 43);
+			this.label6.Location = new System.Drawing.Point(547, 43);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(98, 17);
 			this.label6.TabIndex = 14;
@@ -214,7 +216,7 @@
 			// cboTestProgram
 			// 
 			this.cboTestProgram.FormattingEnabled = true;
-			this.cboTestProgram.Location = new System.Drawing.Point(667, 39);
+			this.cboTestProgram.Location = new System.Drawing.Point(651, 39);
 			this.cboTestProgram.Name = "cboTestProgram";
 			this.cboTestProgram.Size = new System.Drawing.Size(267, 24);
 			this.cboTestProgram.TabIndex = 15;
@@ -222,24 +224,47 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(1026, 43);
+			this.label7.Location = new System.Drawing.Point(1005, 43);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(99, 17);
+			this.label7.Size = new System.Drawing.Size(82, 17);
 			this.label7.TabIndex = 16;
-			this.label7.Text = "Test Data Set:";
+			this.label7.Text = "Data Set Id:";
 			// 
 			// txtTestDataSet
 			// 
-			this.txtTestDataSet.Location = new System.Drawing.Point(1131, 38);
+			this.txtTestDataSet.Location = new System.Drawing.Point(1090, 38);
 			this.txtTestDataSet.Name = "txtTestDataSet";
-			this.txtTestDataSet.Size = new System.Drawing.Size(100, 22);
+			this.txtTestDataSet.Size = new System.Drawing.Size(153, 22);
 			this.txtTestDataSet.TabIndex = 17;
+			// 
+			// chkReferenceElectrode
+			// 
+			this.chkReferenceElectrode.AutoSize = true;
+			this.chkReferenceElectrode.Location = new System.Drawing.Point(1266, 39);
+			this.chkReferenceElectrode.Name = "chkReferenceElectrode";
+			this.chkReferenceElectrode.Size = new System.Drawing.Size(116, 21);
+			this.chkReferenceElectrode.TabIndex = 18;
+			this.chkReferenceElectrode.Text = "Ref Electrode";
+			this.chkReferenceElectrode.UseVisualStyleBackColor = true;
+			this.chkReferenceElectrode.CheckedChanged += new System.EventHandler(this.chkReferenceElectrode_CheckedChanged);
+			// 
+			// chkFastSampling
+			// 
+			this.chkFastSampling.AutoSize = true;
+			this.chkFastSampling.Location = new System.Drawing.Point(1402, 38);
+			this.chkFastSampling.Name = "chkFastSampling";
+			this.chkFastSampling.Size = new System.Drawing.Size(156, 21);
+			this.chkFastSampling.TabIndex = 19;
+			this.chkFastSampling.Text = "Fast Sampling (30s)";
+			this.chkFastSampling.UseVisualStyleBackColor = true;
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1567, 446);
+			this.ClientSize = new System.Drawing.Size(1805, 446);
+			this.Controls.Add(this.chkFastSampling);
+			this.Controls.Add(this.chkReferenceElectrode);
 			this.Controls.Add(this.txtTestDataSet);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.cboTestProgram);
@@ -291,6 +316,8 @@
 		public System.Windows.Forms.ComboBox cboTestProgram;
 		private System.Windows.Forms.Label label7;
 		public System.Windows.Forms.TextBox txtTestDataSet;
+		public System.Windows.Forms.CheckBox chkReferenceElectrode;
+		public System.Windows.Forms.CheckBox chkFastSampling;
 	}
 }
 

@@ -92,7 +92,7 @@
 			this.dataGridView1.ReadOnly = true;
 			this.dataGridView1.RowTemplate.Height = 24;
 			this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView1.Size = new System.Drawing.Size(1053, 245);
+			this.dataGridView1.Size = new System.Drawing.Size(1053, 626);
 			this.dataGridView1.TabIndex = 1;
 			// 
 			// Id
@@ -147,7 +147,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1053, 276);
+			this.ClientSize = new System.Drawing.Size(1053, 657);
 			this.Controls.Add(this.dataGridView1);
 			this.Controls.Add(this.flowLayoutPanel1);
 			this.Name = "SelectDataForm";

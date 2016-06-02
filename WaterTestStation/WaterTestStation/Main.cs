@@ -10,6 +10,8 @@ namespace WaterTestStation
 {
 	public partial class Main : Form
 	{
+		public static Main MainForm;
+
 		// for development & debugging purposes
 
 		public const int NStations = 7;
@@ -401,6 +403,11 @@ namespace WaterTestStation
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
 			cboTestProgram.DataSource = new TestProgramDao().GetProgramsList();
+		}
+
+		private void chkReferenceElectrode_CheckedChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

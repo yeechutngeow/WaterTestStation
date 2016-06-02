@@ -82,9 +82,11 @@ namespace WaterTestStation
 							Main.Multimeter.ReadABCurrentAndVoltage(m.TestStation, out ABCurrent, out ABVoltage);
 							break;
 					}
-
-					ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation);
-					BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation);
+					if (m.TestStation.frmMain.chkReferenceElectrode.Checked)
+					{
+						ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation);
+						BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation);
+					}
 					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
 					stopwatch.Stop();
 

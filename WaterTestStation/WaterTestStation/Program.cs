@@ -15,7 +15,9 @@ namespace WaterTestStation
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Main());
+			Main frmMain = new Main();
+			WaterTestStation.Main.MainForm = frmMain;
+			Application.Run(frmMain);
 			//Application.Run(new ViewResultsForm());
 		}
 	}

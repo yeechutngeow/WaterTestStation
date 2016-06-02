@@ -83,7 +83,7 @@ namespace WaterTestStation
 
 			// calculate the number of columns
 			int nDataShown = Util.CountTrue(chkShowARefVoltage.Checked, chkShowBRefVoltage.Checked, chkShowABCurrent.Checked,
-			                           chkShowABVoltage.Checked);
+			                           chkShowABVoltage.Checked, chkShowImpedence.Checked);
 			var nColumns = SetupColumns(nDataShown);
 
 			SortedSet<TestRecord> testRecords =  new SortedSet<TestRecord>();
@@ -97,7 +97,8 @@ namespace WaterTestStation
 			{
 				IList<TestData> dataSet = testRecordDao.GetTestData(testRecord.Id, chkIgnoreLeadTime.Checked);
 				//TestRecord testRecord = testRecordDao.FindById(testRecordId);
-				chartTitle = testRecord.DataSet;
+				if (dataTable.Columns.Count >=3 )
+					chartTitle = testRecord.DataSet + " " + dataTable.Columns[3].ColumnName.Substring(dataTable.Columns[3].ColumnName.LastIndexOf(':') + 1);
 
 				SetColumnNames(datasetNum, nDataShown, testRecord);
 
@@ -136,37 +137,34 @@ namespace WaterTestStation
 					int col = datasetNum*nDataShown + 3;
 					if (chkShowARefVoltage.Checked)
 					{
-						if (Math.Abs(testData.ARefVoltage) >= Config.VoltageThreshold)
-						{
-							matrix2[rowNum][col] = testData.ARefVoltage.ToString();
-							matrix[rowNum][col] = Util.formatNumber(testData.ARefVoltage, "V");
-						}
+						matrix2[rowNum][col] = testData.ARefVoltage.ToString();
+						matrix[rowNum][col] = Util.formatNumber(testData.ARefVoltage, "V");
 						col++;
 					}
 					if (chkShowBRefVoltage.Checked)
 					{
-						if (Math.Abs(testData.BRefVoltage) >= Config.VoltageThreshold)
-						{
-							matrix2[rowNum][col] = testData.BRefVoltage.ToString();
-							matrix[rowNum][col] = Util.formatNumber(testData.BRefVoltage, "V");
-						}
+						matrix2[rowNum][col] = testData.BRefVoltage.ToString();
+						matrix[rowNum][col] = Util.formatNumber(testData.BRefVoltage, "V");
 						col++;
 					}
 					if (chkShowABVoltage.Checked)
 					{
-						if (Math.Abs(testData.ABVoltage) >= Config.VoltageThreshold)
-						{
-							matrix2[rowNum][col] = testData.ABVoltage.ToString();
-							matrix[rowNum][col] = Util.formatNumber(testData.ABVoltage, "V");
-						}
+						matrix2[rowNum][col] = testData.ABVoltage.ToString();
+						matrix[rowNum][col] = Util.formatNumber(testData.ABVoltage, "V");
 						col++;
 					}
 					if (chkShowABCurrent.Checked)
 					{
-						if (Math.Abs(testData.ABCurrent) >= Config.CurrentThreshold)
+						matrix2[rowNum][col] = testData.ABCurrent.ToString();
+						matrix[rowNum][col] = Util.formatNumber(testData.ABCurrent, "A");
+						col++;
+					}
+					if (chkShowImpedence.Checked)
+					{
+						if (Math.Abs(testData.ABCurrent - 0) > 1E-9)
 						{
-							matrix2[rowNum][col] = testData.ABCurrent.ToString();
-							matrix[rowNum][col] = Util.formatNumber(testData.ABCurrent, "A");
+							matrix2[rowNum][col] = (testData.ABVoltage/testData.ABCurrent).ToString();
+							matrix[rowNum][col] = Util.formatNumber((testData.ABVoltage/testData.ABCurrent), "\u2126");
 						}
 					}
 					rowNum++;
@@ -191,13 +189,15 @@ namespace WaterTestStation
 		{
 			int col = setNumber*nDataShown + 3;
 			if (chkShowARefVoltage.Checked)
-				_setColName(dataTable.Columns[col++], testRecord.Sample, ":ARef");
+				_setColName(dataTable.Columns[col++], testRecord.Sample, ":ARef-V");
 			if (chkShowBRefVoltage.Checked)
-				_setColName(dataTable.Columns[col++], testRecord.Sample, ":BRef");
+				_setColName(dataTable.Columns[col++], testRecord.Sample, ":BRef-V");
 			if (chkShowABVoltage.Checked)
-				_setColName(dataTable.Columns[col++], testRecord.Sample, ":ABVolt");
+				_setColName(dataTable.Columns[col++], testRecord.Sample, ":AB-V");
 			if (chkShowABCurrent.Checked)
-				_setColName(dataTable.Columns[col], testRecord.Sample, ":ABAmp");
+				_setColName(dataTable.Columns[col++], testRecord.Sample, ":AB-A");
+			if (chkShowImpedence.Checked)
+				_setColName(dataTable.Columns[col], testRecord.Sample, ":AB-\u2126");
 		}
 
 		private void _setColName(DataColumn dc, string name, string suffix)
@@ -230,7 +230,7 @@ namespace WaterTestStation
 			dataTable.Columns[0].ColumnName = "Elapsed";
 			dataTable.Columns[1].ColumnName = "Step";
 			dataTable.Columns[2].ColumnName = "StepTime";
-			foreach (string[] t in matrix)
+			foreach (object[] t in matrix)
 				dataTable.LoadDataRow(t, true);
 
 			dgvDataGrid.DataSource = dataTable;
@@ -245,7 +245,7 @@ namespace WaterTestStation
 
 			bool toggle = true;
 			int nDataShown = Util.CountTrue(chkShowARefVoltage.Checked, chkShowBRefVoltage.Checked, chkShowABCurrent.Checked,
-									   chkShowABVoltage.Checked);
+									   chkShowABVoltage.Checked, chkShowImpedence.Checked);
 			int col = 3;
 			while (col < dgvDataGrid.Columns.Count)
 			{
@@ -275,38 +275,33 @@ namespace WaterTestStation
 			RefreshData();
 		}
 
-		Color[] colors = new Color[] {Color.Gray, Color.SpringGreen, Color.Blue, Color.Orange, Color.Green, Color.Crimson, Color.MediumOrchid, Color.SteelBlue};
-		bool[] colorUsed;
+		readonly Color[] colors = new[] {Color.Gray, Color.SpringGreen, Color.Blue, Color.Orange, Color.Green, Color.Crimson, Color.MediumOrchid, Color.SteelBlue};
 
-		private Color _useColor(int index)
+		private Color getColor(string sampleName, int seriesIndex)
 		{
-			colorUsed[index] = true;
-			return colors[index];
-		}
+			if (chkUseCustomColor.Checked)
+			{
+				if (sampleName.ToUpper().StartsWith("DIW")) return colors[0];
+				if (sampleName.ToUpper().StartsWith("CTRL")) return colors[1];
+				if (sampleName.ToUpper().StartsWith("B5")) return colors[2];
+				if (sampleName.ToUpper().StartsWith("SPRITZ")) return colors[3];
+				if (sampleName.ToUpper().StartsWith("KMK")) return colors[4];
+				if (sampleName.ToUpper().StartsWith("M3")) return colors[5];
 
-		private Color getColor(string sampleName)
-		{
-			if (sampleName.ToUpper().StartsWith("DIW")) return _useColor(0);
-			if (sampleName.ToUpper().StartsWith("CTRL")) return _useColor(1);
-			if (sampleName.ToUpper().StartsWith("B5")) return _useColor(2);
-			if (sampleName.ToUpper().StartsWith("SPRITZ")) return _useColor(3);
-			if (sampleName.ToUpper().StartsWith("KMK")) return _useColor(4);
-			if (sampleName.ToUpper().StartsWith("M3")) return _useColor(5);
-
-			if (sampleName.ToUpper().StartsWith("1ML")) return _useColor(1);
-			if (sampleName.ToUpper().StartsWith("2ML")) return _useColor(2);
-			if (sampleName.ToUpper().StartsWith("4ML")) return _useColor(3);
-			if (sampleName.ToUpper().StartsWith("8ML")) return _useColor(4);
-			return Color.White;
+				if (sampleName.ToUpper().StartsWith("1ML")) return colors[1];
+				if (sampleName.ToUpper().StartsWith("2ML")) return colors[2];
+				if (sampleName.ToUpper().StartsWith("4ML")) return colors[3];
+				if (sampleName.ToUpper().StartsWith("8ML")) return colors[4];
+			}
+			return colors[seriesIndex % colors.Length];
 		}
 
 		private void DrawChart()
 		{
-			colorUsed = new bool[8];
 			chart1.Series.Clear();
 
 			chart1.Titles.Clear();
-			chart1.Titles.Add("DataSet: " + chartTitle);
+			chart1.Titles.Add( chartTitle);
 			chart1.ChartAreas[0].AxisY.IsLogarithmic = chkLogarithmic.Checked;
 
 			double minY = 0, maxY = 0;
@@ -318,16 +313,29 @@ namespace WaterTestStation
 					Name = dataTable.Columns[i].ColumnName,
 					ChartType = SeriesChartType.Line,
 					XValueType = ChartValueType.Int32,
+					Color = getColor(dataTable.Columns[i].ColumnName, i)
 				};
-				Color color = getColor(dataTable.Columns[i].ColumnName);
-				if (color != Color.White) c.Color = color;
-
 				chart1.Series.Add(c);
+
+				Series c2 = null;
+				if (chkIntegrate.Checked)
+				{
+					c2 = new Series
+					{
+						Name = c.Name + "-i",
+						ChartType = SeriesChartType.Line,
+						XValueType = ChartValueType.Int32,
+						YAxisType = AxisType.Secondary,
+						Color = c.Color
+					};
+					chart1.Series.Add(c2);
+				}
 
 				int lastStepTime = 0;
 				double lastY = 0;
-				int curX = 0;
+				long curX = 0;
 				double integral = 0;
+				double totalIntegral = 0;
 
 				foreach (string[] row in matrix2)
 				{
@@ -338,22 +346,27 @@ namespace WaterTestStation
 					if (chkInvertGraph.Checked) curY = -curY;
 
 					int interval;
-					if (curStepTime == 0)
+					if (curStepTime < lastStepTime)
 						interval = curX > 0 ? 2 : 0;
 					else
 						interval = curStepTime - lastStepTime;
 
 					curX += interval;
-					double yValue = 0;
+					double yValue;
 
 					if (chkIntegrate.Checked)
 					{
-						if (curStepTime == 0)
+						if (curStepTime < lastStepTime)
 							integral = 0;
 						else
+						{
 							integral += (curY + lastY)/2*interval;
+							totalIntegral += (curY + lastY) / 2 * interval;
+						}
 
 						yValue = integral;
+
+						c2.Points.AddXY(curX, totalIntegral);
 					}
 					else
 						yValue = curY;
@@ -372,7 +385,7 @@ namespace WaterTestStation
 			chart1.ChartAreas[0].RecalculateAxesScale();
 			//Set initial zoom
 			chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 4000);
-			chart1.ChartAreas[0].AxisY.ScaleView.Zoom(Util.NextExponent(maxY)/10, 2* Util.NextExponent(maxY)/10);
+			chart1.ChartAreas[0].AxisY.ScaleView.Zoom(0, 3* Util.NextExponent(maxY)/10);
 		}
 
 	}

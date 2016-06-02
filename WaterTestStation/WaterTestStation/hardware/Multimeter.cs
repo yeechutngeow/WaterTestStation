@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using NationalInstruments.VisaNS;
 
@@ -86,9 +87,7 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadABVoltage(TestStation station)
 		{
-			usbRelay.SetChannels(
-				new[] { readingSelector[0] },
-				new[] { readingSelector[1], readingSelector[2], readingSelector[3]});
+			_setChannels("1000");
 			double result = -ReadVoltage();
 			TurnOffMeter();
 			return result;
@@ -101,9 +100,7 @@ namespace WaterTestStation.hardware
 		public double ReadABCurrent(TestStation station)
 		{
 			station.currentSwitch.ToggleOn();
-			usbRelay.SetChannels(
-				new[] { readingSelector[0], readingSelector[3] },
-				new[] { readingSelector[1], readingSelector[2]});
+			_setChannels("1001");
 			
 			double result = ReadCurrent();
 			station.currentSwitch.ToggleOff();
@@ -118,9 +115,7 @@ namespace WaterTestStation.hardware
 		public void ReadABCurrentAndVoltage(TestStation station, out double ABCurrent, out double ABVoltage)
 		{
 			station.currentSwitch.ToggleOn();
-			usbRelay.SetChannels(
-				new[] { readingSelector[0], readingSelector[3] },
-				new[] { readingSelector[1], readingSelector[2] });
+			_setChannels("1001");
 
 			ABCurrent = ReadCurrent();
 			ABVoltage = -ReadVoltage();
@@ -134,9 +129,7 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadARefVoltage(TestStation station)
 		{
-			usbRelay.SetChannels(
-				new[] {readingSelector[0], readingSelector[2]},
-				new[] { readingSelector[1], readingSelector[3]});
+			_setChannels("1010");
 			double result = - ReadVoltage();
 			TurnOffMeter();
 			return result;
@@ -147,9 +140,7 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadBRefVoltage(TestStation station)
 		{
-			usbRelay.SetChannels(
-				new[] {readingSelector[0], readingSelector[1]},
-				new[] { readingSelector[2], readingSelector[3]});
+			_setChannels("1100");
 			double result = ReadVoltage();
 			TurnOffMeter();
 			return result;
@@ -160,12 +151,24 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadABCapacitance(TestStation station)
 		{
-			usbRelay.SetChannels(
-				new[] { readingSelector[0] },
-				new[] { readingSelector[1], readingSelector[2], readingSelector[3]});
+			_setChannels("1000");
 			double result = ReadCapacitance();
 			TurnOffMeter();
 			return result;
+		}
+
+		private void _setChannels(String pattern)
+		{
+			IList<int> onList = new List<int>();
+			IList<int> offList = new List<int>();
+			int i = 0;
+			foreach (char c in pattern)
+			{
+				if (c == '1') onList.Add(readingSelector[i]);
+				else offList.Add(readingSelector[i]);
+				i++;
+			}
+			usbRelay.SetChannels(onList, offList);
 		}
 
 		public void TurnOffMeter()

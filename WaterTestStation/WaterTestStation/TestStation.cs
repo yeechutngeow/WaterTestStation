@@ -22,7 +22,7 @@ namespace WaterTestStation
 
 		private Thread executionThread;
 
-		private Main frmMain;
+		public Main frmMain;
 		private TextBox txtTestDescription;
 		private TextBox txtCycles;
 		private TextBox txtLeadTime;
@@ -96,7 +96,7 @@ namespace WaterTestStation
 
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(testProgramId, ThreadSafeReadText(txtSample),
 				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime),
-				frmMain.txtTestDataSet.Text);
+				frmMain.txtTestDataSet.Text, frmMain.chkReferenceElectrode.Checked);
 
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
@@ -196,10 +196,12 @@ namespace WaterTestStation
 			return stepStartTime;
 		}
 
-		private readonly int[] _dischargeSamplingTime = { 0, 2, 5, 10, 30, 60, 120 };
-		private readonly int[] _chargeSamplingTime = { 0, 2, 5, 10, 30, 60, 120 };
-		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60, 120 };
-		private const int SamplingInterval = 150; // one sampling every 2.5 minutes
+		private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 30, 60 };
+		private readonly int[] _chargeSamplingTime = { 0, 5, 10, 30, 60 };
+		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60 };
+		private const int DefaultSamplingInterval = 150; // one sampling every 2.5 minutes
+
+		private const int FastSamplingInterval = 30; // fast sampling
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
@@ -224,19 +226,25 @@ namespace WaterTestStation
 
 		private void _ExecuteStep(int stepStartTime, TestProgramStep testStep, IEnumerable<int> ReadingTimes)
 		{
+			int samplingInterval = Main.MainForm.chkFastSampling.Checked ? FastSamplingInterval : DefaultSamplingInterval;
+
 			foreach (var t in ReadingTimes)
 			{
 				Debug.WriteLine("ExecuteStep " + testStep.TestType + ":" + stepStartTime + " traget time:", t);
 				if (t > testStep.Duration)
 					break;
+				if (t >= samplingInterval)
+					break;
 				_TakeReadings(t, stepStartTime, testStep);
 			}
 
-			int time = SamplingInterval;																																																																																																																										
+
+			int time = samplingInterval;
+
 			while (time < testStep.Duration)
 			{
 				_TakeReadings(time, stepStartTime, testStep);
-				time += SamplingInterval; // add 5 mins 
+				time += samplingInterval; // advance to next sampling time
 				if (time == testStep.Duration) time -= 2; // last reading - bring forward 2 seconds
 			}
 		}
