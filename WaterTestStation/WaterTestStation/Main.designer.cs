@@ -38,18 +38,23 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.cboTestType = new System.Windows.Forms.ComboBox();
 			this.btnAdhocReading = new System.Windows.Forms.Button();
-			this.lblRelayStatus1 = new System.Windows.Forms.Label();
-			this.lblRelayStatus2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
 			this.cboTestProgram = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.txtTestDataSet = new System.Windows.Forms.TextBox();
 			this.chkReferenceElectrode = new System.Windows.Forms.CheckBox();
-			this.chkFastSampling = new System.Windows.Forms.CheckBox();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblRelayStatus1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblRelayStatus2 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblTemperature = new System.Windows.Forms.ToolStripStatusLabel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.cboSamplingRate = new System.Windows.Forms.ComboBox();
 			this.menuStrip1.SuspendLayout();
+			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -154,46 +159,6 @@
 			this.btnAdhocReading.UseVisualStyleBackColor = true;
 			this.btnAdhocReading.Click += new System.EventHandler(this.btnAdhocReading_Click);
 			// 
-			// lblRelayStatus1
-			// 
-			this.lblRelayStatus1.AutoSize = true;
-			this.lblRelayStatus1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus1.Location = new System.Drawing.Point(1670, 33);
-			this.lblRelayStatus1.Name = "lblRelayStatus1";
-			this.lblRelayStatus1.Size = new System.Drawing.Size(130, 20);
-			this.lblRelayStatus1.TabIndex = 9;
-			this.lblRelayStatus1.Text = "0000 0000 0000 0000";
-			// 
-			// lblRelayStatus2
-			// 
-			this.lblRelayStatus2.AutoSize = true;
-			this.lblRelayStatus2.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblRelayStatus2.Location = new System.Drawing.Point(1670, 50);
-			this.lblRelayStatus2.Name = "lblRelayStatus2";
-			this.lblRelayStatus2.Size = new System.Drawing.Size(130, 20);
-			this.lblRelayStatus2.TabIndex = 10;
-			this.lblRelayStatus2.Text = "0000 0000 0000 0000";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(1622, 33);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(50, 20);
-			this.label1.TabIndex = 11;
-			this.label1.Text = "Relay1:";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(1622, 50);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(50, 20);
-			this.label5.TabIndex = 12;
-			this.label5.Text = "Relay2:";
-			// 
 			// btnRefresh
 			// 
 			this.btnRefresh.Location = new System.Drawing.Point(926, 38);
@@ -246,34 +211,98 @@
 			this.chkReferenceElectrode.TabIndex = 18;
 			this.chkReferenceElectrode.Text = "Ref Electrode";
 			this.chkReferenceElectrode.UseVisualStyleBackColor = true;
-			this.chkReferenceElectrode.CheckedChanged += new System.EventHandler(this.chkReferenceElectrode_CheckedChanged);
 			// 
-			// chkFastSampling
+			// statusStrip1
 			// 
-			this.chkFastSampling.AutoSize = true;
-			this.chkFastSampling.Location = new System.Drawing.Point(1402, 38);
-			this.chkFastSampling.Name = "chkFastSampling";
-			this.chkFastSampling.Size = new System.Drawing.Size(156, 21);
-			this.chkFastSampling.TabIndex = 19;
-			this.chkFastSampling.Text = "Fast Sampling (30s)";
-			this.chkFastSampling.UseVisualStyleBackColor = true;
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.lblRelayStatus1,
+            this.toolStripStatusLabel3,
+            this.lblRelayStatus2,
+            this.toolStripStatusLabel2,
+            this.lblTemperature});
+			this.statusStrip1.Location = new System.Drawing.Point(0, 421);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(1805, 25);
+			this.statusStrip1.TabIndex = 20;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// toolStripStatusLabel1
+			// 
+			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+			this.toolStripStatusLabel1.Size = new System.Drawing.Size(56, 20);
+			this.toolStripStatusLabel1.Text = "Relay1:";
+			// 
+			// lblRelayStatus1
+			// 
+			this.lblRelayStatus1.Name = "lblRelayStatus1";
+			this.lblRelayStatus1.Size = new System.Drawing.Size(149, 20);
+			this.lblRelayStatus1.Text = "0000 0000 0000 0000";
+			// 
+			// toolStripStatusLabel3
+			// 
+			this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+			this.toolStripStatusLabel3.Size = new System.Drawing.Size(56, 20);
+			this.toolStripStatusLabel3.Text = "Relay2:";
+			// 
+			// lblRelayStatus2
+			// 
+			this.lblRelayStatus2.Name = "lblRelayStatus2";
+			this.lblRelayStatus2.Size = new System.Drawing.Size(149, 20);
+			this.lblRelayStatus2.Text = "0000 0000 0000 0000";
+			// 
+			// toolStripStatusLabel2
+			// 
+			this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+			this.toolStripStatusLabel2.Size = new System.Drawing.Size(96, 20);
+			this.toolStripStatusLabel2.Text = "Temperature:";
+			// 
+			// lblTemperature
+			// 
+			this.lblTemperature.Name = "lblTemperature";
+			this.lblTemperature.Size = new System.Drawing.Size(17, 20);
+			this.lblTemperature.Text = "0";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(1388, 42);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(99, 17);
+			this.label1.TabIndex = 21;
+			this.label1.Text = "Sampling rate:";
+			// 
+			// cboSamplingRate
+			// 
+			this.cboSamplingRate.FormattingEnabled = true;
+			this.cboSamplingRate.Items.AddRange(new object[] {
+            "10",
+            "15",
+            "20",
+            "30",
+            "60",
+            "90",
+            "120"});
+			this.cboSamplingRate.Location = new System.Drawing.Point(1502, 36);
+			this.cboSamplingRate.Name = "cboSamplingRate";
+			this.cboSamplingRate.Size = new System.Drawing.Size(56, 24);
+			this.cboSamplingRate.TabIndex = 22;
+			this.cboSamplingRate.Text = "20";
 			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1805, 446);
-			this.Controls.Add(this.chkFastSampling);
+			this.Controls.Add(this.cboSamplingRate);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.chkReferenceElectrode);
 			this.Controls.Add(this.txtTestDataSet);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.cboTestProgram);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.btnRefresh);
-			this.Controls.Add(this.label5);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.lblRelayStatus2);
-			this.Controls.Add(this.lblRelayStatus1);
 			this.Controls.Add(this.btnAdhocReading);
 			this.Controls.Add(this.cboTestType);
 			this.Controls.Add(this.label4);
@@ -290,6 +319,8 @@
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.statusStrip1.ResumeLayout(false);
+			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -307,17 +338,21 @@
 		private System.Windows.Forms.ComboBox cboTestType;
 		private System.Windows.Forms.Button btnAdhocReading;
 		private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
-		private System.Windows.Forms.Label lblRelayStatus1;
-		private System.Windows.Forms.Label lblRelayStatus2;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button btnRefresh;
 		private System.Windows.Forms.Label label6;
 		public System.Windows.Forms.ComboBox cboTestProgram;
 		private System.Windows.Forms.Label label7;
 		public System.Windows.Forms.TextBox txtTestDataSet;
 		public System.Windows.Forms.CheckBox chkReferenceElectrode;
-		public System.Windows.Forms.CheckBox chkFastSampling;
+		public System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		public System.Windows.Forms.ToolStripStatusLabel lblRelayStatus1;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+		private System.Windows.Forms.ToolStripStatusLabel lblRelayStatus2;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+		private System.Windows.Forms.ToolStripStatusLabel lblTemperature;
+		private System.Windows.Forms.Label label1;
+		public System.Windows.Forms.ComboBox cboSamplingRate;
 	}
 }
 

@@ -23,6 +23,25 @@ namespace WaterTestStation
 			}
 		}
 
+		private delegate void SetStatusStripLabelCallback(StatusStrip statusStrip, ToolStripStatusLabel label, string text);
+
+		public void ThreadSafeSetStatusStripLabel(StatusStrip statusStrip, ToolStripStatusLabel label, string text)
+		{
+			// InvokeRequired required compares the thread ID of the
+			// calling thread to the thread ID of the creating thread.
+			// If these threads are different, it returns true.
+			if (statusStrip.InvokeRequired)
+			{
+				SetStatusStripLabelCallback d = ThreadSafeSetStatusStripLabel;
+				statusStrip.Invoke(d, new object[] {statusStrip, label, text });
+			}
+			else
+			{
+				label.Text = text;
+			}
+		}
+
+
 		private delegate void SetTextCallback(TextBox txtBox, string text);
 
 		protected void ThreadSafeSetText(TextBox txtBox, string text)
@@ -65,7 +84,6 @@ namespace WaterTestStation
 			Object value = null;
 			if (cbo.InvokeRequired)
 			{
-				//ReadComboboxCallback d = (ReadComboboxCallback) ThreadSafeReadCombo(cbo);
 				cbo.Invoke((MethodInvoker)delegate
 				{
 					value = cbo.SelectedValue;
@@ -77,6 +95,21 @@ namespace WaterTestStation
 			return value;
 		}
 
+		protected Object ThreadSafeReadComboItem(ComboBox cbo)
+		{
+			Object value = null;
+			if (cbo.InvokeRequired)
+			{
+				cbo.Invoke((MethodInvoker)delegate
+				{
+					value = cbo.SelectedItem;
+				});
+			}
+			else
+				value = cbo.SelectedText;
+
+			return value;
+		}
 
 		private delegate void SetButtonEnabledCallback(Button btn, bool enabled);
 

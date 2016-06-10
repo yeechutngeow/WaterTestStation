@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="WaterTestStation" namespace="WaterTestStation.model">
+
+	<class name="TestProgramStep" table="TestProgramStep">
+		<id name="Id">
+			<column name="Id" not-null="true"/>
+			<generator class="identity" />
+		</id>
+		<property name="TestType" />
+		<property name="Duration" />
+		<property name="RowOrder" />
+	</class>
+</hibernate-mapping>

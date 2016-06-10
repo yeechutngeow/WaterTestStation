@@ -7,3 +7,5 @@ Resources/
 dbBackup.bak
 *.mdf
 *.ldf
+WaterTestStation/obj/
+WaterTestStation/bin

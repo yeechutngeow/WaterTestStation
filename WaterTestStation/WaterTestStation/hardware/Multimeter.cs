@@ -13,6 +13,8 @@ namespace WaterTestStation.hardware
 		private readonly int[] readingSelector;
 		private readonly UsbRelay usbRelay;
 
+		private readonly Pt100 pt100 = new Pt100();
+
 		public Multimeter(UsbRelay usbRelay, int[] readingSelector)
 		{
 			this.usbRelay = usbRelay;
@@ -43,17 +45,22 @@ namespace WaterTestStation.hardware
 
 		private double ReadVoltage()
 		{
-			return _ReadMeter(":measure:voltage:DC?", Config.MultimeterDelay);
+			return _ReadMeter("voltage:DC", Config.MultimeterDelay);
 		}
 
 		private double ReadCurrent()
 		{
-			return _ReadMeter(":measure:current:DC?", Config.MultimeterDelay);
+			return _ReadMeter("current:DC", Config.MultimeterDelay);
+		}
+
+		private double ReadResistance()
+		{
+			return _ReadMeter("resistance", Config.MultimeterDelay + 200);
 		}
 
 		private double ReadCapacitance()
 		{
-			return _ReadMeter(":measure:capacitance?", 32000);
+			return _ReadMeter("capacitance", 32000);
 		}
 
 		private double _ReadMeter(string command, int delay)
@@ -64,8 +71,9 @@ namespace WaterTestStation.hardware
 				return random.NextDouble();
 			}
 
+            mbSession.Write(":function:" + command);
 			Thread.Sleep(delay);
-			mbSession.Write(command);
+			mbSession.Write(":measure:" + command + "?");
 			Thread.Sleep(20);
 			string result;
 			try
@@ -104,6 +112,9 @@ namespace WaterTestStation.hardware
 			
 			double result = ReadCurrent();
 			station.currentSwitch.ToggleOff();
+			if (Config.HasMultimeter)
+				mbSession.Write(":function:voltage:DC");
+
 			TurnOffMeter();
 			return result;
 		}
@@ -154,6 +165,20 @@ namespace WaterTestStation.hardware
 			_setChannels("1000");
 			double result = ReadCapacitance();
 			TurnOffMeter();
+			return result;
+		}
+
+		/* 
+		 * reads temperature sensor
+		 */
+		public double ReadTemperature()
+		{
+			TurnOffMeter();
+
+			double result = pt100.Convert(ReadResistance());
+			if (Config.HasMultimeter)
+				mbSession.Write(":function:voltage:DC");
+	
 			return result;
 		}
 

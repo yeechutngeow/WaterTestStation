@@ -11,6 +11,7 @@ namespace WaterTestStation
 	public partial class Main : Form
 	{
 		public static Main MainForm;
+		public double Temperature;
 
 		// for development & debugging purposes
 
@@ -30,7 +31,7 @@ namespace WaterTestStation
 		// the 4 multiplexers for switching the multiplexer to the right channel
 		public static readonly RelayMux[] mux = new RelayMux[4];
 
-		readonly TestStation[] stations = new TestStation[NStations];
+		public readonly TestStation[] stations = new TestStation[NStations];
 
 		public static Multimeter Multimeter;
 
@@ -44,12 +45,18 @@ namespace WaterTestStation
 
 			DrawForm();
 
+			cboSamplingRate.SelectedValue = "20";
+
 			cboTestType.DataSource = Enum.GetValues(typeof(TestType));
 			cboTestProgram.ValueMember = "Id";
 			cboTestProgram.DisplayMember = "Title";
 			cboTestProgram.DataSource = new TestProgramDao().GetProgramsList();
 
+			usbRelay1.OpenComPort(Config.RelayCom1);
+			usbRelay2.OpenComPort(Config.RelayCom2);
+
 			MeterRequest.StartServiceQueue();
+			TemperatureSensor.StartSensor();
 		}
 
 		private void btnStart_Click(object sender, EventArgs e)
@@ -109,7 +116,7 @@ namespace WaterTestStation
 
 			const int textWidth = panelWidth - col2 -5 ; 
 
-			this.Height = panelHeight*2 + yOffSet + 50;
+			this.Height = panelHeight*2 + yOffSet + 70;
 			this.Width = panelWidth*stationsPerRow + xOffSet + 30;
 
 			for (int i = 0; i < NStations; i++)
@@ -389,6 +396,7 @@ namespace WaterTestStation
 			}
 			if (Config.HasMultimeter)
 				Multimeter.CloseSession();
+			TemperatureSensor.Stop();
 			MeterRequest.AbortThread();
 			usbRelay1.Close();
 			usbRelay2.Close();
@@ -405,9 +413,12 @@ namespace WaterTestStation
 			cboTestProgram.DataSource = new TestProgramDao().GetProgramsList();
 		}
 
-		private void chkReferenceElectrode_CheckedChanged(object sender, EventArgs e)
-		{
+		readonly FormUtil formUtil = new FormUtil();
 
+		public void SetTemperature(double temperature)
+		{
+			this.Temperature = temperature;
+			formUtil.ThreadSafeSetStatusStripLabel(this.statusStrip1, this.lblTemperature, temperature.ToString("0.00"));
 		}
 	}
 }

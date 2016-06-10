@@ -74,7 +74,7 @@ namespace WaterTestStation
 
 		// This method is called by Multimeter class to log and display the readings obtained
 		public void LogMeterReadings(TestProgramStep testStep, int pCycle, int pCycleStartTime, int pStepTime, 
-				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, bool logFlag)
+				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, bool logFlag)
 		{
 			ThreadSafeSetLabel(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
 			ThreadSafeSetLabel(lblBRefVolt, Util.formatNumber(BRefVoltage, "V"));
@@ -85,7 +85,7 @@ namespace WaterTestStation
 			if (logFlag)
 			{
 				testRecordDao.LogTestData(testRecordId, testStep.GetTestType(), pCycle, pCycleStartTime + pStepTime, pStepTime, 
-					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent);
+					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature);
 			}
 		}
 
@@ -196,12 +196,15 @@ namespace WaterTestStation
 			return stepStartTime;
 		}
 
-		private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 30, 60 };
-		private readonly int[] _chargeSamplingTime = { 0, 5, 10, 30, 60 };
-		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60 };
-		private const int DefaultSamplingInterval = 150; // one sampling every 2.5 minutes
+//		private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 30, 60 };
+//		private readonly int[] _chargeSamplingTime = { 0, 5, 10, 30, 60 };
+//		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60 };
+        private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 20, 40 };
+        private readonly int[] _chargeSamplingTime = { 0, 5, 10, 20, 40 };
+        private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 20, 40 };
+        private const int DefaultSamplingInterval = 150; // one sampling every 2.5 minutes
 
-		private const int FastSamplingInterval = 30; // fast sampling
+		private const int FastSamplingInterval = 20; // fast sampling
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
@@ -226,8 +229,8 @@ namespace WaterTestStation
 
 		private void _ExecuteStep(int stepStartTime, TestProgramStep testStep, IEnumerable<int> ReadingTimes)
 		{
-			int samplingInterval = Main.MainForm.chkFastSampling.Checked ? FastSamplingInterval : DefaultSamplingInterval;
-
+			
+			int samplingInterval = int.Parse((string) ThreadSafeReadComboItem(frmMain.cboSamplingRate));
 			foreach (var t in ReadingTimes)
 			{
 				Debug.WriteLine("ExecuteStep " + testStep.TestType + ":" + stepStartTime + " traget time:", t);
