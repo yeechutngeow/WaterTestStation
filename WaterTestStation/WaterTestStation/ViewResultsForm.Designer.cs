@@ -37,28 +37,36 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.dgvDataGrid = new System.Windows.Forms.DataGridView();
 			this.dataGrid = new System.Windows.Forms.DataGridView();
+			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.txtY2Max = new System.Windows.Forms.TextBox();
+			this.txtY2Min = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.txtY1Max = new System.Windows.Forms.TextBox();
+			this.txtY1Min = new System.Windows.Forms.TextBox();
+			this.chkInvertGraph2 = new System.Windows.Forms.CheckBox();
+			this.chkPlotAverage = new System.Windows.Forms.CheckBox();
+			this.chkAxis2Logarithmic = new System.Windows.Forms.CheckBox();
+			this.cboYaxis2 = new System.Windows.Forms.ComboBox();
+			this.cboYaxis1 = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.chkShowReferenceVoltage = new System.Windows.Forms.CheckBox();
 			this.chkUseCustomColor = new System.Windows.Forms.CheckBox();
 			this.lbtnRefresh = new System.Windows.Forms.LinkLabel();
 			this.lbtnAddDataSet = new System.Windows.Forms.LinkLabel();
 			this.chkIgnoreLeadTime = new System.Windows.Forms.CheckBox();
-			this.chkShowBRefVoltage = new System.Windows.Forms.CheckBox();
-			this.chkShowImpedence = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.chkInvertGraph = new System.Windows.Forms.CheckBox();
-			this.chkShowARefVoltage = new System.Windows.Forms.CheckBox();
-			this.chkIntegrate = new System.Windows.Forms.CheckBox();
+			this.chkInvertGraph1 = new System.Windows.Forms.CheckBox();
 			this.chkShowOpenCircuit = new System.Windows.Forms.CheckBox();
-			this.chkLogarithmic = new System.Windows.Forms.CheckBox();
-			this.chkShowABCurrent = new System.Windows.Forms.CheckBox();
+			this.chkAxis1Logarithmic = new System.Windows.Forms.CheckBox();
 			this.chkShowDischarge = new System.Windows.Forms.CheckBox();
 			this.chkShowReverseCharge = new System.Windows.Forms.CheckBox();
-			this.chkShowABVoltage = new System.Windows.Forms.CheckBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.chkShowForwardCharge = new System.Windows.Forms.CheckBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.chkShowTemperature = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -121,24 +129,32 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowTemperature);
+			this.splitContainer1.Panel2.Controls.Add(this.label7);
+			this.splitContainer1.Panel2.Controls.Add(this.label8);
+			this.splitContainer1.Panel2.Controls.Add(this.txtY2Max);
+			this.splitContainer1.Panel2.Controls.Add(this.txtY2Min);
+			this.splitContainer1.Panel2.Controls.Add(this.label6);
+			this.splitContainer1.Panel2.Controls.Add(this.label5);
+			this.splitContainer1.Panel2.Controls.Add(this.txtY1Max);
+			this.splitContainer1.Panel2.Controls.Add(this.txtY1Min);
+			this.splitContainer1.Panel2.Controls.Add(this.chkInvertGraph2);
+			this.splitContainer1.Panel2.Controls.Add(this.chkPlotAverage);
+			this.splitContainer1.Panel2.Controls.Add(this.chkAxis2Logarithmic);
+			this.splitContainer1.Panel2.Controls.Add(this.cboYaxis2);
+			this.splitContainer1.Panel2.Controls.Add(this.cboYaxis1);
+			this.splitContainer1.Panel2.Controls.Add(this.label4);
+			this.splitContainer1.Panel2.Controls.Add(this.label1);
+			this.splitContainer1.Panel2.Controls.Add(this.chkShowReferenceVoltage);
 			this.splitContainer1.Panel2.Controls.Add(this.chkUseCustomColor);
 			this.splitContainer1.Panel2.Controls.Add(this.lbtnRefresh);
 			this.splitContainer1.Panel2.Controls.Add(this.lbtnAddDataSet);
 			this.splitContainer1.Panel2.Controls.Add(this.chkIgnoreLeadTime);
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowBRefVoltage);
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowImpedence);
 			this.splitContainer1.Panel2.Controls.Add(this.label2);
-			this.splitContainer1.Panel2.Controls.Add(this.chkInvertGraph);
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowARefVoltage);
-			this.splitContainer1.Panel2.Controls.Add(this.chkIntegrate);
+			this.splitContainer1.Panel2.Controls.Add(this.chkInvertGraph1);
 			this.splitContainer1.Panel2.Controls.Add(this.chkShowOpenCircuit);
-			this.splitContainer1.Panel2.Controls.Add(this.chkLogarithmic);
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowABCurrent);
+			this.splitContainer1.Panel2.Controls.Add(this.chkAxis1Logarithmic);
 			this.splitContainer1.Panel2.Controls.Add(this.chkShowDischarge);
 			this.splitContainer1.Panel2.Controls.Add(this.chkShowReverseCharge);
-			this.splitContainer1.Panel2.Controls.Add(this.chkShowABVoltage);
-			this.splitContainer1.Panel2.Controls.Add(this.label1);
 			this.splitContainer1.Panel2.Controls.Add(this.chkShowForwardCharge);
 			this.splitContainer1.Panel2.Controls.Add(this.label3);
 			this.splitContainer1.Panel2MinSize = 30;
@@ -170,10 +186,164 @@
 			this.dataGrid.Size = new System.Drawing.Size(842, 613);
 			this.dataGrid.TabIndex = 0;
 			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(15, 427);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(49, 17);
+			this.label7.TabIndex = 33;
+			this.label7.Text = "range:";
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(133, 427);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(13, 17);
+			this.label8.TabIndex = 32;
+			this.label8.Text = "-";
+			// 
+			// txtY2Max
+			// 
+			this.txtY2Max.Location = new System.Drawing.Point(149, 422);
+			this.txtY2Max.Name = "txtY2Max";
+			this.txtY2Max.Size = new System.Drawing.Size(54, 22);
+			this.txtY2Max.TabIndex = 31;
+			this.txtY2Max.Text = "35";
+			// 
+			// txtY2Min
+			// 
+			this.txtY2Min.Location = new System.Drawing.Point(72, 423);
+			this.txtY2Min.Name = "txtY2Min";
+			this.txtY2Min.Size = new System.Drawing.Size(57, 22);
+			this.txtY2Min.TabIndex = 30;
+			this.txtY2Min.Text = "0";
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(15, 292);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(49, 17);
+			this.label6.TabIndex = 29;
+			this.label6.Text = "range:";
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(133, 292);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(13, 17);
+			this.label5.TabIndex = 28;
+			this.label5.Text = "-";
+			// 
+			// txtY1Max
+			// 
+			this.txtY1Max.Location = new System.Drawing.Point(149, 287);
+			this.txtY1Max.Name = "txtY1Max";
+			this.txtY1Max.Size = new System.Drawing.Size(54, 22);
+			this.txtY1Max.TabIndex = 27;
+			this.txtY1Max.Text = "5E-6";
+			// 
+			// txtY1Min
+			// 
+			this.txtY1Min.Location = new System.Drawing.Point(72, 288);
+			this.txtY1Min.Name = "txtY1Min";
+			this.txtY1Min.Size = new System.Drawing.Size(57, 22);
+			this.txtY1Min.TabIndex = 26;
+			this.txtY1Min.Text = "-1E-6";
+			// 
+			// chkInvertGraph2
+			// 
+			this.chkInvertGraph2.AutoSize = true;
+			this.chkInvertGraph2.Location = new System.Drawing.Point(8, 400);
+			this.chkInvertGraph2.Name = "chkInvertGraph2";
+			this.chkInvertGraph2.Size = new System.Drawing.Size(109, 21);
+			this.chkInvertGraph2.TabIndex = 25;
+			this.chkInvertGraph2.Text = "Invert Graph";
+			this.chkInvertGraph2.UseVisualStyleBackColor = true;
+			// 
+			// chkPlotAverage
+			// 
+			this.chkPlotAverage.AutoSize = true;
+			this.chkPlotAverage.Location = new System.Drawing.Point(8, 491);
+			this.chkPlotAverage.Name = "chkPlotAverage";
+			this.chkPlotAverage.Size = new System.Drawing.Size(149, 21);
+			this.chkPlotAverage.TabIndex = 24;
+			this.chkPlotAverage.Text = "Plot average curve";
+			this.chkPlotAverage.UseVisualStyleBackColor = true;
+			// 
+			// chkAxis2Logarithmic
+			// 
+			this.chkAxis2Logarithmic.AutoSize = true;
+			this.chkAxis2Logarithmic.Location = new System.Drawing.Point(6, 373);
+			this.chkAxis2Logarithmic.Name = "chkAxis2Logarithmic";
+			this.chkAxis2Logarithmic.Size = new System.Drawing.Size(142, 21);
+			this.chkAxis2Logarithmic.TabIndex = 23;
+			this.chkAxis2Logarithmic.Text = "Logarithmic Scale";
+			this.chkAxis2Logarithmic.UseVisualStyleBackColor = true;
+			// 
+			// cboYaxis2
+			// 
+			this.cboYaxis2.FormattingEnabled = true;
+			this.cboYaxis2.Items.AddRange(new object[] {
+            "",
+            "Voltage",
+            "Current",
+            "Temperature",
+            "Cumulative Integral",
+            "Impedance"});
+			this.cboYaxis2.Location = new System.Drawing.Point(6, 343);
+			this.cboYaxis2.Name = "cboYaxis2";
+			this.cboYaxis2.Size = new System.Drawing.Size(179, 24);
+			this.cboYaxis2.TabIndex = 22;
+			// 
+			// cboYaxis1
+			// 
+			this.cboYaxis1.FormattingEnabled = true;
+			this.cboYaxis1.Items.AddRange(new object[] {
+            "Voltage",
+            "Current",
+            "Current Integral",
+            "Impedance"});
+			this.cboYaxis1.Location = new System.Drawing.Point(6, 209);
+			this.cboYaxis1.Name = "cboYaxis1";
+			this.cboYaxis1.Size = new System.Drawing.Size(179, 24);
+			this.cboYaxis1.TabIndex = 21;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(3, 323);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(62, 17);
+			this.label4.TabIndex = 20;
+			this.label4.Text = "Y-axis 2:";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(2, 189);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(62, 17);
+			this.label1.TabIndex = 19;
+			this.label1.Text = "Y-axis 1:";
+			// 
+			// chkShowReferenceVoltage
+			// 
+			this.chkShowReferenceVoltage.AutoSize = true;
+			this.chkShowReferenceVoltage.Location = new System.Drawing.Point(6, 155);
+			this.chkShowReferenceVoltage.Name = "chkShowReferenceVoltage";
+			this.chkShowReferenceVoltage.Size = new System.Drawing.Size(179, 21);
+			this.chkShowReferenceVoltage.TabIndex = 18;
+			this.chkShowReferenceVoltage.Text = "Show reference voltage";
+			this.chkShowReferenceVoltage.UseVisualStyleBackColor = true;
+			// 
 			// chkUseCustomColor
 			// 
 			this.chkUseCustomColor.AutoSize = true;
-			this.chkUseCustomColor.Location = new System.Drawing.Point(6, 472);
+			this.chkUseCustomColor.Location = new System.Drawing.Point(8, 542);
 			this.chkUseCustomColor.Name = "chkUseCustomColor";
 			this.chkUseCustomColor.Size = new System.Drawing.Size(158, 21);
 			this.chkUseCustomColor.TabIndex = 17;
@@ -183,7 +353,7 @@
 			// lbtnRefresh
 			// 
 			this.lbtnRefresh.AutoSize = true;
-			this.lbtnRefresh.Location = new System.Drawing.Point(2, 496);
+			this.lbtnRefresh.Location = new System.Drawing.Point(127, 0);
 			this.lbtnRefresh.Name = "lbtnRefresh";
 			this.lbtnRefresh.Size = new System.Drawing.Size(58, 17);
 			this.lbtnRefresh.TabIndex = 6;
@@ -207,110 +377,58 @@
 			this.chkIgnoreLeadTime.AutoSize = true;
 			this.chkIgnoreLeadTime.Checked = true;
 			this.chkIgnoreLeadTime.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkIgnoreLeadTime.Location = new System.Drawing.Point(5, 445);
+			this.chkIgnoreLeadTime.Location = new System.Drawing.Point(7, 515);
 			this.chkIgnoreLeadTime.Name = "chkIgnoreLeadTime";
 			this.chkIgnoreLeadTime.Size = new System.Drawing.Size(141, 21);
 			this.chkIgnoreLeadTime.TabIndex = 14;
 			this.chkIgnoreLeadTime.Text = "Ignore Lead Time";
 			this.chkIgnoreLeadTime.UseVisualStyleBackColor = true;
 			// 
-			// chkShowBRefVoltage
-			// 
-			this.chkShowBRefVoltage.AutoSize = true;
-			this.chkShowBRefVoltage.Location = new System.Drawing.Point(5, 126);
-			this.chkShowBRefVoltage.Name = "chkShowBRefVoltage";
-			this.chkShowBRefVoltage.Size = new System.Drawing.Size(118, 21);
-			this.chkShowBRefVoltage.TabIndex = 4;
-			this.chkShowBRefVoltage.Text = "B-Ref Voltage";
-			this.chkShowBRefVoltage.UseVisualStyleBackColor = true;
-			// 
-			// chkShowImpedence
-			// 
-			this.chkShowImpedence.AutoSize = true;
-			this.chkShowImpedence.Location = new System.Drawing.Point(5, 153);
-			this.chkShowImpedence.Name = "chkShowImpedence";
-			this.chkShowImpedence.Size = new System.Drawing.Size(129, 21);
-			this.chkShowImpedence.TabIndex = 16;
-			this.chkShowImpedence.Text = "Impedence (V/I)";
-			this.chkShowImpedence.UseVisualStyleBackColor = true;
-			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(1, 209);
+			this.label2.Location = new System.Drawing.Point(3, 27);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(110, 17);
+			this.label2.Size = new System.Drawing.Size(76, 17);
 			this.label2.TabIndex = 11;
-			this.label2.Text = "Show Test Type";
+			this.label2.Text = "Show Data";
 			// 
-			// chkInvertGraph
+			// chkInvertGraph1
 			// 
-			this.chkInvertGraph.AutoSize = true;
-			this.chkInvertGraph.Location = new System.Drawing.Point(5, 418);
-			this.chkInvertGraph.Name = "chkInvertGraph";
-			this.chkInvertGraph.Size = new System.Drawing.Size(109, 21);
-			this.chkInvertGraph.TabIndex = 13;
-			this.chkInvertGraph.Text = "Invert Graph";
-			this.chkInvertGraph.UseVisualStyleBackColor = true;
-			// 
-			// chkShowARefVoltage
-			// 
-			this.chkShowARefVoltage.AutoSize = true;
-			this.chkShowARefVoltage.Location = new System.Drawing.Point(5, 99);
-			this.chkShowARefVoltage.Name = "chkShowARefVoltage";
-			this.chkShowARefVoltage.Size = new System.Drawing.Size(118, 21);
-			this.chkShowARefVoltage.TabIndex = 3;
-			this.chkShowARefVoltage.Text = "A-Ref Voltage";
-			this.chkShowARefVoltage.UseVisualStyleBackColor = true;
-			// 
-			// chkIntegrate
-			// 
-			this.chkIntegrate.AutoSize = true;
-			this.chkIntegrate.Location = new System.Drawing.Point(5, 364);
-			this.chkIntegrate.Name = "chkIntegrate";
-			this.chkIntegrate.Size = new System.Drawing.Size(131, 21);
-			this.chkIntegrate.TabIndex = 12;
-			this.chkIntegrate.Text = "Integrate values";
-			this.chkIntegrate.UseVisualStyleBackColor = true;
+			this.chkInvertGraph1.AutoSize = true;
+			this.chkInvertGraph1.Location = new System.Drawing.Point(6, 262);
+			this.chkInvertGraph1.Name = "chkInvertGraph1";
+			this.chkInvertGraph1.Size = new System.Drawing.Size(109, 21);
+			this.chkInvertGraph1.TabIndex = 13;
+			this.chkInvertGraph1.Text = "Invert Graph";
+			this.chkInvertGraph1.UseVisualStyleBackColor = true;
 			// 
 			// chkShowOpenCircuit
 			// 
 			this.chkShowOpenCircuit.AutoSize = true;
-			this.chkShowOpenCircuit.Location = new System.Drawing.Point(4, 229);
+			this.chkShowOpenCircuit.Location = new System.Drawing.Point(6, 47);
 			this.chkShowOpenCircuit.Name = "chkShowOpenCircuit";
 			this.chkShowOpenCircuit.Size = new System.Drawing.Size(108, 21);
 			this.chkShowOpenCircuit.TabIndex = 7;
 			this.chkShowOpenCircuit.Text = "Open Circuit";
 			this.chkShowOpenCircuit.UseVisualStyleBackColor = true;
 			// 
-			// chkLogarithmic
+			// chkAxis1Logarithmic
 			// 
-			this.chkLogarithmic.AutoSize = true;
-			this.chkLogarithmic.Location = new System.Drawing.Point(5, 391);
-			this.chkLogarithmic.Name = "chkLogarithmic";
-			this.chkLogarithmic.Size = new System.Drawing.Size(142, 21);
-			this.chkLogarithmic.TabIndex = 16;
-			this.chkLogarithmic.Text = "Logarithmic Scale";
-			this.chkLogarithmic.UseVisualStyleBackColor = true;
-			// 
-			// chkShowABCurrent
-			// 
-			this.chkShowABCurrent.AutoSize = true;
-			this.chkShowABCurrent.Checked = true;
-			this.chkShowABCurrent.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowABCurrent.Location = new System.Drawing.Point(5, 72);
-			this.chkShowABCurrent.Name = "chkShowABCurrent";
-			this.chkShowABCurrent.Size = new System.Drawing.Size(99, 21);
-			this.chkShowABCurrent.TabIndex = 2;
-			this.chkShowABCurrent.Text = "AB Current";
-			this.chkShowABCurrent.UseVisualStyleBackColor = true;
+			this.chkAxis1Logarithmic.AutoSize = true;
+			this.chkAxis1Logarithmic.Location = new System.Drawing.Point(6, 235);
+			this.chkAxis1Logarithmic.Name = "chkAxis1Logarithmic";
+			this.chkAxis1Logarithmic.Size = new System.Drawing.Size(142, 21);
+			this.chkAxis1Logarithmic.TabIndex = 16;
+			this.chkAxis1Logarithmic.Text = "Logarithmic Scale";
+			this.chkAxis1Logarithmic.UseVisualStyleBackColor = true;
 			// 
 			// chkShowDischarge
 			// 
 			this.chkShowDischarge.AutoSize = true;
 			this.chkShowDischarge.Checked = true;
 			this.chkShowDischarge.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowDischarge.Location = new System.Drawing.Point(4, 256);
+			this.chkShowDischarge.Location = new System.Drawing.Point(6, 74);
 			this.chkShowDischarge.Name = "chkShowDischarge";
 			this.chkShowDischarge.Size = new System.Drawing.Size(94, 21);
 			this.chkShowDischarge.TabIndex = 8;
@@ -320,38 +438,17 @@
 			// chkShowReverseCharge
 			// 
 			this.chkShowReverseCharge.AutoSize = true;
-			this.chkShowReverseCharge.Location = new System.Drawing.Point(4, 310);
+			this.chkShowReverseCharge.Location = new System.Drawing.Point(6, 128);
 			this.chkShowReverseCharge.Name = "chkShowReverseCharge";
 			this.chkShowReverseCharge.Size = new System.Drawing.Size(133, 21);
 			this.chkShowReverseCharge.TabIndex = 10;
 			this.chkShowReverseCharge.Text = "Reverse Charge";
 			this.chkShowReverseCharge.UseVisualStyleBackColor = true;
 			// 
-			// chkShowABVoltage
-			// 
-			this.chkShowABVoltage.AutoSize = true;
-			this.chkShowABVoltage.Checked = true;
-			this.chkShowABVoltage.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkShowABVoltage.Location = new System.Drawing.Point(5, 48);
-			this.chkShowABVoltage.Name = "chkShowABVoltage";
-			this.chkShowABVoltage.Size = new System.Drawing.Size(100, 21);
-			this.chkShowABVoltage.TabIndex = 0;
-			this.chkShowABVoltage.Text = "AB Voltage";
-			this.chkShowABVoltage.UseVisualStyleBackColor = true;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(2, 27);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(76, 17);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Show Data";
-			// 
 			// chkShowForwardCharge
 			// 
 			this.chkShowForwardCharge.AutoSize = true;
-			this.chkShowForwardCharge.Location = new System.Drawing.Point(4, 283);
+			this.chkShowForwardCharge.Location = new System.Drawing.Point(6, 101);
 			this.chkShowForwardCharge.Name = "chkShowForwardCharge";
 			this.chkShowForwardCharge.Size = new System.Drawing.Size(131, 21);
 			this.chkShowForwardCharge.TabIndex = 9;
@@ -361,7 +458,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(2, 344);
+			this.label3.Location = new System.Drawing.Point(5, 465);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(114, 17);
 			this.label3.TabIndex = 15;
@@ -394,16 +491,6 @@
 			this.chart1.Size = new System.Drawing.Size(1052, 613);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
-			// 
-			// chkShowTemperature
-			// 
-			this.chkShowTemperature.AutoSize = true;
-			this.chkShowTemperature.Location = new System.Drawing.Point(5, 180);
-			this.chkShowTemperature.Name = "chkShowTemperature";
-			this.chkShowTemperature.Size = new System.Drawing.Size(112, 21);
-			this.chkShowTemperature.TabIndex = 18;
-			this.chkShowTemperature.Text = "Temperature";
-			this.chkShowTemperature.UseVisualStyleBackColor = true;
 			// 
 			// ViewResultsForm
 			// 
@@ -438,11 +525,6 @@
 		private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.DataGridView dataGrid;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.CheckBox chkShowBRefVoltage;
-		private System.Windows.Forms.CheckBox chkShowABVoltage;
-		private System.Windows.Forms.CheckBox chkShowARefVoltage;
-		private System.Windows.Forms.CheckBox chkShowABCurrent;
 		private System.Windows.Forms.LinkLabel lbtnAddDataSet;
 		private System.Windows.Forms.DataGridView dgvDataGrid;
 		private System.Windows.Forms.LinkLabel lbtnRefresh;
@@ -451,14 +533,27 @@
 		private System.Windows.Forms.CheckBox chkShowForwardCharge;
 		private System.Windows.Forms.CheckBox chkShowReverseCharge;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.CheckBox chkIntegrate;
-		private System.Windows.Forms.CheckBox chkInvertGraph;
+		private System.Windows.Forms.CheckBox chkInvertGraph1;
 		private System.Windows.Forms.CheckBox chkIgnoreLeadTime;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox chkLogarithmic;
-		private System.Windows.Forms.CheckBox chkShowImpedence;
+		private System.Windows.Forms.CheckBox chkAxis1Logarithmic;
 		private System.Windows.Forms.CheckBox chkUseCustomColor;
-		private System.Windows.Forms.CheckBox chkShowTemperature;
+		private System.Windows.Forms.ComboBox cboYaxis2;
+		private System.Windows.Forms.ComboBox cboYaxis1;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox chkShowReferenceVoltage;
+		private System.Windows.Forms.CheckBox chkAxis2Logarithmic;
+		private System.Windows.Forms.CheckBox chkPlotAverage;
+		private System.Windows.Forms.CheckBox chkInvertGraph2;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.TextBox txtY1Max;
+		private System.Windows.Forms.TextBox txtY1Min;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.TextBox txtY2Max;
+		private System.Windows.Forms.TextBox txtY2Min;
+		private System.Windows.Forms.Label label6;
 
 	}
 }

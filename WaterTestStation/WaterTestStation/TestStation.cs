@@ -196,15 +196,9 @@ namespace WaterTestStation
 			return stepStartTime;
 		}
 
-//		private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 30, 60 };
-//		private readonly int[] _chargeSamplingTime = { 0, 5, 10, 30, 60 };
-//		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 30, 60 };
         private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 20, 40 };
         private readonly int[] _chargeSamplingTime = { 0, 5, 10, 20, 40 };
         private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 20, 40 };
-        private const int DefaultSamplingInterval = 150; // one sampling every 2.5 minutes
-
-		private const int FastSamplingInterval = 20; // fast sampling
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{

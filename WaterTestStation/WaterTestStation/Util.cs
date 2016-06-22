@@ -22,7 +22,7 @@ namespace WaterTestStation
 		public static string formatTime(int seconds)
 		{
 			TimeSpan ts = TimeSpan.FromSeconds(seconds);
-			return ts.ToString(@"hh\:mm\:ss");
+			return (int) (seconds/86400) + "d" + ts.ToString(@"hh\:mm\:ss");
 		}
 
 		public static int CountTrue(params bool[] args)

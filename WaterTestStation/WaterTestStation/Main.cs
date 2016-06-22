@@ -420,5 +420,10 @@ namespace WaterTestStation
 			this.Temperature = temperature;
 			formUtil.ThreadSafeSetStatusStripLabel(this.statusStrip1, this.lblTemperature, temperature.ToString("0.00"));
 		}
+
+		private void label1_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }
