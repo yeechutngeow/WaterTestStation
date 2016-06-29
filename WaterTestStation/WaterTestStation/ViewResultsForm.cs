@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using WaterTestStation.dao;
@@ -179,6 +180,7 @@ namespace WaterTestStation
 
 		private void _calculateAverage()
 		{
+			if (matrix.Count == 0) return;
 			int col;
 			for (int i = 0; i < matrix.Count; i++)
 			{
@@ -361,6 +363,8 @@ namespace WaterTestStation
 
 		private void DrawChart()
 		{
+			_saveAxisRanges();
+
 			chart1.Series.Clear();
 			chart1.Titles.Clear();
 			chart1.Titles.Add(chartTitle);
@@ -368,29 +372,29 @@ namespace WaterTestStation
 			int dataSets = testRecords.Count;
 			if (chkPlotAverage.Checked) dataSets++;
 
+			long curX = 0;
 			for (int i = 0; i < dataSets; i++)
 			{
 				Series series1, series2;
 				int col1, col2;
 
 				_determneDataColumns(i, out col1, out col2, out series1, out series2);
+				int currentCol = FIXED_COLS + nDataShown() * i + 1;
 				chart1.Series.Add(series1);
 				if (series2 != null)
 					chart1.Series.Add(series2);
 
 				int lastStepTime = 0;
-				double lastY1 = 0;
-				long curX = 0;
+				double lastAmpValue = 0;
 				double integral = 0;
 				double totalIntegral = 0;
+				curX = 0;
 
 				for (int j = 0; j < matrix.Count; j++ )
 				{
 					int curStepTime = Util.ParseInt(matrix[j][2]);
 
-					double curY1 = matrix2[j][col1];
-
-					if (chkInvertGraph1.Checked) curY1 = -curY1;
+					double curAmpValue = matrix2[j][currentCol];
 
 					int interval;
 					if (curStepTime < lastStepTime)
@@ -400,27 +404,25 @@ namespace WaterTestStation
 
 					curX += interval;
 
-					// calculate integral (only current integral is meanigful, but calculate nevertheless to simplify program logic
+					// calculate integral of current
 					if (curStepTime < lastStepTime)
 						integral = 0;
 					else
 					{
-						integral += (curY1 + lastY1)/2*interval;
-						totalIntegral += (curY1 + lastY1)/2*interval;
+						integral += (curAmpValue + lastAmpValue)/2*interval;
+						totalIntegral += Math.Abs((curAmpValue + lastAmpValue)/2*interval);
 					}
 
 					double yValue = 0;
 					if ((string) cboYaxis1.SelectedItem == "Current Integral")
 						yValue = integral;
 					else
-						yValue = curY1;
-
-					if (chkAxis1Logarithmic.Checked)
 					{
-						if (yValue > 0)
-							series1.Points.AddXY(curX, yValue);
+						yValue = matrix2[j][col1];
+						if (chkInvertGraph1.Checked) yValue = -yValue;
 					}
-					else
+
+					if (!chkAxis1Logarithmic.Checked || yValue > 0)
 						series1.Points.AddXY(curX, yValue);
 
 
@@ -431,23 +433,19 @@ namespace WaterTestStation
 						else
 							yValue = matrix2[j][col2];
 
-						if (chkAxis2Logarithmic.Checked)
-						{
-							if (yValue > 0)
-								series2.Points.AddXY(curX, yValue);
-						}
-						else
+						if (!chkAxis2Logarithmic.Checked || yValue > 0)
 							series2.Points.AddXY(curX, yValue);
 					}
 
 					lastStepTime = curStepTime;
-					lastY1 = curY1;
+					lastAmpValue = curAmpValue;
 				}
 			}
 
 			chart1.ChartAreas[0].RecalculateAxesScale();
 			//Set initial zoom
-			chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 4000);
+			long firstX = curX > 6000? curX-6000:0;
+			chart1.ChartAreas[0].AxisX.ScaleView.Zoom(firstX, curX);
 			//chart1.ChartAreas[0].AxisX.Interval = 600;
 
 			double y1Min = Util.ParseDoubleE(txtY1Min.Text);
@@ -538,6 +536,127 @@ namespace WaterTestStation
 			else if (chartType == "Impedance")
 				abbr = "";
 			return abbr;
+		}
+
+		private void cboYaxis1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			double min = 0, max = 0;
+			_getAxisRange(_getDataShown(), (string) cboYaxis1.SelectedItem, ref min, ref max);
+			if (min != 0 || max != 0)
+			{
+				txtY1Max.Text = max.ToString();
+				txtY1Min.Text = min.ToString();
+			}
+		}
+
+		private void cboYaxis2_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			double min = 0, max = 0;
+			_getAxisRange(_getDataShown(), (string)cboYaxis2.SelectedItem, ref min, ref max);
+			if (min != 0 || max != 0)
+			{
+				txtY2Max.Text = max.ToString();
+				txtY2Min.Text = min.ToString();
+			}
+		}
+
+		private string _getDataShown()
+		{
+			if (chkShowForwardCharge.Checked)
+				return "Charging";
+			else if (chkShowReverseCharge.Checked)
+				return "Charging";
+			else if (chkShowOpenCircuit.Checked)
+				return "OpenCircuit";
+			else if (chkShowDischarge.Checked)
+				return "Discharge";
+			else
+				return "";
+		}
+
+		private void _getAxisRanges()
+		{
+			cboYaxis1_SelectedIndexChanged(null, null);
+			cboYaxis2_SelectedIndexChanged(null, null);
+		}
+
+		private void _getAxisRange(string dataShown, string chartType, ref double axisMin, ref double axisMax)
+		{
+			try
+			{
+				string propertyName = _axisPropertyName(dataShown, chartType);
+				PropertyInfo property = typeof (Config).GetProperty(propertyName + "Min");
+				axisMin = (double) property.GetValue(property, null);
+				property = typeof (Config).GetProperty(propertyName + "Max");
+				axisMax = (double) property.GetValue(property, null);
+			}
+			catch
+			{
+			}
+		}
+
+		private void _setAxisRange(string dataShown, string chartType, double axisMin, double axisMax)
+		{
+			try
+			{
+				string propertyName = _axisPropertyName(dataShown, chartType);
+				PropertyInfo property = typeof (Config).GetProperty(propertyName + "Min");
+				property.SetValue(property, axisMin, null);
+				property = typeof (Config).GetProperty(propertyName + "Max");
+				property.SetValue(property, axisMax, null);
+			}
+			catch
+			{
+			}
+		}
+
+		private void _saveAxisRanges()
+		{
+			double min = Util.ParseDoubleE(txtY1Min.Text);
+			double max = Util.ParseDoubleE(txtY1Max.Text);
+			_setAxisRange(_getDataShown(), (string)cboYaxis1.SelectedItem, min, max);
+
+			min = Util.ParseDoubleE(txtY2Min.Text);
+			max = Util.ParseDoubleE(txtY2Max.Text);
+			_setAxisRange(_getDataShown(), (string)cboYaxis2.SelectedItem, min, max);
+		}
+
+		private static string _axisPropertyName(string dataShown, string chartType)
+		{
+			string name;
+			if (chartType == "Temperature" || chartType == "Current Integral" 
+					|| chartType == "Cumulative Integral" || chartType == "Impedance")
+				name = chartType;
+			else
+				name = dataShown + chartType;
+
+			name = "Chart" + Regex.Replace(name, @"\s+", "");
+			return name;
+		}
+
+		private void chkShowOpenCircuit_CheckedChanged(object sender, EventArgs e)
+		{
+			_getAxisRanges();
+		}
+
+		private void chkShowDischarge_CheckedChanged(object sender, EventArgs e)
+		{
+			_getAxisRanges();
+		}
+
+		private void chkShowForwardCharge_CheckedChanged(object sender, EventArgs e)
+		{
+			_getAxisRanges();
+		}
+
+		private void chkShowReverseCharge_CheckedChanged(object sender, EventArgs e)
+		{
+			_getAxisRanges();
+		}
+
+		private void lbtnRefreshChart_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			DrawChart();
 		}
 
 	}

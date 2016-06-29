@@ -20,5 +20,59 @@
     <Setting Name="TemperatureRefreshInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
+    <Setting Name="ChartTemperatureMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ChartTemperatureMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="ChartChargingVoltageMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3.9</Value>
+    </Setting>
+    <Setting Name="ChartChargingVoltageMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">4.2</Value>
+    </Setting>
+    <Setting Name="ChartChargingCurrentMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ChartChargingCurrentMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.8</Value>
+    </Setting>
+    <Setting Name="ChartDischargeCurrentMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-2E-06</Value>
+    </Setting>
+    <Setting Name="ChartDischargeCurrentMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5E-06</Value>
+    </Setting>
+    <Setting Name="ChartDischargeVoltageMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-0.0001</Value>
+    </Setting>
+    <Setting Name="ChartDischargeVoltageMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.0005</Value>
+    </Setting>
+    <Setting Name="ChartOpenCircuitVoltageMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-0.05</Value>
+    </Setting>
+    <Setting Name="ChartOpenCircuitVoltageMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="ChartCumulativeIntegralMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ChartCumulativeIntegralMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.12</Value>
+    </Setting>
+    <Setting Name="ChartCurrentIntegralMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-0.0005</Value>
+    </Setting>
+    <Setting Name="ChartCurrentIntegralMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.003</Value>
+    </Setting>
+    <Setting Name="ChartImpedanceMin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ChartImpedanceMax" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">800</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

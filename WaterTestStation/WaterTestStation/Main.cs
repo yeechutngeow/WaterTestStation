@@ -358,6 +358,8 @@ namespace WaterTestStation
 			switches[6] = new RelayMux(usbRelay1, new[] { 24, 25 });
 			toggles[6] = new MultiPoleSwitch(usbRelay1, new[] { 26, 27 });
 
+			Multimeter = new Multimeter(usbRelay1, new[] { 29, 30, 31, 28 });
+
 			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
 			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 25 });
 			currentSwitch[2] = new MultiPoleSwitch(usbRelay2, new[] { 26 });
@@ -366,13 +368,11 @@ namespace WaterTestStation
 			currentSwitch[5] = new MultiPoleSwitch(usbRelay2, new[] { 29 });
 			currentSwitch[6] = new MultiPoleSwitch(usbRelay2, new[] { 30 });
 
-
 			mux[0] = new RelayMux(usbRelay2, new[] {0, 1, 2, 3, 4, 5});
 			mux[1] = new RelayMux(usbRelay2, new[] {6, 7, 8, 9, 10, 11});
 			mux[2] = new RelayMux(usbRelay2, new[] {12, 13, 14, 15, 16, 17});
 			mux[3] = new RelayMux(usbRelay2, new[] {18, 19, 20, 21, 22, 23});
 
-			Multimeter = new Multimeter(usbRelay1, new[] {29, 30, 31, 28});
 
 			for (int i = 0; i < NStations; i++ )
 				stations[i] = new TestStation(i, toggles[i], switches[i], currentSwitch[i]);

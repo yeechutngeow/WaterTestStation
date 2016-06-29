@@ -67,6 +67,7 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.lbtnRefreshChart = new System.Windows.Forms.LinkLabel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -129,6 +130,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
+			this.splitContainer1.Panel2.Controls.Add(this.lbtnRefreshChart);
 			this.splitContainer1.Panel2.Controls.Add(this.label7);
 			this.splitContainer1.Panel2.Controls.Add(this.label8);
 			this.splitContainer1.Panel2.Controls.Add(this.txtY2Max);
@@ -298,6 +300,7 @@
 			this.cboYaxis2.Name = "cboYaxis2";
 			this.cboYaxis2.Size = new System.Drawing.Size(179, 24);
 			this.cboYaxis2.TabIndex = 22;
+			this.cboYaxis2.SelectedIndexChanged += new System.EventHandler(this.cboYaxis2_SelectedIndexChanged);
 			// 
 			// cboYaxis1
 			// 
@@ -311,6 +314,7 @@
 			this.cboYaxis1.Name = "cboYaxis1";
 			this.cboYaxis1.Size = new System.Drawing.Size(179, 24);
 			this.cboYaxis1.TabIndex = 21;
+			this.cboYaxis1.SelectedIndexChanged += new System.EventHandler(this.cboYaxis1_SelectedIndexChanged);
 			// 
 			// label4
 			// 
@@ -355,10 +359,10 @@
 			this.lbtnRefresh.AutoSize = true;
 			this.lbtnRefresh.Location = new System.Drawing.Point(127, 0);
 			this.lbtnRefresh.Name = "lbtnRefresh";
-			this.lbtnRefresh.Size = new System.Drawing.Size(58, 17);
+			this.lbtnRefresh.Size = new System.Drawing.Size(77, 17);
 			this.lbtnRefresh.TabIndex = 6;
 			this.lbtnRefresh.TabStop = true;
-			this.lbtnRefresh.Text = "Refresh";
+			this.lbtnRefresh.Text = "Fetch Data";
 			this.lbtnRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefresh_LinkClicked);
 			// 
 			// lbtnAddDataSet
@@ -412,6 +416,7 @@
 			this.chkShowOpenCircuit.TabIndex = 7;
 			this.chkShowOpenCircuit.Text = "Open Circuit";
 			this.chkShowOpenCircuit.UseVisualStyleBackColor = true;
+			this.chkShowOpenCircuit.CheckedChanged += new System.EventHandler(this.chkShowOpenCircuit_CheckedChanged);
 			// 
 			// chkAxis1Logarithmic
 			// 
@@ -434,6 +439,7 @@
 			this.chkShowDischarge.TabIndex = 8;
 			this.chkShowDischarge.Text = "Discharge";
 			this.chkShowDischarge.UseVisualStyleBackColor = true;
+			this.chkShowDischarge.CheckedChanged += new System.EventHandler(this.chkShowDischarge_CheckedChanged);
 			// 
 			// chkShowReverseCharge
 			// 
@@ -444,6 +450,7 @@
 			this.chkShowReverseCharge.TabIndex = 10;
 			this.chkShowReverseCharge.Text = "Reverse Charge";
 			this.chkShowReverseCharge.UseVisualStyleBackColor = true;
+			this.chkShowReverseCharge.CheckedChanged += new System.EventHandler(this.chkShowReverseCharge_CheckedChanged);
 			// 
 			// chkShowForwardCharge
 			// 
@@ -454,6 +461,7 @@
 			this.chkShowForwardCharge.TabIndex = 9;
 			this.chkShowForwardCharge.Text = "Forward Charge";
 			this.chkShowForwardCharge.UseVisualStyleBackColor = true;
+			this.chkShowForwardCharge.CheckedChanged += new System.EventHandler(this.chkShowForwardCharge_CheckedChanged);
 			// 
 			// label3
 			// 
@@ -491,6 +499,17 @@
 			this.chart1.Size = new System.Drawing.Size(1052, 613);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
+			// 
+			// lbtnRefreshChart
+			// 
+			this.lbtnRefreshChart.AutoSize = true;
+			this.lbtnRefreshChart.Location = new System.Drawing.Point(5, 579);
+			this.lbtnRefreshChart.Name = "lbtnRefreshChart";
+			this.lbtnRefreshChart.Size = new System.Drawing.Size(96, 17);
+			this.lbtnRefreshChart.TabIndex = 34;
+			this.lbtnRefreshChart.TabStop = true;
+			this.lbtnRefreshChart.Text = "Refresh Chart";
+			this.lbtnRefreshChart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefreshChart_LinkClicked);
 			// 
 			// ViewResultsForm
 			// 
@@ -554,6 +573,7 @@
 		private System.Windows.Forms.TextBox txtY2Max;
 		private System.Windows.Forms.TextBox txtY2Min;
 		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.LinkLabel lbtnRefreshChart;
 
 	}
 }
