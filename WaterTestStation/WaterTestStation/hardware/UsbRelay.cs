@@ -10,7 +10,8 @@ namespace WaterTestStation.hardware
 	{
 		private readonly SerialPort SerialPort = new SerialPort();
 		private Int32 bitmap;
-		private ToolStripStatusLabel statusDisplay;
+		private readonly ToolStripStatusLabel statusDisplay;
+		private bool[] channelOn = new bool[32];
 
 		public UsbRelay(int comPort, ToolStripStatusLabel label)
 		{
@@ -63,7 +64,7 @@ namespace WaterTestStation.hardware
 			}
 			return v;
 		}
-
+		/*
 		public void OnChannel(int channelNumber)
 		{
 			SetChannels(new[] {channelNumber}, new int[] {});
@@ -73,17 +74,44 @@ namespace WaterTestStation.hardware
 		{
 			SetChannels(new int[] {}, new[] {channelNumber});
 		}
-
-		public void SetChannels(IEnumerable<int> onList, IEnumerable<int> offList)
+		*/
+		public void SetChannels(IList<int> onList, IList<int> offList)
 		{
 			Int32 onMask = onList.Aggregate(0, (current, channel) => current | (1 << channel));
 			Int32 offMask = offList.Aggregate(0, (current, channel) => current | (1 << channel));
 			bitmap = bitmap | onMask;
 			bitmap = bitmap & ~offMask;
-
-			String command = "relay writeall " + bitmap.ToString("X8").ToLower();
-			SendCommand(command);
 			displayStatus();
+
+			// count the number of relays that needs to be set.
+			int diffCount = onList.Count(c => !channelOn[c]) + offList.Count(c => channelOn[c]);
+
+			if (diffCount > 4)
+			{
+				String command = "relay writeall " + bitmap.ToString("X8").ToLower();
+				SendCommand(command);
+			}
+			else
+			{
+				foreach (int c in onList.Where(c => !channelOn[c]))
+				{
+					SendCommand("relay on " + _channelCharName(c));
+					channelOn[c] = true;
+				}
+				foreach (int c in offList.Where(c => channelOn[c]))
+				{
+					SendCommand("relay off" + _channelCharName(c));
+					channelOn[c] = false;
+				}
+			}
+		}
+
+		private char _channelCharName(int c)
+		{
+			if (c < 10)
+				return (char) ('0' + c);
+			else
+				return (char) ('A' + c - 10);
 		}
 
 		private void displayStatus()

@@ -71,7 +71,7 @@ namespace WaterTestStation.hardware
 				return random.NextDouble();
 			}
 
-            mbSession.Write(":function:" + command);
+			mbSession.Write(":function:" + command);
 			Thread.Sleep(delay);
 			mbSession.Write(":measure:" + command + "?");
 			Thread.Sleep(20);
@@ -115,7 +115,7 @@ namespace WaterTestStation.hardware
 			if (Config.HasMultimeter)
 				mbSession.Write(":function:voltage:DC");
 
-			TurnOffMeter();
+			//TurnOffMeter();
 			return result;
 		}
 
@@ -132,7 +132,7 @@ namespace WaterTestStation.hardware
 			ABVoltage = -ReadVoltage();
 
 			station.currentSwitch.ToggleOff();
-			TurnOffMeter();
+			//TurnOffMeter();
 		}
 
 		/*
@@ -142,7 +142,7 @@ namespace WaterTestStation.hardware
 		{
 			_setChannels("1010");
 			double result = - ReadVoltage();
-			TurnOffMeter();
+			//TurnOffMeter();
 			return result;
 		}
 
@@ -153,7 +153,7 @@ namespace WaterTestStation.hardware
 		{
 			_setChannels("1100");
 			double result = ReadVoltage();
-			TurnOffMeter();
+			//TurnOffMeter();
 			return result;
 		}
 
@@ -164,7 +164,7 @@ namespace WaterTestStation.hardware
 		{
 			_setChannels("1000");
 			double result = ReadCapacitance();
-			TurnOffMeter();
+			//TurnOffMeter();
 			return result;
 		}
 
