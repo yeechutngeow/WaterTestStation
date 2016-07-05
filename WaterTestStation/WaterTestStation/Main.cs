@@ -31,7 +31,7 @@ namespace WaterTestStation
 		// the 4 multiplexers for switching the multiplexer to the right channel
 		public static readonly RelayMux[] mux = new RelayMux[4];
 
-		public readonly TestStation[] stations = new TestStation[NStations];
+		public static readonly TestStation[] stations = new TestStation[NStations];
 
 		public static Multimeter Multimeter;
 
@@ -93,9 +93,8 @@ namespace WaterTestStation
 			string testType = cboTestType.Text;
 			TestType eTestType = (TestType) Enum.Parse(typeof (TestType), testType);
 
-			TestProgramStep testStep = new TestProgramStep {TestType = testType};
 			stations[stationNumber]._switchTestType(eTestType);
-			MultimeterQueue.Enqueue(new MeterRequest(stations[stationNumber], testStep, 0, 0, 0, false));
+			MultimeterQueue.Enqueue(new MeterRequest(stations[stationNumber], null, eTestType, 0, 0, 0, false));
 		}
 
 		private void DrawForm()
@@ -421,9 +420,10 @@ namespace WaterTestStation
 			formUtil.ThreadSafeSetStatusStripLabel(this.statusStrip1, this.lblTemperature, temperature.ToString("0.00"));
 		}
 
-		private void label1_Click(object sender, EventArgs e)
+		private void AdhocMenuItem_Click(object sender, EventArgs e)
 		{
-
+			new AdHocForm().Show();
 		}
+
 	}
 }

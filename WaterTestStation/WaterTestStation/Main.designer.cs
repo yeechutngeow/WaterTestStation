@@ -29,8 +29,8 @@
 		private void InitializeComponent()
 		{
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.programsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewTestResultMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.AdhocMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -60,8 +60,8 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.programsToolStripMenuItem,
             this.viewTestResultMenuItem,
+            this.AdhocMenuItem,
             this.propertiesToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -69,18 +69,19 @@
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// programsToolStripMenuItem
-			// 
-			this.programsToolStripMenuItem.Name = "programsToolStripMenuItem";
-			this.programsToolStripMenuItem.Size = new System.Drawing.Size(84, 24);
-			this.programsToolStripMenuItem.Text = "Programs";
-			// 
 			// viewTestResultMenuItem
 			// 
 			this.viewTestResultMenuItem.Name = "viewTestResultMenuItem";
 			this.viewTestResultMenuItem.Size = new System.Drawing.Size(133, 24);
 			this.viewTestResultMenuItem.Text = "View Test Results";
 			this.viewTestResultMenuItem.Click += new System.EventHandler(this.viewTestResultMenuItem_Click);
+			// 
+			// AdhocMenuItem
+			// 
+			this.AdhocMenuItem.Name = "AdhocMenuItem";
+			this.AdhocMenuItem.Size = new System.Drawing.Size(136, 24);
+			this.AdhocMenuItem.Text = "Ad Hoc Readings";
+			this.AdhocMenuItem.Click += new System.EventHandler(this.AdhocMenuItem_Click);
 			// 
 			// propertiesToolStripMenuItem
 			// 
@@ -117,8 +118,7 @@
             "4",
             "5",
             "6",
-            "7",
-            "8"});
+            "7"});
 			this.cboStationNumber.Location = new System.Drawing.Point(186, 39);
 			this.cboStationNumber.Name = "cboStationNumber";
 			this.cboStationNumber.Size = new System.Drawing.Size(47, 24);
@@ -271,7 +271,6 @@
 			this.label1.Size = new System.Drawing.Size(141, 17);
 			this.label1.TabIndex = 21;
 			this.label1.Text = "Sampling interval (s):";
-			this.label1.Click += new System.EventHandler(this.label1_Click);
 			// 
 			// cboSamplingRate
 			// 
@@ -330,7 +329,6 @@
 		#endregion
 
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem programsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewTestResultMenuItem;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -354,6 +352,7 @@
 		private System.Windows.Forms.ToolStripStatusLabel lblTemperature;
 		private System.Windows.Forms.Label label1;
 		public System.Windows.Forms.ComboBox cboSamplingRate;
+		private System.Windows.Forms.ToolStripMenuItem AdhocMenuItem;
 	}
 }
 

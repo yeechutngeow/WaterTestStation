@@ -102,6 +102,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdHocForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdHocForm.Designer.cs">
+      <DependentUpon>AdHocForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="dao\TestProgramDao.cs" />
     <Compile Include="dao\TestRecordDao.cs" />
@@ -149,6 +155,9 @@
     <Compile Include="ViewResultsForm.Designer.cs">
       <DependentUpon>ViewResultsForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AdHocForm.resx">
+      <DependentUpon>AdHocForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PropertiesForm.resx">
       <DependentUpon>PropertiesForm.cs</DependentUpon>
     </EmbeddedResource>

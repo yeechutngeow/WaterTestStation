@@ -15,22 +15,24 @@ namespace WaterTestStation
 	public class MeterRequest
 	{
 		private readonly TestStation TestStation;
+		public readonly AdHocForm AdHocForm;
 		private readonly int cycle;
 		private readonly int _stepStartTime;
 		private readonly int _stepTime;
-		private readonly TestProgramStep TestStep;
+		public readonly TestType TestType;
 		private readonly bool logFlag;
 		private static Thread thread;
 
 		readonly static Stopwatch stopwatch = new Stopwatch();
 
-		public MeterRequest(TestStation testStation, TestProgramStep pTestStep, int pCycle, int pStepStartTime, int pStepTime, bool flag)
+		public MeterRequest(TestStation testStation, AdHocForm adhocForm, TestType testType, int pCycle, int pStepStartTime, int pStepTime, bool flag)
 		{
 			this.TestStation = testStation;
+			this.AdHocForm = adhocForm;
 			this.cycle = pCycle;
 			this._stepStartTime = pStepStartTime;
 			this._stepTime = pStepTime;
-			this.TestStep = pTestStep;
+			this.TestType = testType;
 			logFlag = flag;
 		}
 
@@ -54,14 +56,14 @@ namespace WaterTestStation
 				{
 					Main.Multimeter.OpenSession();
 
-					if (m.TestStep == null)
+					if (m.TestStation == null && m.AdHocForm == null)
 					{
 						double temperature = Main.Multimeter.ReadTemperature();
 						Main.MainForm.SetTemperature(temperature);
 						continue;
 					}
 
-					TestType testType = (TestType)Enum.Parse(typeof(TestType), m.TestStep.TestType);
+					TestType testType = (TestType)Enum.Parse(typeof(TestType), m.TestType.ToString());
 					m.TestStation._switchTestType(testType);
 
 					stopwatch.Start();
@@ -73,7 +75,7 @@ namespace WaterTestStation
 					double ABVoltage = 0;
 					double ABCurrent = 0;
 
-					switch (m.TestStep.GetTestType())
+					switch (m.TestType)
 					{
 						case TestType.OpenCircuit:
 							// No ABCurrent
@@ -98,10 +100,16 @@ namespace WaterTestStation
 					stopwatch.Stop();
 
 					Main.Multimeter.TurnOffMeter();
-					SelectStation(Main.mux, 0); // turn off the relays
+					//SelectStation(Main.mux, 0); // turn off the relays
 
-					m.TestStation.LogMeterReadings(m.TestStep, m.cycle, m._stepStartTime, m._stepTime, 
-						ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, m.logFlag);
+					if (m.AdHocForm == null)
+						m.TestStation.LogMeterReadings(m.TestType, m.cycle, m._stepStartTime, m._stepTime, 
+							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, m.logFlag);
+					else
+					{
+						m.AdHocForm.LogMeterReadings(m.TestType, m.cycle, m._stepStartTime, m._stepTime,
+							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, m.logFlag);
+					}
 				}
 				else
 				{

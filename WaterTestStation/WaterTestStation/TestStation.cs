@@ -73,7 +73,7 @@ namespace WaterTestStation
 
 
 		// This method is called by Multimeter class to log and display the readings obtained
-		public void LogMeterReadings(TestProgramStep testStep, int pCycle, int pCycleStartTime, int pStepTime, 
+		public void LogMeterReadings(TestType testType, int pCycle, int pCycleStartTime, int pStepTime, 
 				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, bool logFlag)
 		{
 			ThreadSafeSetLabel(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
@@ -84,7 +84,7 @@ namespace WaterTestStation
 			// logs to database if this is not an adhoc reading
 			if (logFlag)
 			{
-				testRecordDao.LogTestData(testRecordId, testStep.GetTestType(), pCycle, pCycleStartTime + pStepTime, pStepTime, 
+				testRecordDao.LogTestData(testRecordId, testType, pCycle, pCycleStartTime + pStepTime, pStepTime, 
 					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature);
 			}
 		}
@@ -196,9 +196,9 @@ namespace WaterTestStation
 			return stepStartTime;
 		}
 
-        private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 20, 40 };
-        private readonly int[] _chargeSamplingTime = { 0, 5, 10, 20, 40 };
-        private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 20, 40 };
+		private readonly int[] _dischargeSamplingTime = { 0, 5, 10, 20, 40 };
+		private readonly int[] _chargeSamplingTime = { 0, 5, 10, 20, 40 };
+		private readonly int[] _openCircuitSamplingTime = { 0, 5, 10, 20, 40 };
 
 		private void runstep(int stepStartTime, TestProgramStep testStep)
 		{
@@ -262,7 +262,7 @@ namespace WaterTestStation
 						 + "Total Elapsed: " + stopwatch.Elapsed.ToString("hh\\:mm\\:ss");
 			ThreadSafeSetText(txtStatus, msg);
 
-			Main.MultimeterQueue.Enqueue(new MeterRequest(this, testStep, curCycle, stepStartTime, targetTime, true));
+			Main.MultimeterQueue.Enqueue(new MeterRequest(this, null, testStep.GetTestType(), curCycle, stepStartTime, targetTime, true));
 		}
 
 		private void SleepTill(int targetTime, int baseTime)

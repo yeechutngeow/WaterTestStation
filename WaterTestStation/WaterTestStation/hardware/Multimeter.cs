@@ -32,6 +32,7 @@ namespace WaterTestStation.hardware
 			{
 				mbSession = (MessageBasedSession) ResourceManager.GetLocalManager().Open(strVISARsrc);
 				mbSession.Write(":function:voltage:DC");
+				mbSession.Write(":MEASure:CURRent:DC MAX");
 			}
 		}
 
@@ -50,7 +51,7 @@ namespace WaterTestStation.hardware
 
 		private double ReadCurrent()
 		{
-			return _ReadMeter("current:DC", Config.MultimeterDelay);
+			return -1 * _ReadMeter("current:DC", Config.MultimeterDelay);
 		}
 
 		private double ReadResistance()
@@ -201,5 +202,37 @@ namespace WaterTestStation.hardware
 			usbRelay.SetChannels(new int [] {}, readingSelector );
 		}
 
+
+		/**
+		 * 
+		 * Parameter Range		Resolution	Change
+		 * 	0		200 μA		1 nA		150 uA
+		 * 	1		2 mA		10 nA		1.5 mA	
+		 * 	2		20 mA		100 nA		15 mA
+		 * 	3		200 mA		1 μA		150 mA
+		 * 	4		2 A			10 μA		1.5 A
+		 *	5		10 A		100 μA
+		 *	MIN		200 μA		1 nA
+		 *	MAX		10 A		100 μA
+		 *	DEF		200 mA		1 μA
+		 * 
+		 **/
+		public static string DetermineCurrentRange(double c)
+		{
+			string range = "DEF";
+			if (c < 150E-6)
+				range = "0";
+			else if (c < 1.5E-3)
+				range = "1";
+			else if (c < 15E-3)
+				range = "2";
+			else if (c < 150E-3)
+				range = "3";
+			else if (c < 1.5)
+				range = "4";
+			else
+				range = "5";
+			return range;
+		}
 	}
 }

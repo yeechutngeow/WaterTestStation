@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using WaterTestStation.model;
 
 namespace WaterTestStation
 {
@@ -18,10 +19,9 @@ namespace WaterTestStation
 		{
 			while (true)
 			{
-				Main.MultimeterQueue.Enqueue(new MeterRequest(null, null, 0, 0, 0, false));
+				Main.MultimeterQueue.Enqueue(new MeterRequest(null, null, TestType.ForwardCharge, 0, 0, 0, false));
 				Thread.Sleep(Config.TemperatureRefreshInterval * 1000);
 			}
-			thread.Abort();
 		}
 
 		public static void Stop()
