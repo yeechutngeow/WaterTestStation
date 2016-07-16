@@ -10,15 +10,17 @@ namespace WaterTestStation.hardware
 	{
 		private MessageBasedSession mbSession; //Create Message based session
 
-		private readonly int[] readingSelector;
-		private readonly UsbRelay usbRelay;
+		private readonly int[] readingSelector1, readingSelector2;
+		private readonly UsbRelay usbRelay1, usbRelay2;
 
 		private readonly Pt100 pt100 = new Pt100();
 
-		public Multimeter(UsbRelay usbRelay, int[] readingSelector)
+		public Multimeter(UsbRelay usbRelay1, int[] readingSelector1, UsbRelay usbRelay2, int[] readingSelector2)
 		{
-			this.usbRelay = usbRelay;
-			this.readingSelector = readingSelector;
+			this.usbRelay1 = usbRelay1;
+			this.readingSelector1 = readingSelector1;
+			this.usbRelay2 = usbRelay2;
+			this.readingSelector2 = readingSelector2;
 		}
 
 		public void OpenSession()
@@ -32,8 +34,13 @@ namespace WaterTestStation.hardware
 			{
 				mbSession = (MessageBasedSession) ResourceManager.GetLocalManager().Open(strVISARsrc);
 				mbSession.Write(":function:voltage:DC");
-				mbSession.Write(":MEASure:CURRent:DC MAX");
 			}
+		}
+
+		private void WriteSession(string msg)
+		{
+			if (Config.HasMultimeter)
+				mbSession.Write(msg);
 		}
 
 		public void CloseSession()
@@ -49,9 +56,27 @@ namespace WaterTestStation.hardware
 			return _ReadMeter("voltage:DC", Config.MultimeterDelay);
 		}
 
-		private double ReadCurrent()
+		private double ReadCurrent(double lastReading)
 		{
-			return -1 * _ReadMeter("current:DC", Config.MultimeterDelay);
+			char range = _determineCurrentRange(lastReading);
+		again:
+			WriteSession(":measure:current:dc " + range);
+			if (range == '4' || range == '5')
+				usbRelay2.OnChannel(readingSelector2[1]);
+			else
+				usbRelay2.OffChannel(readingSelector2[1]);
+			int sign = range == '4' || range == '5' ? 1 : -1;
+			double result =  sign * _ReadMeter("current:DC", Config.MultimeterDelay);
+
+			if (Math.Abs(result) > 1E10)	/* overload */
+			{
+				if (range < '5')
+				{
+					range = (char) (range + 1);
+					goto again;
+				}
+			}
+			return result;
 		}
 
 		private double ReadResistance()
@@ -72,9 +97,9 @@ namespace WaterTestStation.hardware
 				return random.NextDouble();
 			}
 
-			mbSession.Write(":function:" + command);
+			WriteSession(":function:" + command);
 			Thread.Sleep(delay);
-			mbSession.Write(":measure:" + command + "?");
+			WriteSession(":measure:" + command + "?");
 			Thread.Sleep(20);
 			string result;
 			try
@@ -96,7 +121,9 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadABVoltage(TestStation station)
 		{
-			_setChannels("1000");
+			WriteSession(":measure auto");
+			_setChannels(usbRelay1, "1001");
+			usbRelay2.OffChannel(readingSelector2[0]);
 			double result = -ReadVoltage();
 			TurnOffMeter();
 			return result;
@@ -106,15 +133,15 @@ namespace WaterTestStation.hardware
 		 * Reads charge & discharge current from A to B
 		 * This will require breaking the circuit to route the current into the multimeter
 		 */
-		public double ReadABCurrent(TestStation station)
+		public double ReadABCurrent(TestStation station, double lastCurrent)
 		{
 			station.currentSwitch.ToggleOn();
-			_setChannels("1001");
+			_setChannels(usbRelay1, "1001");
+			usbRelay2.OnChannel(readingSelector2[0]);
 			
-			double result = ReadCurrent();
+			double result = ReadCurrent(lastCurrent);
 			station.currentSwitch.ToggleOff();
-			if (Config.HasMultimeter)
-				mbSession.Write(":function:voltage:DC");
+			WriteSession(":function:voltage:DC");
 
 			//TurnOffMeter();
 			return result;
@@ -124,46 +151,50 @@ namespace WaterTestStation.hardware
 		 * Breaks the circuit and route the current into the multimeter,
 		 * And reads current and voltage together
 		 */
-		public void ReadABCurrentAndVoltage(TestStation station, out double ABCurrent, out double ABVoltage)
+		public void ReadABCurrentAndVoltage(TestStation station, out double ABCurrent, out double ABVoltage, double lastCurrent)
 		{
 			station.currentSwitch.ToggleOn();
-			_setChannels("1001");
+			_setChannels(usbRelay1, "1001");
+			usbRelay2.OnChannel(readingSelector2[0]);
 
-			ABCurrent = ReadCurrent();
+			ABCurrent = ReadCurrent(lastCurrent);
+			WriteSession(":measure auto");
 			ABVoltage = -ReadVoltage();
 
 			station.currentSwitch.ToggleOff();
-			//TurnOffMeter();
 		}
 
 		/*
 		 * Reads ARef voltage
 		 */
-		public double ReadARefVoltage(TestStation station)
+		public double ReadARefVoltage()
 		{
-			_setChannels("1010");
-			double result = - ReadVoltage();
-			//TurnOffMeter();
+			WriteSession(":measure auto");
+			_setChannels(usbRelay1, "1011");
+			usbRelay2.OffChannel(readingSelector2[0]);
+			double result = -ReadVoltage();
 			return result;
 		}
 
 		/*
 		 * Reads BRef voltage
 		 */
-		public double ReadBRefVoltage(TestStation station)
+		public double ReadBRefVoltage()
 		{
-			_setChannels("1100");
+			WriteSession(":measure auto");
+			_setChannels(usbRelay1, "1101");
+			usbRelay2.OffChannel(readingSelector2[0]);
 			double result = ReadVoltage();
-			//TurnOffMeter();
 			return result;
 		}
 
 		/* 
 		 * reads charge & discharge current from A to B
 		 */
-		public double ReadABCapacitance(TestStation station)
+		public double ReadABCapacitance()
 		{
-			_setChannels("1000");
+			WriteSession(":measure auto");
+			_setChannels(usbRelay1, "1001");
 			double result = ReadCapacitance();
 			//TurnOffMeter();
 			return result;
@@ -174,37 +205,58 @@ namespace WaterTestStation.hardware
 		 */
 		public double ReadTemperature()
 		{
-			TurnOffMeter();
+			WriteSession(":measure auto");
+			_setChannels(usbRelay1, "0001");
+			usbRelay2.OffChannel(readingSelector2[0]);
 
 			double result = pt100.Convert(ReadResistance());
-			if (Config.HasMultimeter)
-				mbSession.Write(":function:voltage:DC");
+			WriteSession(":function:voltage:DC");
 	
 			return result;
 		}
 
-		private void _setChannels(String pattern)
+		readonly LightMeter lightMeter = new LightMeter();
+		public double ReadLightLevel(ref double lastCurrent)
+		{
+			_setChannels(usbRelay1, "0000");
+			usbRelay2.OnChannel(readingSelector2[0]);
+			lastCurrent = ReadCurrent(lastCurrent);
+			return lightMeter.Convert(lastCurrent);
+		}
+
+		private void _setChannels(UsbRelay relay, String pattern)
 		{
 			IList<int> onList = new List<int>();
 			IList<int> offList = new List<int>();
 			int i = 0;
 			foreach (char c in pattern)
 			{
-				if (c == '1') onList.Add(readingSelector[i]);
-				else offList.Add(readingSelector[i]);
+				if (c == '1') onList.Add(readingSelector1[i]);
+				else offList.Add(readingSelector1[i]);
 				i++;
 			}
-			usbRelay.SetChannels(onList, offList);
+			relay.SetChannels(onList, offList);
 		}
 
 		public void TurnOffMeter()
 		{
-			usbRelay.SetChannels(new int [] {}, readingSelector );
+			usbRelay1.SetChannels(new int [] {}, readingSelector1 );
+			usbRelay2.OffChannel(readingSelector2[0]);
 		}
 
+		/**
+		 * Voltage Parameter Range Resolution
+		 * 0	200 mV		100 nV
+		 * 1	2 V			1 μV
+		 * 2	20 V		10 μV
+		 * 3	200 V		100 μV
+		 * 4	1000 V		1 mV
+		 * MIN	200 mV		100 nV
+		 * MAX	1000 V		1 mV
+		 * DEF	20 V		10 μV
+		 **/
 
 		/**
-		 * 
 		 * Parameter Range		Resolution	Change
 		 * 	0		200 μA		1 nA		150 uA
 		 * 	1		2 mA		10 nA		1.5 mA	
@@ -215,24 +267,22 @@ namespace WaterTestStation.hardware
 		 *	MIN		200 μA		1 nA
 		 *	MAX		10 A		100 μA
 		 *	DEF		200 mA		1 μA
-		 * 
 		 **/
-		public static string DetermineCurrentRange(double c)
+		private char _determineCurrentRange(double lastReading)
 		{
-			string range = "DEF";
-			if (c < 150E-6)
-				range = "0";
-			else if (c < 1.5E-3)
-				range = "1";
-			else if (c < 15E-3)
-				range = "2";
-			else if (c < 150E-3)
-				range = "3";
-			else if (c < 1.5)
-				range = "4";
-			else
-				range = "5";
-			return range;
+			lastReading = Math.Abs(lastReading);
+			if (lastReading < 150E-6)
+				return '0';
+			if (lastReading < 1.5E-3)
+				return '1';
+			if (lastReading < 15E-3)
+				return '2';
+			if (lastReading < 150E-3)
+				return '3';
+			if (lastReading < 1.5)
+				return '4';
+			
+			return '5';
 		}
 	}
 }

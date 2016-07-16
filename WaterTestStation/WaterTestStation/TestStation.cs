@@ -17,6 +17,9 @@ namespace WaterTestStation
 		private readonly RelayMux chargeDischargeSelect;
 		public readonly MultiPoleSwitch currentSwitch;
 
+		public double LastChargingCurrent = 0;
+		public double LastDischargeCurrent = 0;
+
 		// Execution of test program
 		private Stopwatch stopwatch;
 
@@ -33,6 +36,7 @@ namespace WaterTestStation
 		private Label lblABVolt;
 		private TextBox txtVesselId;
 		private TextBox txtSample;
+		public CheckBox chkRefElectrode;
 		public Button btnStart, btnStop;
 
 		public int testProgramId;
@@ -53,28 +57,30 @@ namespace WaterTestStation
 			this.currentSwitch = currentSwitch;
 		}
 
-		public void SetFormControls(Main fMain, TextBox vesselId, TextBox tSample, TextBox tTestDescription, TextBox tCycles, TextBox tLeadTime,
-			TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt, Button bStart, Button bStop)
+		public void SetFormControls(Main fMain, TextBox vesselId, TextBox tSample, TextBox tTestDescription, 
+			TextBox tCycles, TextBox tLeadTime, TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt,
+			CheckBox tchkRefElectrode, Button bStart, Button bStop)
 		{
-			this.frmMain = fMain;
-			this.txtTestDescription = tTestDescription;
-			this.txtCycles = tCycles;
-			this.txtLeadTime = tLeadTime;
-			this.txtVesselId = vesselId;
-			this.txtSample = tSample;
-			this.txtStatus = tStatus;
-			this.lblARefVolt = lARefVolt;
-			this.lblBRefVolt = lBRefVolt;
-			this.lblABAmp = lABAmp;
-			this.lblABVolt = lABVolt;
-			this.btnStart = bStart;
-			this.btnStop = bStop;
+			frmMain = fMain;
+			txtTestDescription = tTestDescription;
+			txtCycles = tCycles;
+			txtLeadTime = tLeadTime;
+			txtVesselId = vesselId;
+			txtSample = tSample;
+			txtStatus = tStatus;
+			lblARefVolt = lARefVolt;
+			lblBRefVolt = lBRefVolt;
+			lblABAmp = lABAmp;
+			lblABVolt = lABVolt;
+			btnStart = bStart;
+			btnStop = bStop;
+			chkRefElectrode = tchkRefElectrode;
 		}
 
 
 		// This method is called by Multimeter class to log and display the readings obtained
 		public void LogMeterReadings(TestType testType, int pCycle, int pCycleStartTime, int pStepTime, 
-				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, bool logFlag)
+				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, bool logFlag)
 		{
 			ThreadSafeSetLabel(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
 			ThreadSafeSetLabel(lblBRefVolt, Util.formatNumber(BRefVoltage, "V"));
@@ -85,7 +91,7 @@ namespace WaterTestStation
 			if (logFlag)
 			{
 				testRecordDao.LogTestData(testRecordId, testType, pCycle, pCycleStartTime + pStepTime, pStepTime, 
-					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature);
+					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature, lightLevel);
 			}
 		}
 
@@ -93,10 +99,12 @@ namespace WaterTestStation
 		public void ExecuteProgram()
 		{
 			testProgramId = (int) ThreadSafeReadCombo(frmMain.cboTestProgram);
+			LastChargingCurrent = 15E-3; // to set initial DC current range
+			LastDischargeCurrent = 20E-6;
 
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(testProgramId, ThreadSafeReadText(txtSample),
 				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime),
-				frmMain.txtTestDataSet.Text, frmMain.chkReferenceElectrode.Checked);
+				frmMain.txtTestDataSet.Text, chkRefElectrode.Checked);
 
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
@@ -112,10 +120,11 @@ namespace WaterTestStation
 			{
 				executionThread.Abort();
 				TogglePositivePower();
-				_switchTestType(TestType.OpenCircuit);
-				ThreadSafeSetText(txtStatus, "Execution aborted" + System.Environment.NewLine + ThreadSafeReadText(txtStatus));
+				SwitchTestType(TestType.OpenCircuit);
+				ThreadSafeSetText(txtStatus, "Execution aborted" + Environment.NewLine + ThreadSafeReadText(txtStatus));
 				_finalizeExecution();
 			}
+			SwitchTestType(TestType.OpenCircuit);
 		}
 
 		private void _finalizeExecution()
@@ -272,7 +281,7 @@ namespace WaterTestStation
 				Thread.Sleep(t);
 		}
 
-		public void _switchTestType(TestType testType)
+		public void SwitchTestType(TestType testType)
 		{
 			switch (testType)
 			{
@@ -295,7 +304,7 @@ namespace WaterTestStation
 
 		public void Initialize()
 		{
-			_switchTestType(TestType.OpenCircuit);
+			SwitchTestType(TestType.OpenCircuit);
 		}
 
 		public void TogglePositivePower()

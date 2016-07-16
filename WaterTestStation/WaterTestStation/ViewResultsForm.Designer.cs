@@ -37,6 +37,7 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.dgvDataGrid = new System.Windows.Forms.DataGridView();
 			this.dataGrid = new System.Windows.Forms.DataGridView();
+			this.lbtnRefreshChart = new System.Windows.Forms.LinkLabel();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.txtY2Max = new System.Windows.Forms.TextBox();
@@ -67,7 +68,6 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.lbtnRefreshChart = new System.Windows.Forms.LinkLabel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -188,6 +188,17 @@
 			this.dataGrid.Size = new System.Drawing.Size(842, 613);
 			this.dataGrid.TabIndex = 0;
 			// 
+			// lbtnRefreshChart
+			// 
+			this.lbtnRefreshChart.AutoSize = true;
+			this.lbtnRefreshChart.Location = new System.Drawing.Point(5, 579);
+			this.lbtnRefreshChart.Name = "lbtnRefreshChart";
+			this.lbtnRefreshChart.Size = new System.Drawing.Size(96, 17);
+			this.lbtnRefreshChart.TabIndex = 34;
+			this.lbtnRefreshChart.TabStop = true;
+			this.lbtnRefreshChart.Text = "Refresh Chart";
+			this.lbtnRefreshChart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefreshChart_LinkClicked);
+			// 
 			// label7
 			// 
 			this.label7.AutoSize = true;
@@ -294,6 +305,7 @@
             "Voltage",
             "Current",
             "Temperature",
+            "Light",
             "Cumulative Integral",
             "Impedance"});
 			this.cboYaxis2.Location = new System.Drawing.Point(6, 343);
@@ -499,17 +511,6 @@
 			this.chart1.Size = new System.Drawing.Size(1052, 613);
 			this.chart1.TabIndex = 0;
 			this.chart1.Text = "chart1";
-			// 
-			// lbtnRefreshChart
-			// 
-			this.lbtnRefreshChart.AutoSize = true;
-			this.lbtnRefreshChart.Location = new System.Drawing.Point(5, 579);
-			this.lbtnRefreshChart.Name = "lbtnRefreshChart";
-			this.lbtnRefreshChart.Size = new System.Drawing.Size(96, 17);
-			this.lbtnRefreshChart.TabIndex = 34;
-			this.lbtnRefreshChart.TabStop = true;
-			this.lbtnRefreshChart.Text = "Refresh Chart";
-			this.lbtnRefreshChart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefreshChart_LinkClicked);
 			// 
 			// ViewResultsForm
 			// 

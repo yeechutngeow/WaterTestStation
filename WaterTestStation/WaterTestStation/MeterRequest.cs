@@ -23,6 +23,7 @@ namespace WaterTestStation
 		private readonly bool logFlag;
 		private static Thread thread;
 
+		private static double lastLightCurrent = 1E-6;
 		readonly static Stopwatch stopwatch = new Stopwatch();
 
 		public MeterRequest(TestStation testStation, AdHocForm adhocForm, TestType testType, int pCycle, int pStepStartTime, int pStepTime, bool flag)
@@ -60,11 +61,13 @@ namespace WaterTestStation
 					{
 						double temperature = Main.Multimeter.ReadTemperature();
 						Main.MainForm.SetTemperature(temperature);
+						double lightLevel = Main.Multimeter.ReadLightLevel(ref lastLightCurrent);
+						Main.MainForm.SetLightLevel(lightLevel);
 						continue;
 					}
 
 					TestType testType = (TestType)Enum.Parse(typeof(TestType), m.TestType.ToString());
-					m.TestStation._switchTestType(testType);
+					m.TestStation.SwitchTestType(testType);
 
 					stopwatch.Start();
 					Debug.WriteLine("Begin meter readings:" + DateTime.Now);
@@ -84,17 +87,19 @@ namespace WaterTestStation
 						case TestType.ForwardCharge:
 						case TestType.ReverseCharge:
 							ABVoltage = Main.Multimeter.ReadABVoltage(m.TestStation);
-							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation);
+							ABCurrent = Main.Multimeter.ReadABCurrent(m.TestStation, m.TestStation.LastChargingCurrent);
+							m.TestStation.LastChargingCurrent = ABCurrent;
 							break;
 						case TestType.Discharge:
 							// No ABVoltage
-							Main.Multimeter.ReadABCurrentAndVoltage(m.TestStation, out ABCurrent, out ABVoltage);
+							Main.Multimeter.ReadABCurrentAndVoltage(m.TestStation, out ABCurrent, out ABVoltage, m.TestStation.LastDischargeCurrent);
+							m.TestStation.LastDischargeCurrent = ABCurrent;
 							break;
 					}
-					if (m.TestStation.frmMain.chkReferenceElectrode.Checked)
+					if (m.TestStation.chkRefElectrode.Checked)
 					{
-						ARefVoltage = Main.Multimeter.ReadARefVoltage(m.TestStation);
-						BRefVoltage = Main.Multimeter.ReadBRefVoltage(m.TestStation);
+						ARefVoltage = Main.Multimeter.ReadARefVoltage();
+						BRefVoltage = Main.Multimeter.ReadBRefVoltage();
 					}
 					Debug.WriteLine("End meter readings:" + DateTime.Now + "  Elapsed time:" + stopwatch.Elapsed);
 					stopwatch.Stop();
@@ -104,11 +109,11 @@ namespace WaterTestStation
 
 					if (m.AdHocForm == null)
 						m.TestStation.LogMeterReadings(m.TestType, m.cycle, m._stepStartTime, m._stepTime, 
-							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, m.logFlag);
+							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, Main.MainForm.LightLevel, m.logFlag);
 					else
 					{
 						m.AdHocForm.LogMeterReadings(m.TestType, m.cycle, m._stepStartTime, m._stepTime,
-							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, m.logFlag);
+							ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, Main.MainForm.Temperature, Main.MainForm.LightLevel, m.logFlag);
 					}
 				}
 				else
@@ -124,7 +129,7 @@ namespace WaterTestStation
 		{
 			int i = 0;
 
-			for (; i < channelNumber; i++)
+			for (; i < channelNumber && i < mux.relays.Length; i++)
 				onList.Add(mux.relays[i]);
 
 			for (; i < mux.relays.Count(); i++)

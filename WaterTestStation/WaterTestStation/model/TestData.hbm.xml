@@ -18,5 +18,6 @@
 		<property name="ABVoltage" />
 		<property name="ABCurrent" />
 		<property name="Temperature" />
+		<property name="LightLevel" />
 	</class>
 </hibernate-mapping>

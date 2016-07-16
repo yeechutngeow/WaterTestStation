@@ -73,7 +73,7 @@ namespace WaterTestStation
 
 		// This method is called by Multimeter class to log and display the readings obtained
 		public void LogMeterReadings(TestType testType, int pCycle, int pCycleStartTime, int pStepTime,
-				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, bool logFlag)
+				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, bool logFlag)
 		{
 			lblARefVolt.Text = Util.formatNumber(ARefVoltage, "V");
 			lblBRefVolt.Text = Util.formatNumber(BRefVoltage, "V");
@@ -81,7 +81,7 @@ namespace WaterTestStation
 			lblABAmp.Text = Util.formatNumber(ABCurrent, "A");
 
 			testRecordDao.LogTestData(testRecordId, testType, pCycle, pCycleStartTime + pStepTime, pStepTime,
-					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature);
+					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature, lightLevel);
 		}
 
 

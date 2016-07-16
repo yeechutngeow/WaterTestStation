@@ -63,7 +63,7 @@ namespace WaterTestStation.hardware
 			}
 			return v;
 		}
-		/*
+
 		public void OnChannel(int channelNumber)
 		{
 			SetChannels(new[] {channelNumber}, new int[] {});
@@ -73,7 +73,7 @@ namespace WaterTestStation.hardware
 		{
 			SetChannels(new int[] {}, new[] {channelNumber});
 		}
-		*/
+
 		public void SetChannels(IList<int> onList, IList<int> offList)
 		{
 			Int32 onMask = onList.Aggregate(0, (current, channel) => current | (1 << channel));

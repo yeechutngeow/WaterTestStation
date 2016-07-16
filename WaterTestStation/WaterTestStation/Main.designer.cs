@@ -43,7 +43,6 @@
 			this.cboTestProgram = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.txtTestDataSet = new System.Windows.Forms.TextBox();
-			this.chkReferenceElectrode = new System.Windows.Forms.CheckBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.lblRelayStatus1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -53,6 +52,8 @@
 			this.lblTemperature = new System.Windows.Forms.ToolStripStatusLabel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.cboSamplingRate = new System.Windows.Forms.ComboBox();
+			this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblLightLevel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -202,16 +203,6 @@
 			this.txtTestDataSet.Size = new System.Drawing.Size(153, 22);
 			this.txtTestDataSet.TabIndex = 17;
 			// 
-			// chkReferenceElectrode
-			// 
-			this.chkReferenceElectrode.AutoSize = true;
-			this.chkReferenceElectrode.Location = new System.Drawing.Point(1266, 43);
-			this.chkReferenceElectrode.Name = "chkReferenceElectrode";
-			this.chkReferenceElectrode.Size = new System.Drawing.Size(116, 21);
-			this.chkReferenceElectrode.TabIndex = 18;
-			this.chkReferenceElectrode.Text = "Ref Electrode";
-			this.chkReferenceElectrode.UseVisualStyleBackColor = true;
-			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -220,7 +211,9 @@
             this.toolStripStatusLabel3,
             this.lblRelayStatus2,
             this.toolStripStatusLabel2,
-            this.lblTemperature});
+            this.lblTemperature,
+            this.toolStripStatusLabel4,
+            this.lblLightLevel});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 498);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(1805, 25);
@@ -289,6 +282,18 @@
 			this.cboSamplingRate.TabIndex = 22;
 			this.cboSamplingRate.Text = "20";
 			// 
+			// toolStripStatusLabel4
+			// 
+			this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+			this.toolStripStatusLabel4.Size = new System.Drawing.Size(83, 20);
+			this.toolStripStatusLabel4.Text = "Light Level:";
+			// 
+			// lblLightLevel
+			// 
+			this.lblLightLevel.Name = "lblLightLevel";
+			this.lblLightLevel.Size = new System.Drawing.Size(17, 20);
+			this.lblLightLevel.Text = "0";
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -297,7 +302,6 @@
 			this.Controls.Add(this.cboSamplingRate);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.statusStrip1);
-			this.Controls.Add(this.chkReferenceElectrode);
 			this.Controls.Add(this.txtTestDataSet);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.cboTestProgram);
@@ -342,7 +346,6 @@
 		public System.Windows.Forms.ComboBox cboTestProgram;
 		private System.Windows.Forms.Label label7;
 		public System.Windows.Forms.TextBox txtTestDataSet;
-		public System.Windows.Forms.CheckBox chkReferenceElectrode;
 		public System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 		public System.Windows.Forms.ToolStripStatusLabel lblRelayStatus1;
@@ -353,6 +356,8 @@
 		private System.Windows.Forms.Label label1;
 		public System.Windows.Forms.ComboBox cboSamplingRate;
 		private System.Windows.Forms.ToolStripMenuItem AdhocMenuItem;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
+		private System.Windows.Forms.ToolStripStatusLabel lblLightLevel;
 	}
 }
 

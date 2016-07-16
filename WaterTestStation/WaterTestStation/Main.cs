@@ -12,6 +12,7 @@ namespace WaterTestStation
 	{
 		public static Main MainForm;
 		public double Temperature;
+		public double LightLevel;
 
 		// for development & debugging purposes
 
@@ -56,7 +57,7 @@ namespace WaterTestStation
 			usbRelay2.OpenComPort(Config.RelayCom2);
 
 			MeterRequest.StartServiceQueue();
-			TemperatureSensor.StartSensor();
+			LightAndTemperatureSensor.StartSensor();
 		}
 
 		private void btnStart_Click(object sender, EventArgs e)
@@ -93,7 +94,7 @@ namespace WaterTestStation
 			string testType = cboTestType.Text;
 			TestType eTestType = (TestType) Enum.Parse(typeof (TestType), testType);
 
-			stations[stationNumber]._switchTestType(eTestType);
+			stations[stationNumber].SwitchTestType(eTestType);
 			MultimeterQueue.Enqueue(new MeterRequest(stations[stationNumber], null, eTestType, 0, 0, 0, false));
 		}
 
@@ -129,17 +130,15 @@ namespace WaterTestStation
 				};
 				this.Controls.Add(panel);
 
-				Label label;
-
 				int y = 5;
 				//------------------------------------------------------------
-				label = new Label
-				{
-					Text = "Station " + (i+1),
-					Location = new Point(col1, y),
-					Font = new Font(this.Font, FontStyle.Bold),
-					Width = labelWidth
-				};
+				Label label = new Label
+					              {
+						              Text = "Station " + (i+1),
+						              Location = new Point(col1, y),
+						              Font = new Font(this.Font, FontStyle.Bold),
+						              Width = labelWidth
+					              };
 				panel.Controls.Add(label);
 				y += yLineHeight;
 	
@@ -157,6 +156,14 @@ namespace WaterTestStation
 					Location = new Point(col2, y)
 				};
 				panel.Controls.Add(txtVesselId);
+
+				CheckBox chkRefElectrode = new CheckBox
+				{
+					Text = "Ref Electrode",
+					Location = new Point(col3 + 80, y)
+				};
+				if (i >= 6) chkRefElectrode.Enabled = false;
+				panel.Controls.Add(chkRefElectrode);
 				y += yLineHeight;
 
 				//------------------------------------------------------------
@@ -333,7 +340,7 @@ namespace WaterTestStation
 				//-----------------------------------------------------------------
 
 				stations[i].SetFormControls(this, txtVesselId, txtSample, txtTestDescription,  txtCycles, txtLeadTime, txtStatus,
-					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, btnStart, btnStop);
+					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, chkRefElectrode, btnStart, btnStop);
 			}
 		}
 
@@ -357,20 +364,28 @@ namespace WaterTestStation
 			switches[6] = new RelayMux(usbRelay1, new[] { 24, 25 });
 			toggles[6] = new MultiPoleSwitch(usbRelay1, new[] { 26, 27 });
 
-			Multimeter = new Multimeter(usbRelay1, new[] { 29, 30, 31, 28 });
+			Multimeter = new Multimeter(usbRelay1, new[] { 29, 30, 31, 28 }, usbRelay2, new[] {30,31});
 
-			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
-			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 25 });
-			currentSwitch[2] = new MultiPoleSwitch(usbRelay2, new[] { 26 });
-			currentSwitch[3] = new MultiPoleSwitch(usbRelay2, new[] { 27 });
-			currentSwitch[4] = new MultiPoleSwitch(usbRelay2, new[] { 28 });
-			currentSwitch[5] = new MultiPoleSwitch(usbRelay2, new[] { 29 });
-			currentSwitch[6] = new MultiPoleSwitch(usbRelay2, new[] { 30 });
+//			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
+//			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 25 });
+//			currentSwitch[2] = new MultiPoleSwitch(usbRelay2, new[] { 26 });
+//			currentSwitch[3] = new MultiPoleSwitch(usbRelay2, new[] { 27 });
+//			currentSwitch[4] = new MultiPoleSwitch(usbRelay2, new[] { 28 });
+//			currentSwitch[5] = new MultiPoleSwitch(usbRelay2, new[] { 29 });
+//			currentSwitch[6] = new MultiPoleSwitch(usbRelay2, new[] { 30 });
+
+			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 23 });
+			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
+			currentSwitch[2] = new MultiPoleSwitch(usbRelay2, new[] { 25 });
+			currentSwitch[3] = new MultiPoleSwitch(usbRelay2, new[] { 26 });
+			currentSwitch[4] = new MultiPoleSwitch(usbRelay2, new[] { 27 });
+			currentSwitch[5] = new MultiPoleSwitch(usbRelay2, new[] { 28 });
+			currentSwitch[6] = new MultiPoleSwitch(usbRelay2, new[] { 29 });
 
 			mux[0] = new RelayMux(usbRelay2, new[] {0, 1, 2, 3, 4, 5});
 			mux[1] = new RelayMux(usbRelay2, new[] {6, 7, 8, 9, 10, 11});
 			mux[2] = new RelayMux(usbRelay2, new[] {12, 13, 14, 15, 16, 17});
-			mux[3] = new RelayMux(usbRelay2, new[] {18, 19, 20, 21, 22, 23});
+			mux[3] = new RelayMux(usbRelay2, new[] {18, 19, 20, 21, 22});
 
 
 			for (int i = 0; i < NStations; i++ )
@@ -393,9 +408,8 @@ namespace WaterTestStation
 			{
 				station.StopExecution();	
 			}
-			if (Config.HasMultimeter)
-				Multimeter.CloseSession();
-			TemperatureSensor.Stop();
+			Multimeter.CloseSession();
+			LightAndTemperatureSensor.Stop();
 			MeterRequest.AbortThread();
 			usbRelay1.Close();
 			usbRelay2.Close();
@@ -418,6 +432,12 @@ namespace WaterTestStation
 		{
 			this.Temperature = temperature;
 			formUtil.ThreadSafeSetStatusStripLabel(this.statusStrip1, this.lblTemperature, temperature.ToString("0.00"));
+		}
+
+		public void SetLightLevel(double lightLevel)
+		{
+			this.LightLevel = lightLevel;
+			formUtil.ThreadSafeSetStatusStripLabel(this.statusStrip1, this.lblLightLevel, lightLevel.ToString("0"));
 		}
 
 		private void AdhocMenuItem_Click(object sender, EventArgs e)

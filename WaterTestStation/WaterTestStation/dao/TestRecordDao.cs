@@ -65,7 +65,7 @@ namespace WaterTestStation.dao
 		}
 
 		internal void LogTestData(int testRecordId, TestType testType, int cycle, int elapsedTime, int stepTime, 
-			double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature)
+			double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel)
 		{
 			TestData testData = new TestData
 				{
@@ -79,7 +79,8 @@ namespace WaterTestStation.dao
 					BRefVoltage = BRefVoltage,
 					ABVoltage = ABVoltage,
 					ABCurrent = ABCurrent,
-					Temperature = temperature
+					Temperature = temperature,
+					LightLevel = lightLevel
 				};
 			using (ISession session = SessionFactory.OpenSession)
 			{

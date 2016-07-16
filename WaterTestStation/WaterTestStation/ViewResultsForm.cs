@@ -16,8 +16,10 @@ namespace WaterTestStation
 		readonly SortedSet<int> selectedDataSet = new SortedSet<int>();
 		readonly SortedSet<TestRecord> testRecords = new SortedSet<TestRecord>();
 
-		private const int FIXED_COLS = 4;
+		private const int FIXED_COLS = 5;
 		private const int TEMP_COL = 3;
+		private const int LIGHT_COL = 4;
+
 
 		// data matrix - rows of data, each row corresponds to an elapsed time
 		readonly IList<string[]> matrix = new List<string[]>();
@@ -45,6 +47,7 @@ namespace WaterTestStation
 			colWidth[1] = 90;
 			colWidth[2] = 35;
 			colWidth[3] = 50;
+			colWidth[4] = 50;
 			for (int i = FIXED_COLS; i < colWidth.Length; i++)
 				colWidth[i] = 70;
 
@@ -129,6 +132,7 @@ namespace WaterTestStation
 						row[1] = testData.TestType;
 						row[2] = testData.StepTime.ToString();
 						row[3] = testData.Temperature.ToString("0.000");
+						row[4] = testData.LightLevel.ToString("0");
 						matrix.Add(row);
 
 						var row2 = new double[nColumns];
@@ -290,6 +294,7 @@ namespace WaterTestStation
 			dataTable.Columns[1].ColumnName = "Step";
 			dataTable.Columns[2].ColumnName = "StepTime";
 			dataTable.Columns[3].ColumnName = "Temp";
+			dataTable.Columns[4].ColumnName = "Lux";
 			foreach (object[] t in matrix)
 				dataTable.LoadDataRow(t, true);
 
@@ -476,7 +481,8 @@ namespace WaterTestStation
 			col2 = _determineDataColumn(dataSetNumber, axis2);
 
 			if (axis2 == "")
-				;
+			{
+			}
 			else if (axis2 == "Temperature" )
 			{
 				if (dataSetNumber == 0)
@@ -485,6 +491,21 @@ namespace WaterTestStation
 					series2 = new Series
 					{
 						Name = "Temp",
+						ChartType = SeriesChartType.Line,
+						XValueType = ChartValueType.Int32,
+						YAxisType = AxisType.Secondary,
+						Color = getColor(dataTable.Columns[col1].ColumnName, dataSetNumber)
+					};
+				}
+			}
+			else if (axis2 == "Light")
+			{
+				if (dataSetNumber == 0)
+				{
+					col2 = LIGHT_COL;
+					series2 = new Series
+					{
+						Name = "Lux",
 						ChartType = SeriesChartType.Line,
 						XValueType = ChartValueType.Int32,
 						YAxisType = AxisType.Secondary,

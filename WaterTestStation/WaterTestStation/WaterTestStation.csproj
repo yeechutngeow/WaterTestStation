@@ -112,6 +112,7 @@
     <Compile Include="dao\TestProgramDao.cs" />
     <Compile Include="dao\TestRecordDao.cs" />
     <Compile Include="FormUtil.cs" />
+    <Compile Include="hardware\LightMeter.cs" />
     <Compile Include="hardware\Pt100.cs" />
     <Compile Include="PropertiesForm.cs">
       <SubType>Form</SubType>
@@ -146,7 +147,7 @@
     <Compile Include="SelectDataForm.Designer.cs">
       <DependentUpon>SelectDataForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TemperatureSensor.cs" />
+    <Compile Include="LightAndTemperatureSensor.cs" />
     <Compile Include="TestStation.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="ViewResultsForm.cs">
