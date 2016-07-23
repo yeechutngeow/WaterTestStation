@@ -1,21 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace WaterTestStation
 {
 	static class Config
 	{
+		public static string DM3068VisaResourceStr { get; set; }
+
 		public static bool HasRelay
 		{
 			get { return Properties.Settings.Default.HasRelay; }
 		}
 
-		public static bool HasMultimeter
+		static Config()
 		{
-			get { return Properties.Settings.Default.HasMultimeter; }
+			HasMultimeter = false;
+			DM3068VisaResourceStr = "";
 		}
+
+		public static bool HasMultimeter { get; set; }
+
+//		public static bool HasMultimeter
+//		{
+//			get { return Properties.Settings.Default.HasMultimeter; }
+//		}
 
 		public static int RelayCom1
 		{

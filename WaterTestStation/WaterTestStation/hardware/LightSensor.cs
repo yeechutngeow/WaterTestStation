@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WaterTestStation.hardware
 {
-	class LightMeter
+	class LightSensor
 	{
 		private const double minA = 1E-6;
 		private const double maxA = 1000E-6;
@@ -14,7 +14,8 @@ namespace WaterTestStation.hardware
 
 		public double Convert(double current)
 		{
-			double lux = (current - minA) * (maxLux - minLux) / (maxA-minA) + minLux;
+			//double lux = (current - minA) * (maxLux - minLux) / (maxA-minA) + minLux;
+			double lux = current*10E6;
 			return lux;
 		}
 	}

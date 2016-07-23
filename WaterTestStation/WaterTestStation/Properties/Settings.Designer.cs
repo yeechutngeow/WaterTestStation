@@ -61,18 +61,6 @@ namespace WaterTestStation.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool HasMultimeter {
-            get {
-                return ((bool)(this["HasMultimeter"]));
-            }
-            set {
-                this["HasMultimeter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public int MultimeterDelay {
             get {

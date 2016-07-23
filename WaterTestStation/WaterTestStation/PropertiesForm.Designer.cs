@@ -33,7 +33,6 @@
 			this.txtCom1 = new System.Windows.Forms.TextBox();
 			this.txtCom2 = new System.Windows.Forms.TextBox();
 			this.chkHasRelay = new System.Windows.Forms.CheckBox();
-			this.chkHasMultimeter = new System.Windows.Forms.CheckBox();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.txtMultimeterDelay = new System.Windows.Forms.TextBox();
@@ -83,19 +82,9 @@
 			this.chkHasRelay.Text = "Has Relay";
 			this.chkHasRelay.UseVisualStyleBackColor = true;
 			// 
-			// chkHasMultimeter
-			// 
-			this.chkHasMultimeter.AutoSize = true;
-			this.chkHasMultimeter.Location = new System.Drawing.Point(39, 148);
-			this.chkHasMultimeter.Name = "chkHasMultimeter";
-			this.chkHasMultimeter.Size = new System.Drawing.Size(124, 21);
-			this.chkHasMultimeter.TabIndex = 5;
-			this.chkHasMultimeter.Text = "Has Multimeter";
-			this.chkHasMultimeter.UseVisualStyleBackColor = true;
-			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(165, 290);
+			this.btnSave.Location = new System.Drawing.Point(174, 334);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 27);
 			this.btnSave.TabIndex = 6;
@@ -139,13 +128,12 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(297, 352);
+			this.ClientSize = new System.Drawing.Size(297, 373);
 			this.Controls.Add(this.txtTemperatureRefresh);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.txtMultimeterDelay);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnSave);
-			this.Controls.Add(this.chkHasMultimeter);
 			this.Controls.Add(this.chkHasRelay);
 			this.Controls.Add(this.txtCom2);
 			this.Controls.Add(this.txtCom1);
@@ -165,7 +153,6 @@
 		private System.Windows.Forms.TextBox txtCom1;
 		private System.Windows.Forms.TextBox txtCom2;
 		private System.Windows.Forms.CheckBox chkHasRelay;
-		private System.Windows.Forms.CheckBox chkHasMultimeter;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox txtMultimeterDelay;

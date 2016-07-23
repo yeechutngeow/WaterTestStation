@@ -364,7 +364,7 @@ namespace WaterTestStation
 			switches[6] = new RelayMux(usbRelay1, new[] { 24, 25 });
 			toggles[6] = new MultiPoleSwitch(usbRelay1, new[] { 26, 27 });
 
-			Multimeter = new Multimeter(usbRelay1, new[] { 29, 30, 31, 28 }, usbRelay2, new[] {30,31});
+			Multimeter = new Multimeter(usbRelay1, new[] { 28, 29, 30, 31 }, usbRelay2, new[] {30,31});
 
 //			currentSwitch[0] = new MultiPoleSwitch(usbRelay2, new[] { 24 });
 //			currentSwitch[1] = new MultiPoleSwitch(usbRelay2, new[] { 25 });

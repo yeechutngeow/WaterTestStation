@@ -5,7 +5,11 @@ using NationalInstruments.VisaNS;
 
 namespace WaterTestStation.hardware
 {
-	// using multiplexer
+	/*
+			Old unit: "USB0::0x1AB1::0x0C94::DM3O161550090::INSTR";
+			New Unit: "USB0::0x1AB1::0x0C94::DM3O175000896::INSTR";
+	 */
+
 	public class Multimeter
 	{
 		private MessageBasedSession mbSession; //Create Message based session
@@ -25,15 +29,20 @@ namespace WaterTestStation.hardware
 
 		public void OpenSession()
 		{
-			const string strVISARsrc = "USB0::0x1AB1::0x0C94::DM3O161550090::INSTR";
+			if (mbSession != null) return;
 
-			if (!Config.HasMultimeter)
-				return;
-
-			if (mbSession == null)
+			try
 			{
-				mbSession = (MessageBasedSession) ResourceManager.GetLocalManager().Open(strVISARsrc);
+				string[] visaResource = ResourceManager.GetLocalManager().FindResources("?*");
+				Config.DM3068VisaResourceStr = visaResource[0];
+				mbSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open(Config.DM3068VisaResourceStr);
 				mbSession.Write(":function:voltage:DC");
+
+				Config.HasMultimeter = true;
+			}
+			catch
+			{
+				Config.HasMultimeter = false;
 			}
 		}
 
@@ -51,28 +60,35 @@ namespace WaterTestStation.hardware
 
 		readonly Random random = new Random();
 
-		private double ReadVoltage()
+		private double _ReadVoltage()
 		{
-			return _ReadMeter("voltage:DC", Config.MultimeterDelay);
+			return _readMeter("voltage:DC", Config.MultimeterDelay);
 		}
 
-		private double ReadCurrent(double lastReading)
+		private double _readCurrent(double lastReading)
 		{
 			char range = _determineCurrentRange(lastReading);
 		again:
-			WriteSession(":measure:current:dc " + range);
 			if (range == '4' || range == '5')
 				usbRelay2.OnChannel(readingSelector2[1]);
 			else
 				usbRelay2.OffChannel(readingSelector2[1]);
-			int sign = range == '4' || range == '5' ? 1 : -1;
-			double result =  sign * _ReadMeter("current:DC", Config.MultimeterDelay);
+
+			WriteSession(":measure:current:dc " + range);
+
+			int sign = -1;
+
+			// the old unit has 200mA polarity reversed
+			if (Config.DM3068VisaResourceStr.StartsWith("USB0::0x1AB1::0x0C94::DM3O161550090"))
+				sign = sign * (range == '4' || range == '5' ? 1 : -1);
+
+			double result = sign * _readMeter("current:DC", Config.MultimeterDelay);
 
 			if (Math.Abs(result) > 1E10)	/* overload */
 			{
 				if (range < '5')
 				{
-					range = (char) (range + 1);
+					range = (char)(range + 1);
 					goto again;
 				}
 			}
@@ -81,19 +97,19 @@ namespace WaterTestStation.hardware
 
 		private double ReadResistance()
 		{
-			return _ReadMeter("resistance", Config.MultimeterDelay + 200);
+			return _readMeter("resistance", Config.MultimeterDelay + 200);
 		}
 
 		private double ReadCapacitance()
 		{
-			return _ReadMeter("capacitance", 32000);
+			return _readMeter("capacitance", 32000);
 		}
 
-		private double _ReadMeter(string command, int delay)
+		private double _readMeter(string command, int delay)
 		{
 			if (!Config.HasMultimeter)
 			{
-				Thread.Sleep(delay+ 20);
+				Thread.Sleep(delay + 20);
 				return random.NextDouble();
 			}
 
@@ -124,7 +140,7 @@ namespace WaterTestStation.hardware
 			WriteSession(":measure auto");
 			_setChannels(usbRelay1, "1001");
 			usbRelay2.OffChannel(readingSelector2[0]);
-			double result = -ReadVoltage();
+			double result = -1 * _ReadVoltage();
 			TurnOffMeter();
 			return result;
 		}
@@ -136,10 +152,10 @@ namespace WaterTestStation.hardware
 		public double ReadABCurrent(TestStation station, double lastCurrent)
 		{
 			station.currentSwitch.ToggleOn();
-			_setChannels(usbRelay1, "1001");
+			_setChannels(usbRelay1, "1011");
 			usbRelay2.OnChannel(readingSelector2[0]);
-			
-			double result = ReadCurrent(lastCurrent);
+
+			double result = -1 * _readCurrent(lastCurrent);
 			station.currentSwitch.ToggleOff();
 			WriteSession(":function:voltage:DC");
 
@@ -154,12 +170,13 @@ namespace WaterTestStation.hardware
 		public void ReadABCurrentAndVoltage(TestStation station, out double ABCurrent, out double ABVoltage, double lastCurrent)
 		{
 			station.currentSwitch.ToggleOn();
-			_setChannels(usbRelay1, "1001");
+			_setChannels(usbRelay1, "1011");
 			usbRelay2.OnChannel(readingSelector2[0]);
 
-			ABCurrent = ReadCurrent(lastCurrent);
+			ABCurrent = _readCurrent(lastCurrent);
+			_setChannels(usbRelay1, "1001");
 			WriteSession(":measure auto");
-			ABVoltage = -ReadVoltage();
+			ABVoltage = -_ReadVoltage();
 
 			station.currentSwitch.ToggleOff();
 		}
@@ -172,7 +189,7 @@ namespace WaterTestStation.hardware
 			WriteSession(":measure auto");
 			_setChannels(usbRelay1, "1011");
 			usbRelay2.OffChannel(readingSelector2[0]);
-			double result = -ReadVoltage();
+			double result = -_ReadVoltage();
 			return result;
 		}
 
@@ -184,7 +201,7 @@ namespace WaterTestStation.hardware
 			WriteSession(":measure auto");
 			_setChannels(usbRelay1, "1101");
 			usbRelay2.OffChannel(readingSelector2[0]);
-			double result = ReadVoltage();
+			double result = _ReadVoltage();
 			return result;
 		}
 
@@ -211,16 +228,16 @@ namespace WaterTestStation.hardware
 
 			double result = pt100.Convert(ReadResistance());
 			WriteSession(":function:voltage:DC");
-	
+
 			return result;
 		}
 
-		readonly LightMeter lightMeter = new LightMeter();
+		readonly LightSensor lightMeter = new LightSensor();
 		public double ReadLightLevel(ref double lastCurrent)
 		{
 			_setChannels(usbRelay1, "0000");
-			usbRelay2.OnChannel(readingSelector2[0]);
-			lastCurrent = ReadCurrent(lastCurrent);
+			usbRelay2.OffChannel(readingSelector2[0]);
+			lastCurrent = _readCurrent(lastCurrent);
 			return lightMeter.Convert(lastCurrent);
 		}
 
@@ -240,7 +257,7 @@ namespace WaterTestStation.hardware
 
 		public void TurnOffMeter()
 		{
-			usbRelay1.SetChannels(new int [] {}, readingSelector1 );
+			usbRelay1.SetChannels(new int[] { }, readingSelector1);
 			usbRelay2.OffChannel(readingSelector2[0]);
 		}
 
@@ -277,11 +294,12 @@ namespace WaterTestStation.hardware
 				return '1';
 			if (lastReading < 15E-3)
 				return '2';
+
 			if (lastReading < 150E-3)
 				return '3';
 			if (lastReading < 1.5)
 				return '4';
-			
+
 			return '5';
 		}
 	}

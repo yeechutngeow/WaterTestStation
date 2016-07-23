@@ -11,9 +11,6 @@
     <Setting Name="HasRelay" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="HasMultimeter" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="MultimeterDelay" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">600</Value>
     </Setting>

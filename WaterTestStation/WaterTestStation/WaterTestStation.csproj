@@ -112,7 +112,7 @@
     <Compile Include="dao\TestProgramDao.cs" />
     <Compile Include="dao\TestRecordDao.cs" />
     <Compile Include="FormUtil.cs" />
-    <Compile Include="hardware\LightMeter.cs" />
+    <Compile Include="hardware\LightSensor.cs" />
     <Compile Include="hardware\Pt100.cs" />
     <Compile Include="PropertiesForm.cs">
       <SubType>Form</SubType>

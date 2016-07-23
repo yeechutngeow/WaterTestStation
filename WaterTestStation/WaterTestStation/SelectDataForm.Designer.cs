@@ -36,6 +36,7 @@
 			this.TestStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.DataSet = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Sample = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.StationNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Desription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.TestSummary = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -84,6 +85,7 @@
             this.TestStart,
             this.DataSet,
             this.Sample,
+            this.StationNumber,
             this.Desription,
             this.TestSummary});
 			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -102,6 +104,7 @@
 			this.Id.Name = "Id";
 			this.Id.ReadOnly = true;
 			this.Id.Visible = false;
+			this.Id.Width = 44;
 			// 
 			// TestStart
 			// 
@@ -126,6 +129,14 @@
 			this.Sample.Name = "Sample";
 			this.Sample.ReadOnly = true;
 			this.Sample.Width = 80;
+			// 
+			// StationNumber
+			// 
+			this.StationNumber.DataPropertyName = "StationNumber";
+			this.StationNumber.HeaderText = "StationNo";
+			this.StationNumber.Name = "StationNumber";
+			this.StationNumber.ReadOnly = true;
+			this.StationNumber.Width = 95;
 			// 
 			// Desription
 			// 
@@ -170,6 +181,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn TestStart;
 		private System.Windows.Forms.DataGridViewTextBoxColumn DataSet;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Sample;
+		private System.Windows.Forms.DataGridViewTextBoxColumn StationNumber;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Desription;
 		private System.Windows.Forms.DataGridViewTextBoxColumn TestSummary;
 	}
