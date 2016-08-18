@@ -140,6 +140,7 @@ namespace WaterTestStation
 						//row2[1] = testData.TestType;
 						row2[2] = testData.StepTime;
 						row2[3] = testData.Temperature;
+						row2[4] = testData.LightLevel;
 						matrix2.Add(row2);
 					}
 
@@ -340,7 +341,7 @@ namespace WaterTestStation
 			RefreshData();
 		}
 
-		readonly Color[] colors = new[] {Color.Gray, Color.SpringGreen, Color.Blue, Color.Orange, Color.Green, Color.Crimson, Color.MediumOrchid, Color.SteelBlue};
+		readonly Color[] colors = new[] { Color.SpringGreen, Color.Blue, Color.Orange, Color.Green, Color.Crimson, Color.MediumOrchid, Color.SteelBlue, Color.Gray};
 
 		private Color getColor(string sampleName, int seriesIndex)
 		{
@@ -494,7 +495,7 @@ namespace WaterTestStation
 						ChartType = SeriesChartType.Line,
 						XValueType = ChartValueType.Int32,
 						YAxisType = AxisType.Secondary,
-						Color = getColor(dataTable.Columns[col1].ColumnName, dataSetNumber)
+						Color = Color.Gray //getColor(dataTable.Columns[col1].ColumnName, dataSetNumber)
 					};
 				}
 			}
@@ -509,7 +510,7 @@ namespace WaterTestStation
 						ChartType = SeriesChartType.Line,
 						XValueType = ChartValueType.Int32,
 						YAxisType = AxisType.Secondary,
-						Color = getColor(dataTable.Columns[col1].ColumnName, dataSetNumber)
+						Color = Color.Gray
 					};
 				}
 			}
@@ -585,14 +586,14 @@ namespace WaterTestStation
 		{
 			if (chkShowForwardCharge.Checked)
 				return "Charging";
-			else if (chkShowReverseCharge.Checked)
+			if (chkShowReverseCharge.Checked)
 				return "Charging";
-			else if (chkShowOpenCircuit.Checked)
+			if (chkShowOpenCircuit.Checked)
 				return "OpenCircuit";
-			else if (chkShowDischarge.Checked)
+			if (chkShowDischarge.Checked)
 				return "Discharge";
-			else
-				return "";
+			
+			return "";
 		}
 
 		private void _getAxisRanges()

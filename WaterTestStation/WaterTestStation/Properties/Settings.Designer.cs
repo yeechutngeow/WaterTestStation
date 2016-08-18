@@ -298,5 +298,29 @@ namespace WaterTestStation.Properties {
                 this["ChartImpedanceMax"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ChartLightMin {
+            get {
+                return ((double)(this["ChartLightMin"]));
+            }
+            set {
+                this["ChartLightMin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        public double ChartLightMax {
+            get {
+                return ((double)(this["ChartLightMax"]));
+            }
+            set {
+                this["ChartLightMax"] = value;
+            }
+        }
     }
 }

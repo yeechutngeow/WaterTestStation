@@ -369,12 +369,12 @@
 			// lbtnRefresh
 			// 
 			this.lbtnRefresh.AutoSize = true;
-			this.lbtnRefresh.Location = new System.Drawing.Point(127, 0);
+			this.lbtnRefresh.Location = new System.Drawing.Point(121, 0);
 			this.lbtnRefresh.Name = "lbtnRefresh";
-			this.lbtnRefresh.Size = new System.Drawing.Size(77, 17);
+			this.lbtnRefresh.Size = new System.Drawing.Size(92, 17);
 			this.lbtnRefresh.TabIndex = 6;
 			this.lbtnRefresh.TabStop = true;
-			this.lbtnRefresh.Text = "Fetch Data";
+			this.lbtnRefresh.Text = "Refresh Data";
 			this.lbtnRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbtnRefresh_LinkClicked);
 			// 
 			// lbtnAddDataSet
