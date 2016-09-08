@@ -10,7 +10,6 @@ namespace WaterTestStation.model
 		virtual public String Description { get; set; }
 		virtual public String Title { get; set; }
 		virtual public String Name { get; set; }
-		virtual public int Cycles { get; set; }	// number of cycles to run the program
 		virtual public bool Active { get; set; }
 		virtual public DateTime DateCreated { get; set; }
 		virtual public DateTime LastUpdated { get; set; }

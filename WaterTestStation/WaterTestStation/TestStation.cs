@@ -37,6 +37,7 @@ namespace WaterTestStation
 		private TextBox txtVesselId;
 		private TextBox txtSample;
 		public CheckBox chkRefElectrode;
+		public CheckBox chkVoltageOnly;
 		public Button btnStart, btnStop;
 
 		public int testProgramId;
@@ -59,7 +60,7 @@ namespace WaterTestStation
 
 		public void SetFormControls(Main fMain, TextBox vesselId, TextBox tSample, TextBox tTestDescription, 
 			TextBox tCycles, TextBox tLeadTime, TextBox tStatus, Label lARefVolt, Label lBRefVolt, Label lABAmp, Label lABVolt,
-			CheckBox tchkRefElectrode, Button bStart, Button bStop)
+			CheckBox tchkRefElectrode, CheckBox tchkVoltageOnly, Button bStart, Button bStop)
 		{
 			frmMain = fMain;
 			txtTestDescription = tTestDescription;
@@ -75,11 +76,12 @@ namespace WaterTestStation
 			btnStart = bStart;
 			btnStop = bStop;
 			chkRefElectrode = tchkRefElectrode;
+			chkVoltageOnly = tchkVoltageOnly;
 		}
 
 
 		// This method is called by Multimeter class to log and display the readings obtained
-		public void LogMeterReadings(TestType testType, int pCycle, int pCycleStartTime, int pStepTime, 
+		public void LogMeterReadings(TestType testType, int pCycle, int pStepStartTime, int pStepTime, 
 				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, bool logFlag)
 		{
 			ThreadSafeSetLabel(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
@@ -90,7 +92,7 @@ namespace WaterTestStation
 			// logs to database if this is not an adhoc reading
 			if (logFlag)
 			{
-				testRecordDao.LogTestData(testRecordId, testType, pCycle, pCycleStartTime + pStepTime, pStepTime, 
+				testRecordDao.LogTestData(testRecordId, testType, pCycle, pStepStartTime + pStepTime, pStepTime, 
 					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature, lightLevel);
 			}
 		}
@@ -104,13 +106,13 @@ namespace WaterTestStation
 
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(testProgramId, ThreadSafeReadText(txtSample),
 				ThreadSafeReadText(txtTestDescription), ThreadSafeReadText(txtVesselId), this.StationNumber, ThreadSafeReadText(txtLeadTime),
-				frmMain.txtTestDataSet.Text, chkRefElectrode.Checked);
+				frmMain.txtTestDataSet.Text);
 
 			testRecordId = testRecord.Id;
 			Thread thread = new Thread(_executeProgram);
 			executionThread = thread;
-			ThreadSafeSetButtonEnabled(btnStart, false);
-			ThreadSafeSetButtonEnabled(btnStop, true);
+			ThreadSafeSetControlEnabled(btnStart, false);
+			ThreadSafeSetControlEnabled(btnStop, true);
 			thread.Start();
 		}
 
@@ -119,18 +121,17 @@ namespace WaterTestStation
 			if (executionThread != null && executionThread.IsAlive)
 			{
 				executionThread.Abort();
-				TogglePositivePower();
-				SwitchTestType(TestType.OpenCircuit);
 				ThreadSafeSetText(txtStatus, "Execution aborted" + Environment.NewLine + ThreadSafeReadText(txtStatus));
 				_finalizeExecution();
 			}
+			TogglePositivePower();
 			SwitchTestType(TestType.OpenCircuit);
 		}
 
 		private void _finalizeExecution()
 		{
-			ThreadSafeSetButtonEnabled(btnStart, true);
-			ThreadSafeSetButtonEnabled(btnStop, false);
+			ThreadSafeSetControlEnabled(btnStart, true);
+			ThreadSafeSetControlEnabled(btnStop, false);
 
 			_updateTestRecord();
 		}
@@ -147,7 +148,13 @@ namespace WaterTestStation
 
 		private void _executeProgram()
 		{
-			testProgramId = (int) ThreadSafeReadCombo(frmMain.cboTestProgram);
+			if (chkVoltageOnly.Checked)
+			{
+				SwitchTestType(TestType.OpenCircuit);
+				currentSwitch.ToggleOn();
+			}
+
+			testProgramId = (int)ThreadSafeReadCombo(frmMain.cboTestProgram);
 			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 
 			stopwatch = new Stopwatch();

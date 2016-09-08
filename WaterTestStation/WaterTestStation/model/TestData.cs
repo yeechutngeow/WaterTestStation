@@ -20,5 +20,6 @@ namespace WaterTestStation.model
 		public virtual double ABCurrent { get; set; }
 		public virtual double Temperature { get; set; }
 		public virtual double LightLevel { get; set; }
+		public virtual string Notes { get; set; }
 	}
 }

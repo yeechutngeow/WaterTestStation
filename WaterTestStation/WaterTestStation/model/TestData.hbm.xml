@@ -19,5 +19,6 @@
 		<property name="ABCurrent" />
 		<property name="Temperature" />
 		<property name="LightLevel" />
+		<property name ="Notes" />
 	</class>
 </hibernate-mapping>

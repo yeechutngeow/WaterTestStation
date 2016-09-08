@@ -14,9 +14,8 @@ namespace WaterTestStation
 		public double Temperature;
 		public double LightLevel;
 
-		// for development & debugging purposes
-
 		public const int NStations = 7;
+
 		//----- the hardware components ---------------------------------------------------------
 
 		UsbRelay usbRelay1;
@@ -140,6 +139,13 @@ namespace WaterTestStation
 						              Width = labelWidth
 					              };
 				panel.Controls.Add(label);
+
+				CheckBox chkVoltageOnly = new CheckBox
+				{
+					Text = "Voltage Only",
+					Location = new Point(col3 + 80, y)
+				};
+				panel.Controls.Add(chkVoltageOnly);
 				y += yLineHeight;
 	
 				//------------------------------------------------------------
@@ -340,7 +346,7 @@ namespace WaterTestStation
 				//-----------------------------------------------------------------
 
 				stations[i].SetFormControls(this, txtVesselId, txtSample, txtTestDescription,  txtCycles, txtLeadTime, txtStatus,
-					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, chkRefElectrode, btnStart, btnStop);
+					lblARefVolt, lblBRefVolt, lblABAmp, lblABVolt, chkRefElectrode, chkVoltageOnly, btnStart, btnStop);
 			}
 		}
 

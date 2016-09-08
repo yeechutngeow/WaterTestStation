@@ -18,7 +18,6 @@
 		<property name="StationNumber" />
 		<property name="TestStart" />
 		<property name="TestEnd" />
-		<property name="Cycles" />
 		<property name="LeadTime" />
 		<property name="TotalDuration" />
 	</class>

@@ -7,7 +7,7 @@ namespace WaterTestStation
 	{
 		private delegate void SetLabelCallback(Label label, string text);
 
-		protected void ThreadSafeSetLabel(Label label, string text)
+		public void ThreadSafeSetLabel(Label label, string text)
 		{
 			// InvokeRequired required compares the thread ID of the
 			// calling thread to the thread ID of the creating thread.
@@ -42,30 +42,29 @@ namespace WaterTestStation
 		}
 
 
-		private delegate void SetTextCallback(TextBox txtBox, string text);
+		private delegate void SetTextCallback(Control control, string text);
 
-		protected void ThreadSafeSetText(TextBox txtBox, string text)
+		public void ThreadSafeSetText(Control control, string text)
 		{
 			// InvokeRequired required compares the thread ID of the
 			// calling thread to the thread ID of the creating thread.
 			// If these threads are different, it returns true.
-			if (txtBox.InvokeRequired)
+			if (control.InvokeRequired)
 			{
 				SetTextCallback d = ThreadSafeSetText;
-				txtBox.Invoke(d, new object[] { txtBox, text });
+				control.Invoke(d, new object[] { control, text });
 			}
 			else
 			{
-				txtBox.Text = text;
+				control.Text = text;
 			}
 		}
 
-		protected string ThreadSafeReadText(Control control)
+		public string ThreadSafeReadText(Control control)
 		{
 			string text = null;
 			if (control.InvokeRequired)
 			{
-				//ReadTextCallback d = ThreadSafeReadText;
 				control.Invoke((MethodInvoker)delegate
 				{
 					text = control.Text;
@@ -79,7 +78,7 @@ namespace WaterTestStation
 
 		//private delegate Object ReadComboboxCallback(ComboBox cbo);
 
-		protected Object ThreadSafeReadCombo(ComboBox cbo)
+		public Object ThreadSafeReadCombo(ComboBox cbo)
 		{
 			Object value = null;
 			if (cbo.InvokeRequired)
@@ -95,7 +94,7 @@ namespace WaterTestStation
 			return value;
 		}
 
-		protected Object ThreadSafeReadComboItem(ComboBox cbo)
+		public Object ThreadSafeReadComboItem(ComboBox cbo)
 		{
 			Object value = null;
 			if (cbo.InvokeRequired)
@@ -111,17 +110,17 @@ namespace WaterTestStation
 			return value;
 		}
 
-		private delegate void SetButtonEnabledCallback(Button btn, bool enabled);
+		private delegate void SetControlEnabledCallback(Control control, bool enabled);
 
-		protected void ThreadSafeSetButtonEnabled(Button btn, bool enabled)
+		public void ThreadSafeSetControlEnabled(Control control, bool enabled)
 		{
-			if (btn.InvokeRequired)
+			if (control.InvokeRequired)
 			{
-				SetButtonEnabledCallback d = ThreadSafeSetButtonEnabled;
-				btn.Invoke(d, new object[] { btn, enabled });
+				SetControlEnabledCallback d = ThreadSafeSetControlEnabled;
+				control.Invoke(d, new object[] { control, enabled });
 			}
 			else
-				btn.Enabled = enabled;
+				control.Enabled = enabled;
 
 		}
 	}

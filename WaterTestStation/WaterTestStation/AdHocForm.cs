@@ -13,6 +13,9 @@ namespace WaterTestStation
 		private int testRecordId;
 		private Thread executionThread;
 		private Stopwatch stopwatch;
+		private double lastReadingTime;
+		private TestType lastTestType;
+		private bool changeTestType;
 
 		private readonly TestRecordDao testRecordDao = new TestRecordDao();
 
@@ -21,70 +24,113 @@ namespace WaterTestStation
 			InitializeComponent();
 			cboSamplingRate.SelectedIndex = 1; // default to 10 seconds
 			cboTestType.DataSource = Enum.GetValues(typeof(TestType));
+			btnEnd.Enabled = false;
 		}
 
 		private void btnStartLogging_Click(object sender, EventArgs e)
 		{
 			StationNumber = Util.ParseInt((String)cboStationNumber.SelectedItem);
 			TestRecord testRecord = new TestRecordDao().CreateTestRecord(0, txtSample.Text,
-				txtDescription.Text, "", StationNumber, "0",
-				txtTestId.Text, chkReferenceElectrode.Checked);
+						txtDescription.Text, "", StationNumber, "0", txtTestId.Text);
 
 			testRecordId = testRecord.Id;
-			Thread thread = new Thread(_executeProgram);
-			executionThread = thread;
+			executionThread = new Thread(_run);
 			stopwatch = new Stopwatch();
-			btnStartLogging.Enabled = false;
-			btnStopLogging.Enabled = true;
-			thread.Start();
+			btnStart.Enabled = false;
+			btnEnd.Enabled = true;
+			executionThread.Start();
 		}
 
-		private void _executeProgram()
+		readonly FormUtil formUtil = new FormUtil();
+
+		private void _run()
 		{
-			int targeTtime = 0;
-			stopwatch.Start();
+			formUtil.ThreadSafeSetControlEnabled(cboStationNumber, false);
+			formUtil.ThreadSafeSetControlEnabled(btnStart, false);
+
+			stopwatch.Restart();
+			changeTestType = false;
+			changeTestType = false;
+			lastReadingTime = 0;
+			Stopwatch stepTimer = new Stopwatch();
+			int stepStartTime = 0;
 			while (true)
 			{
-				TestType testType = (TestType) Enum.Parse(typeof (TestType), (string) cboTestType.SelectedItem);
-				_TakeReadings(targeTtime, 0, testType);
-				targeTtime += Util.ParseInt((string) cboSamplingRate.SelectedItem);
+				int samplingInterval = Util.ParseInt((string) formUtil.ThreadSafeReadCombo(cboSamplingRate));
+
+				if (changeTestType) // do a measurement before changing the test type
+				{
+					Main.MultimeterQueue.Enqueue(new MeterRequest(Main.stations[StationNumber], this, lastTestType, 
+						0, 0, stepTimer.Elapsed.Seconds, true));
+					changeTestType = false;
+					stepTimer.Stop();
+					Thread.Sleep(2000);
+				}
+
+				if (!stepTimer.IsRunning || (chkContinuousSampling.Checked && stopwatch.Elapsed.TotalSeconds - lastReadingTime > samplingInterval))
+				{
+					if (!stepTimer.IsRunning)
+					{
+						stepTimer.Restart();
+						stepStartTime = stopwatch.Elapsed.Seconds;
+					}
+
+					lastReadingTime = stopwatch.Elapsed.TotalSeconds;
+					TestType testType = (TestType) formUtil.ThreadSafeReadComboItem(cboTestType);
+					Main.MultimeterQueue.Enqueue(new MeterRequest(Main.stations[StationNumber], this, testType, 0, 
+						stepStartTime, stepTimer.Elapsed.Seconds, true));
+					lastTestType = testType;
+					changeTestType = false;
+				}
+				Thread.Sleep(50);
 			}
 		}
 
-		private void _TakeReadings(int targetTime, int stepStartTime, TestType testStep)
+		// This method is called by MeterRequest class to log and display the readings obtained
+		public void LogMeterReadings(TestType testType, int pStepStartTime, int pStepTime,
+				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, string notes)
 		{
-			Debug.WriteLine("TakeReading: TargetTime=" + targetTime + " stepStartTime=" + stepStartTime + " Stopwatch=" + stopwatch.ElapsedMilliseconds / 1000);
+			formUtil.ThreadSafeSetText(lblARefVolt, Util.formatNumber(ARefVoltage, "V"));
+			formUtil.ThreadSafeSetText(lblBRefVolt, Util.formatNumber(BRefVoltage, "V"));
+			formUtil.ThreadSafeSetText(lblABVolt, Util.formatNumber(ABVoltage, "V"));
+			formUtil.ThreadSafeSetText(lblABAmp, Util.formatNumber(ABCurrent, "A"));
 
-			SleepTill(targetTime, stepStartTime);
-			TimeSpan t = TimeSpan.FromSeconds(targetTime);
-			txtStatus.Text = testStep + Environment.NewLine
-						 + "StepTime: " + t.ToString("mm\\:ss") + Environment.NewLine
-						 + "Total Elapsed: " + stopwatch.Elapsed.ToString("hh\\:mm\\:ss");
-
-			Main.MultimeterQueue.Enqueue(new MeterRequest(Main.stations[StationNumber], this, testStep, 0, stepStartTime, targetTime, true));
-		}
-
-		private void SleepTill(int targetTime, int baseTime)
-		{
-			int t = (baseTime + targetTime) * 1000 - (int)stopwatch.ElapsedMilliseconds;
-			if (t > 0)
-				Thread.Sleep(t);
-		}
-
-		// This method is called by Multimeter class to log and display the readings obtained
-		public void LogMeterReadings(TestType testType, int pCycle, int pCycleStartTime, int pStepTime,
-				double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, bool logFlag)
-		{
-			lblARefVolt.Text = Util.formatNumber(ARefVoltage, "V");
-			lblBRefVolt.Text = Util.formatNumber(BRefVoltage, "V");
-			lblABVolt.Text = Util.formatNumber(ABVoltage, "V");
-			lblABAmp.Text = Util.formatNumber(ABCurrent, "A");
-
-			testRecordDao.LogTestData(testRecordId, testType, pCycle, pCycleStartTime + pStepTime, pStepTime,
+			testRecordDao.LogTestData(testRecordId, testType, 0, pStepStartTime + pStepTime, pStepTime,
 					ARefVoltage, BRefVoltage, ABVoltage, ABCurrent, temperature, lightLevel);
 		}
 
+		private void AdHocForm_Load(object sender, EventArgs e)
+		{
+		}
 
+		private void btnChangeTestType_Click(object sender, EventArgs e)
+		{
+			changeTestType = true;
+		}
+
+		private void btnEnd_Click(object sender, EventArgs e)
+		{
+			if (executionThread != null && executionThread.IsAlive)
+			{
+				executionThread.Abort();
+				Main.stations[StationNumber].TogglePositivePower();
+				Main.stations[StationNumber].SwitchTestType(TestType.OpenCircuit);
+				formUtil.ThreadSafeSetText(txtStatus, "Execution aborted");
+				_updateTestRecord();
+
+				formUtil.ThreadSafeSetControlEnabled(btnStart, true);
+				formUtil.ThreadSafeSetControlEnabled(btnEnd, false);
+			}
+		}
+
+		private void _updateTestRecord()
+		{
+			TestRecord testRecord = testRecordDao.FindById(testRecordId);
+			testRecord.TestEnd = DateTime.Now;
+			testRecord.Sample = txtSample.Text;
+			testRecord.Description = txtDescription.Text;
+			testRecordDao.saveOrUpdate(testRecord);
+		}
 
 	}
 }

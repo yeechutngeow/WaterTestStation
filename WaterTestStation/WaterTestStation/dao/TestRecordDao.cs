@@ -9,23 +9,26 @@ namespace WaterTestStation.dao
 	class TestRecordDao
 	{
 		public TestRecord CreateTestRecord(int testProgramId, string sample, string description, string vesselId, 
-				int StationNumber, string leadTime, string testDataSet, bool hasReferenceElectrode)
+				int StationNumber, string leadTime, string testDataSet)
 		{
-			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
 
 			TestRecord r = new TestRecord
 				{
-					Cycles = testProgram.Cycles,
 					LeadTime = Util.ParseInt(leadTime),
 					Description = description,
 					VesselId = vesselId,
 					Sample = sample,
 					StationNumber = StationNumber,
 					TestStart = DateTime.Now,
-					TestProgramId = testProgramId,
-					TestSummary = testProgram.TestSummary(),
 					DataSet = testDataSet
 				};
+
+			TestProgram testProgram = new TestProgramDao().FindById(testProgramId);
+			if (testProgram != null)
+			{
+				r.TestProgramId = testProgramId;
+				r.TestSummary = testProgram.TestSummary();
+			}
 
 			using (ISession session = SessionFactory.OpenSession)
 			{
@@ -63,9 +66,16 @@ namespace WaterTestStation.dao
 			}
 			
 		}
+		internal void LogTestData(int testRecordId, TestType testType, int cycle, int elapsedTime, int stepTime,
+		                          double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent,
+		                          double temperature, double lightLevel)
+		{
+			LogTestData(testRecordId, testType, cycle, elapsedTime, stepTime, ARefVoltage, BRefVoltage, ABVoltage, ABCurrent,
+		                          temperature, lightLevel, "");
+		}
 
 		internal void LogTestData(int testRecordId, TestType testType, int cycle, int elapsedTime, int stepTime, 
-			double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel)
+			double ARefVoltage, double BRefVoltage, double ABVoltage, double ABCurrent, double temperature, double lightLevel, string notes)
 		{
 			TestData testData = new TestData
 				{
@@ -80,7 +90,8 @@ namespace WaterTestStation.dao
 					ABVoltage = ABVoltage,
 					ABCurrent = ABCurrent,
 					Temperature = temperature,
-					LightLevel = lightLevel
+					LightLevel = lightLevel,
+					Notes = notes
 				};
 			using (ISession session = SessionFactory.OpenSession)
 			{

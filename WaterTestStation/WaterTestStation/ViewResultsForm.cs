@@ -389,7 +389,6 @@ namespace WaterTestStation
 				chart1.Series.Add(series1);
 				if (series2 != null)
 					chart1.Series.Add(series2);
-
 				int lastStepTime = 0;
 				double lastAmpValue = 0;
 				double integral = 0;
@@ -428,6 +427,9 @@ namespace WaterTestStation
 						if (chkInvertGraph1.Checked) yValue = -yValue;
 					}
 
+//					if (chkAxis1Logarithmic.Checked && yValue > 0)
+//						series1.Points.AddXY(curX, Math.Log10(yValue));
+//					else
 					if (!chkAxis1Logarithmic.Checked || yValue > 0)
 						series1.Points.AddXY(curX, yValue);
 
@@ -439,6 +441,9 @@ namespace WaterTestStation
 						else
 							yValue = matrix2[j][col2];
 
+//						if (chkAxis2Logarithmic.Checked && yValue > 0)
+//							series2.Points.AddXY(curX, Math.Log10(yValue));
+//						else
 						if (!chkAxis2Logarithmic.Checked || yValue > 0)
 							series2.Points.AddXY(curX, yValue);
 					}
@@ -447,6 +452,9 @@ namespace WaterTestStation
 					lastAmpValue = curAmpValue;
 				}
 			}
+
+			chart1.ChartAreas[0].AxisY.IsLogarithmic = chkAxis1Logarithmic.Checked;
+			chart1.ChartAreas[0].AxisY2.IsLogarithmic = chkAxis2Logarithmic.Checked;
 
 			chart1.ChartAreas[0].RecalculateAxesScale();
 			//Set initial zoom

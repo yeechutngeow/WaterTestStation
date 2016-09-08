@@ -19,7 +19,6 @@ namespace WaterTestStation.model
 		public virtual float MolarConcentration { get; set; }
 		public virtual DateTime TestStart { get; set; }
 		public virtual DateTime? TestEnd { get; set; }
-		public virtual int Cycles { get; set; }
 		public virtual int LeadTime { get; set; }
 		public virtual int TotalDuration { get; set; }
 

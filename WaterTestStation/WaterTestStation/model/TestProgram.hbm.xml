@@ -10,7 +10,6 @@
 		<property name="Name" />
 		<property name="Title" />
 		<property name="Description" />
-		<property name="Cycles" />
 		<property name="Active" />
 
 		<property name="DateCreated" />
